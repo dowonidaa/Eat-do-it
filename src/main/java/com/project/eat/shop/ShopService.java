@@ -17,7 +17,7 @@ public class ShopService {
 
     public List<ShopVO> selectAllPageBlock(int cpage,int pageBlock) {
         int startRow = (cpage - 1) * pageBlock + 1;
-        return shopRepository.selectAllPageBlock(startRow-1, pageBlock);//네이티브쿼리사용 함수
+        return shopRepository.selectAllPageBlock(startRow-1, pageBlock);
     }
 
     public List<ShopVO> searchList(String searchWord) {
@@ -80,5 +80,36 @@ public class ShopService {
     public List<ShopVO> cateIdListPageBlockMyAddr(String userAddr, int cateId, int cpage, int pageBlock) {
         int startRow = (cpage - 1) * pageBlock + 1;
         return  shopRepository.findAllByCateIdListPageMyAddr("%"+userAddr+"%", cateId,startRow-1,pageBlock);
+    }
+
+    public List<ShopVO> selectListSortPageBlock(int sortNum, int cpage, int pageBlock) {
+        //1: 별점순 / 2:최소금액순 / 3:리뷰수순
+
+        int startRow = (cpage - 1) * pageBlock + 1;
+        if(sortNum==1){
+            return shopRepository.selectAllPageBlock(startRow-1, pageBlock);
+        } else if(sortNum==2){
+            return shopRepository.findAllBySortWithMinPrice(startRow-1,pageBlock);
+        } else if(sortNum==3){
+            return shopRepository.findAllBySortWithReviewCnt(startRow-1,pageBlock);
+        } else {
+            return shopRepository.selectAllPageBlock(startRow-1, pageBlock); //디폴트 별점순
+        }
+
+    }
+
+    public List<ShopVO> findAllAddrPageWithSort(int sortNum, String userAddr, int cpage, int pageBlock) {
+        //1: 별점순 / 2:최소금액순 / 3:리뷰수순
+
+        int startRow = (cpage - 1) * pageBlock + 1;
+        if(sortNum==1){
+            return shopRepository.findAllByShopAddrContainingPageBlock("%"+userAddr+"%",startRow-1,pageBlock);
+        } else if(sortNum==2){
+            return shopRepository.findAllByShopAddrPageBlockSortMinPrice("%"+userAddr+"%", startRow-1,pageBlock);
+        } else if(sortNum==3){
+            return shopRepository.findAllByShopAddrPageBlockSortReviewCnt("%"+userAddr+"%", startRow-1,pageBlock);
+        } else {
+            return shopRepository.findAllByShopAddrContainingPageBlock("%"+userAddr+"%",startRow-1,pageBlock); //디폴트 별점순
+        }
     }
 }

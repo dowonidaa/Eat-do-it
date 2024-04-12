@@ -424,8 +424,72 @@ public class ShopController {
         return "thymeleaf/shop/shopListMain";
     }
     
-    //location.href="sortList.do?sortNum=1";' 별점. 2최소금액 3리뷰수
+    //정렬조회: 1별점 2최소금액 3리뷰수
+    @GetMapping("/sortList.do")
+    public String sortList(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
+                               @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
+                               @RequestParam("sortNum") int sortNum,
+                               @RequestParam(name = "userId", defaultValue = "") String userId,
+                               Model model){
+        log.info("shop list vos in controller sortList  sortNum:  "+sortNum);
 
+        log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
+        log.info("정렬 !!! userId : {},", userId);
+
+        // 로그인 안한 경우
+        List<ShopVO> vos = shopService.selectListSortPageBlock(sortNum,cpage, pageBlock);
+//        List<ShopVO> vos = shopService.selectListByCategory(cateId); //페이지처리없음
+        log.info("selectListBySortWithMinPricePageBlock list vos in controller :  "+vos);
+
+
+        // shop테이블에 모든음식점수는 몇개?
+        long total_rows = shopService.getTotalRows();
+        log.info("total_rows:" + total_rows);
+
+
+        // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+        String userAddr = getUserAddrWithUserId.AddrGu(userId);
+        log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
+        if(userId != null && !userId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
+            log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
+
+
+            // 로그인성공-userId집주소 주변 음식점 + 정렬 (집주소기준:~구 =>전체)  => 총 갯수 조회
+            total_rows = shopService.getTotalRowswithContainingGu(userAddr);
+            log.info("로그인성공 집주변 음식점+카테고리별 총갯수 total_rows:" + total_rows);
+            log.info("로그인성공 카테고리별 로우갯수 !  total_rows:{},  ", total_rows);
+
+            //로그인성공-userId집주소 주변 음식점 조회 + 정렬
+            vos = shopService.findAllAddrPageWithSort(sortNum, userAddr, cpage, pageBlock);
+            log.info("userId집주소 주변 음식점 조회+ 정렬 vos:{} ", vos);
+
+            log.info("로그인 성공 ! 유저아이디 확인~~~~~~~~~~~~유저 집주소 조회 :: userId:{}", userId);
+            model.addAttribute("userId", userId);
+        }
+
+
+
+        // 결과값 없을 경우, sorry페이지 이동 및 홈버튼 제공
+        if(total_rows<=0){
+            return "thymeleaf/shop/sorry";
+        }
+
+        // 페이징처리계산식
+        long totalPageCount = 1;
+        if (total_rows / pageBlock == 0) {
+            totalPageCount = 1;
+        } else if (total_rows % pageBlock == 0) {
+            totalPageCount = total_rows / pageBlock;
+        } else {
+            totalPageCount = total_rows / pageBlock + 1;
+        }
+
+        // 페이지처리 화면단에 전달
+        log.info("totalPageCount:" + totalPageCount);
+        model.addAttribute("totalPageCount", totalPageCount);
+        model.addAttribute("vos", vos);
+        return "thymeleaf/shop/shopListMain";
+    }
 
 
 }
