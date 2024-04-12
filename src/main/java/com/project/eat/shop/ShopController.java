@@ -424,6 +424,7 @@ public class ShopController {
         return "thymeleaf/shop/shopListMain";
     }
     
+<<<<<<< HEAD
     //정렬조회: 1별점 2최소금액 3리뷰수
     @GetMapping("/sortList.do")
     public String sortList(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
@@ -490,6 +491,10 @@ public class ShopController {
         model.addAttribute("vos", vos);
         return "thymeleaf/shop/shopListMain";
     }
+=======
+    //location.href="sortList.do?sortNum=1";' 별점. 2최소금액 3리뷰수
+
+>>>>>>> 3bd15674ea199b733d29ddf6704fed247ce757e5
 
 
 }

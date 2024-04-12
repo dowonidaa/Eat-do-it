@@ -17,7 +17,11 @@ public class ShopService {
 
     public List<ShopVO> selectAllPageBlock(int cpage,int pageBlock) {
         int startRow = (cpage - 1) * pageBlock + 1;
+<<<<<<< HEAD
         return shopRepository.selectAllPageBlock(startRow-1, pageBlock);
+=======
+        return shopRepository.selectAllPageBlock(startRow-1, pageBlock);//네이티브쿼리사용 함수
+>>>>>>> 3bd15674ea199b733d29ddf6704fed247ce757e5
     }
 
     public List<ShopVO> searchList(String searchWord) {
@@ -81,6 +85,7 @@ public class ShopService {
         int startRow = (cpage - 1) * pageBlock + 1;
         return  shopRepository.findAllByCateIdListPageMyAddr("%"+userAddr+"%", cateId,startRow-1,pageBlock);
     }
+<<<<<<< HEAD
 
     public List<ShopVO> selectListSortPageBlock(int sortNum, int cpage, int pageBlock) {
         //1: 별점순 / 2:최소금액순 / 3:리뷰수순
@@ -112,4 +117,6 @@ public class ShopService {
             return shopRepository.findAllByShopAddrContainingPageBlock("%"+userAddr+"%",startRow-1,pageBlock); //디폴트 별점순
         }
     }
+=======
+>>>>>>> 3bd15674ea199b733d29ddf6704fed247ce757e5
 }
