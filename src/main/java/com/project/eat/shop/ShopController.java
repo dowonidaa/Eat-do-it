@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -490,6 +491,35 @@ public class ShopController {
         model.addAttribute("totalPageCount", totalPageCount);
         model.addAttribute("vos", vos);
         return "thymeleaf/shop/shopListMain";
+    }
+
+    //shopDatil/num=${vo.shopId})
+    @GetMapping("/shopDetail")
+    public String shopDetail(@RequestParam("num") int shopId, Model model){
+        log.info("shopDetail called@#$@#$%#$@#!@#~~~~~~~~~~~~~~~~~~~~~~~~~");
+        log.info("shopId: {}", shopId);
+        model.addAttribute("shopId", shopId);
+
+        ShopVO vo = shopService.findByShopId(shopId);
+        model.addAttribute("vo", vo);
+
+        List<Object[]> shopAndMenus = shopService.findShopWithMenu(shopId);
+        List<MenuVO> dtos = new ArrayList<>();
+        for (Object[] result : shopAndMenus) {
+            // 배열의 요소에 접근하여 데이터 추출
+            String menuName = (String) result[0];
+            String menuPrice = (String) result[1];
+            String menuDesc = (String) result[2];
+            String menuPic = (String) result[3];
+            int menuId =(int) result[4];
+
+            // DTO에 데이터 저장
+            MenuVO dto = new MenuVO(menuName, menuPrice, menuDesc, menuPic, menuId);
+            dtos.add(dto);
+        }
+        model.addAttribute("dtos", dtos);
+
+        return "thymeleaf/shop/shopDetail";
     }
 
 

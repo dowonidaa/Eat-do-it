@@ -14,7 +14,7 @@ public class MenuVO {
     @Id  //pk설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increament
     @Column(name="menu_id")
-    private int menu_id;
+    private int menuId;
 
     @Column(name="shop_name")
     private String shopName;
@@ -34,4 +34,11 @@ public class MenuVO {
     @Column(name="shop_id")
     private int shopId;
 
+    public MenuVO(String menuName, String menuPrice, String menuDesc, String menuPic, int menuId) {
+        this.menuName = menuName;
+        this.menuPrice = menuPrice;
+        this.menuDesc = menuDesc;
+        this.menuPic = menuPic;
+        this.menuId = menuId;
+    }
 }

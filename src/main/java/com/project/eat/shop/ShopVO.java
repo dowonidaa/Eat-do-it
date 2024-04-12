@@ -31,6 +31,9 @@ public class ShopVO {
     @Column(name="delivery_time")
     private String deliveryTime;
 
+    @Column(name="delivery_price")
+    private String deliveryPrice;
+
     @Column(name="run_time")
     private String runTime;
 
@@ -51,6 +54,9 @@ public class ShopVO {
 
     @Column(name="shop_thum")
     private String shopThum;
+
+    @Column(name="min_price_int")
+    private int minPriceInt;
 
 //    private String cateName;
 

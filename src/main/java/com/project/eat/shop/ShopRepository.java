@@ -2,6 +2,7 @@ package com.project.eat.shop;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -91,5 +92,11 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
     @Query(nativeQuery=true,
             value="select * from shop where shop_addr like ?1 ORDER BY review_count desc limit ?2, ?3")
     List<ShopVO> findAllByShopAddrPageBlockSortReviewCnt(String s, int i, int pageBlock);
+
+    @Query(nativeQuery=true,
+            value="SELECT m.menu_name, m.menu_price, m.menu_desc, m.menu_pic, m.menu_id FROM Shop s JOIN Menu m ON s.shop_name = m.shop_name WHERE s.shop_id = :shopId")
+        List<Object[]> findShopWithMenu(@Param("shopId") int shopId);
+
+    public ShopVO findByShopId(int shopId);
 
 }
