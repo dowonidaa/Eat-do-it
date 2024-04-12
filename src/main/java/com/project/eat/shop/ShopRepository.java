@@ -75,7 +75,7 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
                     + "		ORDER BY star_avg desc limit ?3, ?4")
     List<ShopVO> findAllByCateIdListPageMyAddr(String s, int cateId, int i, int pageBlock);
 
-<<<<<<< HEAD
+
     @Query(nativeQuery=true,
             value="select * from shop where replace(min_price,'_원','') order by min_price_int asc limit ?1, ?2")
     List<ShopVO> findAllBySortWithMinPrice(int i, int pageBlock);
@@ -91,8 +91,5 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
     @Query(nativeQuery=true,
             value="select * from shop where shop_addr like ?1 ORDER BY review_count desc limit ?2, ?3")
     List<ShopVO> findAllByShopAddrPageBlockSortReviewCnt(String s, int i, int pageBlock);
-=======
 
-
->>>>>>> 3bd15674ea199b733d29ddf6704fed247ce757e5
 }

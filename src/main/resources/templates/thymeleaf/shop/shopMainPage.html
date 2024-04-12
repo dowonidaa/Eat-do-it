@@ -3,57 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-<<<<<<< HEAD
-    <script>
-        // 쿠키에서 userId 값을 추출하는 함수
-        function getUserIdFromCookie() {
-            // 쿠키 문자열을 가져옵니다.
-            var cookieString = document.cookie;
 
-            // 쿠키 문자열을 세미콜론으로 분할하여 배열로 만듭니다.
-            var cookieArray = cookieString.split(';');
-
-            // 쿠키 배열에서 userId를 찾습니다.
-            var userId = null;
-            cookieArray.forEach(function(cookie) {
-                var pair = cookie.split('=');
-                var key = pair[0].trim();
-                var value = pair[1];
-                if (key === 'userId') {
-                    userId = value;
-                }
-            });
-
-            return userId;
-        }
-
-        // 페이지가 로드될 때 호출되는 함수
-        function onLoad() {
-            // 쿠키에서 userId 값을 추출합니다.
-            var userId = getUserIdFromCookie();
-            console.log("userId", userId);
-            // userId가 존재하는 경우, 버튼에 userId를 추가하여 링크를 생성합니다.
-            if (userId) {
-                var buttons = document.querySelectorAll('.cookie-button');
-                buttons.forEach(function(button) {
-                    // 버튼에 userId를 추가하여 링크를 생성합니다.
-                    button.setAttribute('data-userid', userId);
-                    // 버튼을 클릭할 때 링크로 이동하는 이벤트 리스너를 추가합니다.
-                    button.addEventListener('click', function() {
-                        var userId = this.getAttribute('data-userid');
-                        window.location.href = this.getAttribute('data-url') + userId;
-                    });
-                });
-            }
-        }
-
-        // 페이지 로드 시 onLoad 함수를 호출합니다.
-        window.onload = onLoad;
-    </script>
-
-
-=======
->>>>>>> 3bd15674ea199b733d29ddf6704fed247ce757e5
 </head>
 
 <body>
@@ -81,7 +31,6 @@
 
     <hr />
 
-<<<<<<< HEAD
     <h3>정렬기능</h3>
     <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
     <div th:if="${userId != null}">
@@ -103,8 +52,6 @@
 
     <hr />
 
-=======
->>>>>>> 3bd15674ea199b733d29ddf6704fed247ce757e5
 
     <h3>검색기능</h3>
     <form class="validation-form" novalidate action="shop_searchWord"
