@@ -30,11 +30,14 @@
     <tbody>
         <th:block th:each="vo : ${vos}">
             <tr>
+
                 <td><span th:text="${vo.shopName}"></span></td>
                 <td><span th:text="${vo.reviewCount}"></span></td>
                 <td><span th:text="${vo.starAvg}"></span></td>
                 <td><span th:text="${vo.minPrice}"></span></td>
                 <td><span th:text="${vo.deliveryTime}"></span></td>
+                <td><img th:src="${vo.shopThum}"  height="50" width="50"></span></td>
+                <td><span th:text="${vo.shopId}"></span></td>
             </tr>
         </th:block>
     </tbody>

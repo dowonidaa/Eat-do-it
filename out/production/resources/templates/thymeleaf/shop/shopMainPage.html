@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
 </head>
 
 <body>
@@ -27,6 +28,27 @@
         <!-- userId를 포함한 URL을 생성하여 버튼에 설정 -->
         <button th:attr="data-userid=${userId}" onclick="location.href='/shop_selectPageBlockAll?userId=' + this.getAttribute('data-userid');">내주변 음식점 전체조회</button>
     </div>
+
+    <hr />
+
+    <h3>정렬기능</h3>
+    <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+    <div th:if="${userId != null}">
+        <h3>정렬(select-box): 디폴트-별점순</h3>
+        <span>전체조회: 정렬(select-box): 디폴트-별점순</span>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=1&amp;userId=' + this.getAttribute('data-userid');">별점순</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=2&amp;userId=' + this.getAttribute('data-userid');">최소금액순</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=3&amp;userId=' + this.getAttribute('data-userid');">리뷰수 순</button>
+    </div>
+    <!-- 쿠키에 로그인한 유저 정보 없을 경우 -->
+    <div th:if="${userId == null}">
+        <h3>정렬(select-box): 디폴트-별점순</h3>
+        <span>전체조회: 정렬(select-box): 디폴트-별점순</span>
+        <button onclick='location.href="sortList.do?sortNum=1";'>별점순</button>
+        <button onclick='location.href="sortList.do?sortNum=2";'>최소금액순</button>
+        <button onclick='location.href="sortList.do?sortNum=3";'>리뷰수 순</button>
+    </div>
+
 
     <hr />
 
