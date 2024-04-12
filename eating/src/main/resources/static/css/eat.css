@@ -600,3 +600,30 @@ footer{
   font-weight: bold; /* 굵은 글꼴로 설정 */
   margin-top: 5px; /* 위쪽 여백 추가 */
 }
+
+/* --------------- 위치 확인 페이지 ---------------- */
+#location-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.kakao-api {
+  border:1px solid black;
+  margin-top: 20px;
+}
+
+.location-container {
+  margin-top: 40px;
+}
+
+
+.location-container {
+  display: flex;
+  align-items: center;
+}
+
+
+.search-box {
+  margin-right: 30px;
+}

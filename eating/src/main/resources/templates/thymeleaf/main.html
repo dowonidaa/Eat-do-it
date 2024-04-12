@@ -59,7 +59,8 @@
                 </div>
 
                 <div class="search-container">
-                    <button type="submit" class="location-button">위치확인</button>
+                    <button type="button" class="btn btn-light"
+                            th:onclick="|location.href='@{findLocation}'|">위치확인</button>
                     <input type="text" placeholder="배달 받으실 주소를 검색하세요" class="search-box">
                     <button type="submit" class="search-button">검색</button>
                 </div>

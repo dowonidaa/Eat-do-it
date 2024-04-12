@@ -127,6 +127,15 @@ public class MainController {
         return "thymeleaf/shop_review";
     }
 
+    @GetMapping({"/findLocation"})
+    public String findLocation() {
+        log.info("/findLocation...");
+
+
+        return "thymeleaf/findLocation";
+    }
+
+
 
 
 
