@@ -4,8 +4,13 @@ html { font-family: 'Inter', sans-serif; }
   html { font-family: 'Inter var', sans-serif; }
 }
 
+.body {
+    max-width: 1000px;
+}
+
 .container {
     max-width: 1000px;
+
 }
 
 .pricing-header {
@@ -155,6 +160,7 @@ h5 {
 }
 
 footer{
+    margin-top:200px;
     height: 200px;
     position : relative;
     transform : translateY(-100%);

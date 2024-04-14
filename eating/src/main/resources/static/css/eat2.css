@@ -49,6 +49,13 @@ h2 {
     line-height: 50px;
 }
 
+footer{
+    margin-top:200px;
+    height: 200px;
+    position : relative;
+    transform : translateY(-100%);
+    color:black
+  }
 
 .title{
     margin-top: 40px;
