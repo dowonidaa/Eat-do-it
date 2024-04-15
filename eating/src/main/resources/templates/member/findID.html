@@ -30,36 +30,58 @@
             </div>
 
 
-            <form>
+<!--            <form action="/api/find/sendUsernames" method="POST">-->
+            <form action="/api/find/sendVerificationCode" method="POST">
                 <div class="form-findID">
-                    <input type="text" class="form-control" id="InputID" placeholder="휴대폰 번호를 입력하세요">
-                    <button type="button" class="btn btn-dark" onclick="showMessage('NumberMsg')">인증번호 전송</button>
+                    <input type="text" class="form-control" id="InputEmail" name="email" placeholder="이메일 주소를 입력하세요">
+                    <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 전송</button>
                 </div>
                 <div id="form-findID-small">
                     <small id="NumberMsg" class="hidden">인증번호가 발송되었습니다.</small>
                 </div>
 
                 <div class="form-findID">
-                    <input type="password" class="form-control" id="InputPassword1" placeholder="인증번호를 입력하세요">
-                    <button type="button" class="btn btn-dark" onclick="verify()">인증번호 확인</button>
+                    <input type="text" class="form-control" id="InputVerificationCode" name="verificationCode" placeholder="인증번호를 입력하세요">
+                    <button type="button" class="btn btn-dark" onclick="checkVerification()">인증번호 확인</button>
                 </div>
                 <div id="form-findID-small">
                     <small id="VerificationSuccess" class="hidden">인증이 완료되었습니다.</small>
                     <small id="VerificationFailure" class="hidden">인증번호가 일치하지 않습니다.</small>
                 </div>
 
+                <!-- 버튼 클릭 시 findID_confirm.html로 이동하도록 수정 -->
                 <div class="centered-button-container">
-                    <button type="submit" class="btn btn-primary centered-button">아이디 찾기</button>
+                    <button type="button" class="btn btn-primary centered-button" onclick="ConfirmID()">아이디 확인</button>
+                </div>
+
+                <div id="usernameDisplay" class="hidden">
+                    <!-- 아이디가 여기에 표시될 것입니다. -->
                 </div>
             </form>
+
         </div>
+
 
 
 
 
         <!-- ----------------------------------------------------------------- -->
 
-
+    <!--  메일 전송한 후, "인증번호가 발송되었습니다" 띄우는 메소드  -->
+    <script>
+        function sendVerificationCode() {
+            var email = document.getElementById('InputEmail').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/sendVerificationCode", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("NumberMsg").classList.remove("hidden");
+                }
+            };
+            xhr.send("email=" + email);
+        }
+    </script>
 
     <!-- 버튼 누르면 메세지 띄우기 -->
     <script>
@@ -69,33 +91,63 @@
         }
     </script>
 
-    <!-- 인증번호 일치/불일치 여부에 따라 메세지 다르게 띄우기 : 1111-->
+
+
+    <!--  인증번호가 일치하는지 확인 -->
     <script>
-        var verificationCode = "1111"; // 예시로 정해진 인증번호
+        function checkVerification() {
+            var email = document.getElementById("InputEmail").value;
+            var verificationCode = document.getElementById("InputVerificationCode").value;
 
-        function sendVerificationCode() {
-            // 인증번호 전송하는 로직 구현해야함.
-            document.getElementById("NumberMsg").classList.remove("hidden");
-        }
-
-        function verify() {
-            var inputCode = document.getElementById("InputPassword1").value;
-            if (inputCode === verificationCode) {
-                document.getElementById("VerificationSuccess").classList.remove("hidden");
-                document.getElementById("VerificationFailure").classList.add("hidden");
-            } else {
-                document.getElementById("VerificationSuccess").classList.add("hidden");
-                document.getElementById("VerificationFailure").classList.remove("hidden");
-            }
+            // 서버로 이메일과 인증번호 전송하여 확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/verifyCode", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // 인증 성공 시
+                    document.getElementById("VerificationSuccess").classList.remove("hidden");
+                    document.getElementById("VerificationFailure").classList.add("hidden");
+                } else if (xhr.readyState === 4 && xhr.status !== 200) {
+                    // 인증 실패 시
+                    document.getElementById("VerificationSuccess").classList.add("hidden");
+                    document.getElementById("VerificationFailure").classList.remove("hidden");
+                }
+            };
+            xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(verificationCode));
         }
     </script>
 
 
-
     <script>
-        function showMessage(id) {
-            var message = document.getElementById(id);
-            message.classList.remove("hidden");
+        // 이메일 값 가져오기 및 페이지 이동
+        function ConfirmID() {
+            var email = document.getElementById('InputEmail').value;
+            // 이메일 값 추가하여 페이지 이동
+            window.location.href = "/member/findID_confirm?email=" + email;
+        }
+    </script>
+
+    <!-- 인증번호 일치 후, 아이디 확인 버튼 누르면 아이디를 보여주는 메소드-->
+    <script>
+        function getAndDisplayUsername() {
+            var email = document.getElementById('InputEmail').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/sendUsernames", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var usernames = JSON.parse(xhr.responseText);
+                    if (usernames && usernames.length > 0) {
+                        var usernameDisplay = document.getElementById('usernameDisplay');
+                        usernameDisplay.innerHTML = "아이디: " + usernames.join(", ");
+                        usernameDisplay.classList.remove("hidden");
+                    } else {
+                        alert("해당 이메일 주소로 등록된 아이디가 없습니다.");
+                    }
+                }
+            };
+            xhr.send("email=" + email);
         }
     </script>
 
