@@ -43,6 +43,7 @@ public class FindRestController {
         }
     }
 
+    //아이디에서만 쓰는 거. 비밀번호는 재설정 할 거라서.
     @PostMapping("/api/find/sendUsernames")
     public ResponseEntity<Object> sendUsernames(@RequestParam("email") String email){
         // 이메일 주소를 사용하여 아이디를 찾습니다.

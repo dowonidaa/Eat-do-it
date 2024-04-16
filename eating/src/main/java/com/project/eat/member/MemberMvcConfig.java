@@ -13,6 +13,8 @@ public class MemberMvcConfig implements WebMvcConfigurer {
 	private final MemberRestInterceptor memberInterceptor;
 	private final MemberRestInterceptor memberRestInterceptor;
 
+
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// interceptor를 여러개 지정할 수 있다. 메소드 순서대로 실행

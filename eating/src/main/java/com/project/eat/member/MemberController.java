@@ -190,6 +190,7 @@ public class MemberController {
         MemberVO_JPA vo2 = service.selectOne(vo);
         vo2.setPw(vo2.getPw().substring(0,10));
         model.addAttribute("vo2", vo2);
+        log.info("vo2:{}",vo2);
 
         return "member/selectOne";
     }
@@ -197,6 +198,7 @@ public class MemberController {
     @PostMapping("/member/updateOK")
     public String updateOK(MemberVO_JPA vo) {
         log.info("/member/updateOK...");
+        log.info("Original password: {}", vo.getPw()); // 원본 비밀번호 로깅
         log.info("vo:{}",vo);
 
         String salt = User_pwSHA512.Salt();
@@ -207,7 +209,9 @@ public class MemberController {
         String hex_password = User_pwSHA512.getSHA512(vo.getPw(),salt);//암호화
         log.info("암호화 결과 : {}", hex_password);
         //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
+        log.info("Hashed password: {}", hex_password.substring(0, 10) + "********");
         vo.setPw(hex_password);//디비에 저장
+
 
         //수정일자 반영안하면 null값이 들어가는 것을 방지하기위해...
         if(vo.getRegdate()==null) {
@@ -241,22 +245,6 @@ public class MemberController {
         return "redirect:selectAll";
     }
 
-
-    @GetMapping({"/member/changePW"})
-    public String changePW() {
-        log.info("/member/changePW...");
-
-
-        return "member/changePW";
-    }
-
-    @GetMapping({"/member/findPW"})
-    public String findPW() {
-        log.info("/member/findPW...");
-
-        return "member/findPW";
-    }
-
     @GetMapping({"/member/join"})
     public String join() {
         log.info("/member/join...");
@@ -274,11 +262,34 @@ public class MemberController {
     }
 
     @GetMapping({"/member/mypage"})
-    public String mypage() {
+    public String mypage(Model model, HttpSession session) {
         log.info("/member/mypage...");
 
+        // 세션에서 로그인한 사용자의 아이디 가져오기
+        String memberId = (String) session.getAttribute("member_id");
+        log.info("Logged in member ID: {}", memberId);
 
-        return "member/mypage";
+        // 로그인한 사용자의 아이디를 이용하여 해당 회원 정보 조회
+        MemberVO_JPA vo = new MemberVO_JPA();
+        vo.setId(memberId); // 로그인한 사용자의 아이디 설정
+
+        log.info("vo : {}", vo);
+
+        //MemberVO_JPA vo2 = service.selectOne(vo);
+        MemberVO_JPA vo2 = service.selectOneById(vo);
+        log.info("vo2 : {}", vo);
+
+        if (vo2 != null) {
+            vo2.setPw(vo2.getPw().substring(0, 10));
+            model.addAttribute("vo2", vo2);
+            log.info("vo2:{}", vo2);
+            return "member/mypage";
+        } else {
+            // 회원 정보가 없는 경우에 대한 처리
+            log.error("Member not found for ID: {}", memberId);
+            // 에러 페이지로 리다이렉트 또는 에러 메시지를 전달할 수 있음
+            return "redirect:/"; // 예시로 에러 페이지로 리다이렉트
+        }
     }
 
 }

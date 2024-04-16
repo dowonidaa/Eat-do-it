@@ -20,19 +20,24 @@ public class MemberVO_JPA {
     )
     private Date created_at;
 
-//    @Column(name = "email", nullable = true)
-    @Column(name = "email")
-    private String email;
-
+    //@Id // pk설정 //이거 하면 오류남
     @Column(name = "member_id", nullable = false)
     private String id;
 
-//    @Column(name = "member_status", nullable = false)
+    //    @Column(name = "member_status", nullable = false)
     @Column(name = "member_status")
     private String status;
 
     @Column(name = "name", nullable = false)
     private String name;
+
+//    @Column(name = "email", nullable = true)
+    @Column(name = "email")
+    private String email;
+
+
+
+
 
 //    @Column(name = "nickname", nullable = false)
     @Column(name = "nickname")
