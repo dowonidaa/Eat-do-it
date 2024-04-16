@@ -633,3 +633,7 @@ footer{
 .search-box {
   margin-right: 30px;
 }
+
+.btn-square {
+  border-radius: 0 !important; /* Important to override any existing styles */
+}
