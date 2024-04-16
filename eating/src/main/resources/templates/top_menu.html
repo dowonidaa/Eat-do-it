@@ -20,7 +20,7 @@
 							<a th:if="${session.member_id == null}" class="nav-link" th:href="@{/member/login}">로그인</a>
 							<a th:if="${session.member_id != null}" class="nav-link" th:href="@{/member/logout}">로그아웃</a>
 							<a  class="nav-link" th:if="${session.member_id != null}" th:href="@{/member/mypage}">마이페이지</a>
-							<button type="button" class="btn btn-primary"
+							<button type="button" class="btn btn-primary" th:style="'width:50%;'"
 									th:attr="onclick=${shopId != null} ? 'location.href=\'/shop/' + ${shopId} + '\'' : null">
 								장바구니<span th:if="${session.member_id != null}" th:text="|(${cartCount})|">0</span>
 							</button>

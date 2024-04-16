@@ -32,6 +32,14 @@
                         // 성공 시 UI에서 해당 아이템 삭제
                         $this.closest('.cart-card').remove(); // 클릭된 버튼의 가장 가까운 <tr> 요소를 삭제
                          // 클릭된 버튼의 가장 가까운 <tr> 요소를 삭제
+                        if ($('.cart-card').length === 0) {
+                            var emptyMessage = $('<span>', {
+
+                                text: '장바구니가 비어있습니다.'
+                            });
+                            // 적절한 컨테이너나 위치에 emptyMessage를 추가
+                            $('.empty-cart-message').prepend(emptyMessage); // 'cart-container'는 해당 메시지를 넣을 부모 요소의 클래스 이름
+                        }
                         updateTotalPrice()
                     }
                 });
@@ -126,6 +134,9 @@
                             // Handle success
                             alert('장바구니를 비웠습니다.');
                             $('.cart-card').remove();
+
+                                $('.empty-cart-message').text('장바구니가 비어있습니다.').show();
+
                             updateTotalPrice();
 
                         },
@@ -139,6 +150,21 @@
 
 
         });
+        $(document).ready(function() {
+            // 이벤트 위임을 사용하여 동적으로 생성된 요소에도 이벤트 리스너를 적용
+            $('body').on('click', '#orderBtn', function() {
+                var cartItems = $('.cart-card');
+                var orderType = $('input[name="orderType"]:checked').val();
+
+                if (cartItems.length > 0) {
+                    window.location.href = '/order?orderType=' + orderType.toUpperCase();
+                } else {
+                    console.log("No items in the cart.");
+                }
+            });
+        });
+
+
 
     </script>
 </head>
@@ -339,13 +365,23 @@
                 </div>
 
                 <!-- 오른쪽 -->
+
                 <div class="right-container">
-                    <p class="shop-menu">장바구니</p>
+                    <div class="cart-header d-flex align-items-center justify-content-between">
+                        <p class="shop-menu mb-0">장바구니</p>
+                        <div class="btn-group">
+                            <input type="radio" class="btn-check" name="orderType" id="btnradio1" autocomplete="off" checked th:value="delivery">
+                            <label class="btn btn-outline-primary" for="btnradio1">배달</label>
+
+                            <input type="radio" class="btn-check" name="orderType" id="btnradio2" autocomplete="off" th:value="takeout">
+                            <label class="btn btn-outline-primary" for="btnradio2">포장</label>
+                        </div>
+                    </div>
                     <hr>
                     <div class="row">
                         <div class="col">
-                            <div th:if="${cartItems==null or cartItems.isEmpty()}" class="empty-cart-message">
-                                장바구니가 비어있습니다.
+                            <div class="empty-cart-message">
+                                <span th:if="${cartItems==null or cartItems.isEmpty()}" >장바구니가 비어있습니다.</span>
                             </div>
                             <input th:type="hidden" th:id="cartShopId" th:value="${cartShop.id}">
                             <div class="cart-card" th:each="cartItem : ${cartItems}">
@@ -367,7 +403,7 @@
 
                     <!-- 합계 -->
                     <div class="cart-total">
-                        <div class="deliver">
+                        <div class="deliver" aria-labelledby="delivery" >
                             <span class="deliver-left">배달요금</span><span class="deliver-right" th:text="|${#numbers.formatDecimal(cartShop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원 별도|">3,500원</span>
                         </div>
                         <div class="total">
@@ -375,12 +411,13 @@
                         </div>
                         <div class="total-button">
                             <div class="order-btn">
-                                <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/order}'|">주문하기</button>
+                                <button type="button" class="btn btn-primary"  id="orderBtn">주문하기</button>
                             </div>
 
                             <div class="cancel-btn">
                                 <button type="button" class="btn btn-secondary" th:id="cancelButton" th:data-shopid="${shop.id}">취소하기</button>
                             </div>
+
 
 
                         </div>
@@ -442,6 +479,8 @@
                 link.style.width = dynamicWidth + 'px';
             });
         });
+
+
     </script>
 </body>
 
