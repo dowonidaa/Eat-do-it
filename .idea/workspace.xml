@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8638ad31-44da-4d8e-95f1-094d670e86ec" name="Changes" comment="" />
+    <list default="true" id="8638ad31-44da-4d8e-95f1-094d670e86ec" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -89,7 +91,7 @@
       <updated>1713145187437</updated>
       <workItem from="1713145188456" duration="7895000" />
       <workItem from="1713244870388" duration="126000" />
-      <workItem from="1713246753595" duration="2650000" />
+      <workItem from="1713246753595" duration="3025000" />
     </task>
     <task id="LOCAL-00001" summary="- application-db 파일 gitignore에 등록">
       <option name="closed" value="true" />
@@ -134,7 +136,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/dowon" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

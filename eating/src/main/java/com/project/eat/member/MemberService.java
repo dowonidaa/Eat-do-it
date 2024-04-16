@@ -1,15 +1,17 @@
 package com.project.eat.member;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
-	@Autowired
-	private MemberDAO_JPA jpa;
+	private final MemberDAO_JPA jpa;
+	private final MemberRepositoryEM memberRepository;
 
 	public MemberVO_JPA insertOK(MemberVO_JPA vo) {
 		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음
@@ -100,6 +102,10 @@ public class MemberService {
 
 	public String getSalt(MemberVO_JPA vo) {
 		return jpa.findBySalt(vo.getId());
+	}
+
+	public MemberVO_JPA findOne(String memberId) {
+		return memberRepository.findOne(memberId);
 	}
 
 }

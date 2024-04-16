@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>음식점 상세</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -12,15 +13,168 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" type="text/css" th:href="@{/css/eat.css}">
 <!--    <link href="../../static/css/eat.css" rel="stylesheet">-->
+    <script>
+        const formatter = new Intl.NumberFormat('ko-KR', {
+            style: 'decimal', // This is default and can be omitted
+            minimumFractionDigits: 0, // Optional: set to control the number of decimal places
+            maximumFractionDigits: 0  // Optional: set to control the number of decimal places
+        });
+
+        $(document).ready(function () {
+            $('.delete-cart-item').on('click', function () {
+                var cartItemId = $(this).data('cartitemid');
+                var $this = $(this); // 클릭된 버튼을 가리키는 jQuery 객체를 변수에 저장
+
+                $.ajax({
+                    url: '/cart/' + cartItemId + '/delete',
+                    type: 'DELETE',
+                    success: function (result) {
+                        // 성공 시 UI에서 해당 아이템 삭제
+                        $this.closest('.cart-card').remove(); // 클릭된 버튼의 가장 가까운 <tr> 요소를 삭제
+                         // 클릭된 버튼의 가장 가까운 <tr> 요소를 삭제
+                        updateTotalPrice()
+                    }
+                });
+            });
+
+            $('.increment-quantity, .decrement-quantity').click(function () {
+                var cartItemId = $(this).data('cartitemid');
+                var action = $(this).hasClass('increment-quantity') ? 'increment' : 'decrement';
+                var quantityInput = $('#quantity-' + cartItemId);
+                var priceDisplay = $('#price-' + cartItemId);
+
+                $.ajax({
+                    url: '/cart/' + cartItemId + '/' + action,
+                    type: 'POST',
+                    success: function (response) {
+                        // 서버로부터 받은 새로운 수량과 가격으로 업데이트
+                        quantityInput.text(response.newQuantity);
+                        priceDisplay.text(formatter.format(response.newPrice) + '원');
+                        updateTotalPrice()
+                    },
+                    error: function () {
+                        alert("수량 변경에 실패했습니다.");
+                    }
+                });
+            });
+
+            function updateTotalPrice() {
+                $.ajax({
+                    url: '/cart/total-price',
+                    type: 'GET',
+                    success: function (response) {
+                        // 서버 응답에서 totalPrice를 올바르게 받아오고 있는지 확인
+
+
+                        $('.total-price').text(formatter.format(response.totalPrice) + '원');
+                    },
+                    error: function () {
+                        alert("총 가격 업데이트에 실패했습니다.");
+                    }
+                });
+            }
+            $('#addItemForm').submit(function (e) {
+                e.preventDefault(); // 폼 기본 제출 이벤트를 막습니다.
+
+                var shopId = $('#shopId').val();
+                var cartShopId = $('#cartShopId').val()
+                console.log(shopId);
+                console.log(cartShopId);
+
+                // 확인 창을 표시합니다.
+                if (shopId !== cartShopId && shopId !== null) {
+                    var confirmResult = confirm('기존 장바구니 내용을 삭제하고 새로 추가하시겠습니까?');
+                }else{
+                    confirmResult = true;
+                }
+                if (confirmResult) {
+                    // 사용자가 '확인'을 클릭한 경우, AJAX 요청을 수행하여 장바구니 내용을 업데이트합니다.
+                    var formData = $(this).serialize(); // 폼 데이터를 직렬화합니다.
+
+                    $.ajax({
+                        url: $(this).attr('action'), // 폼의 action 속성 값으로 요청 URL을 설정합니다.
+                        type: 'POST', // HTTP 메소드를 지정합니다.
+                        data: formData, // 직렬화된 폼 데이터를 요청 본문에 포함합니다.
+                        success: function(response) {
+                            // 요청 성공 시 실행될 콜백 함수입니다.
+                            alert('장바구니가 업데이트되었습니다.');
+                            var shopId = response.shopId;
+
+                            // 필요한 경우, UI 업데이트 등의 추가 작업을 수행합니다.
+
+                            updateTotalPrice(); // 장바구니 총 가격을 업데이트하는 함수를 호출합니다.
+                            window.location.href = '/shop/' + shopId;
+                        },
+                        error: function() {
+                            // 요청 실패 시 실행될 콜백 함수입니다.
+                            alert('장바구니 업데이트에 실패했습니다.');
+                        }
+                    });
+                } else {
+                    // 사용자가 '취소'를 클릭한 경우, 추가 작업 없이 함수를 종료합니다.
+                    return;
+                }
+            });
+
+                $('#cancelButton').click(function() {
+                    var shopId = $(this).data('shopid');
+                    $.ajax({
+                        url: '/cart/remove', // Change to your actual URL
+                        type: 'POST', // or 'GET', depending on your server setup
+                        data: { shopId: shopId },
+                        success: function(response) {
+                            // Handle success
+                            alert('장바구니를 비었습니다.');
+                            $('.cart-card').remove();
+                            updateTotalPrice();
+
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error
+                            alert('Failed to cancel order');
+                        }
+                    });
+                });
+
+
+
+        });
+
+    </script>
 </head>
 
-<body th:replace="~{layout :: layout}">
+<body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
 
-    <div th:fragment="content" class="container py-3">
+    <div class="container py-3">
+        <!-- header -->
+        <header>
+
+            <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4">
+                <a th:href="@{main}" class="logo d-flex link-body-emphasis text-decoration-none">
+                    <img th:src="@{/img/logo.png}" alt="로고" width="30%" height="auto">
+                </a>
+
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container-fluid">
+                        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                            <div class="navbar-nav">
+                                <a class="nav-link" th:href="@{login}">로그인</a>
+                                <button type="button" class="btn btn-primary"
+                                        th:onclick="|location.href='@{mypage}'|">마이페이지</button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+
+
+
         <!-- ----------------------------------------------------------------- -->
         <!-- content 넣으실 부분 -->
         <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
@@ -209,63 +363,34 @@
                     <hr>
                     <div class="row">
                         <div class="col">
-                            <div class="cart-card" onclick="goSomewhere()">
+                            <div th:if="${cartItems.isEmpty()}" class="empty-cart-message">
+                                장바구니가 비어있습니다.
+                            </div>
+                            <input th:type="hidden" th:id="cartShopId" th:value="${cartShop.id}">
+                            <div class="cart-card" th:each="cartItem : ${cartItems}">
                                 <img th:src="@{/img/whole.jpg}" alt="세트A" class="shop">
                                 <div class="card-body">
-                                    <h4 class="menu-title">세트 A</h4>
-                                    <h4 class="cart-price">15,000원</h4>
+                                    <h5 class="menu-title" th:text="${cartItem.item.itemName}">세트 A</h5>
+                                    <h5 class="cart-price" th:id="'price-' + ${cartItem.id}" th:text="|${#numbers.formatDecimal(cartItem.price, 0, 'COMMA', 0, 'POINT')}원|">15,000원</h5>
                                 </div>
                                 <div class="quantity">
-                                    <button class="quantity-button minus">-</button>
-                                    <span class="quantity-number">1</span>
-                                    <button class="quantity-button plus">+</button>
+                                    <button class="quantity-button btn-outline-secondary decrement-quantity" th:data-cartitemid="${cartItem.id}">-</button>
+                                    <span class="quantity-number" th:id="|quantity-${cartItem.id}|" th:text="${cartItem.quantity}">1</span>
+                                    <button class="quantity-button btn-outline-secondary increment-quantity" th:data-cartitemid="${cartItem.id}">+</button>
                                 </div>
-                                <button class="remove-button">삭제</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="cart-card" onclick="goSomewhere()">
-                                <img th:src="@{/img/chicken.jpg}" alt="세트A" class="shop">
-                                <div class="card-body">
-                                    <h4 class="menu-title">세트 A</h4>
-                                    <h4 class="cart-price">15,000원</h4>
-                                </div>
-                                <div class="quantity">
-                                    <button class="quantity-button minus">-</button>
-                                    <span class="quantity-number">1</span>
-                                    <button class="quantity-button plus">+</button>
-                                </div>
-                                <button class="remove-button">삭제</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="cart-card" onclick="goSomewhere()">
-                                <img th:src="@{/img/pizza.jpg}" alt="세트A" class="shop">
-                                <div class="card-body">
-                                    <h4 class="menu-title">세트 A</h4>
-                                    <h4 class="cart-price">15,000원</h4>
-                                </div>
-                                <div class="quantity">
-                                    <button class="quantity-button minus">-</button>
-                                    <span class="quantity-number">1</span>
-                                    <button class="quantity-button plus">+</button>
-                                </div>
-                                <button class="remove-button">삭제</button>
+                                <button class="remove-button delete-cart-item" th:data-cartitemid="${cartItem.id}">삭제</button>
                             </div>
                         </div>
                     </div>
 
+
                     <!-- 합계 -->
                     <div class="cart-total">
                         <div class="deliver">
-                            <span class="deliver-left">배달요금</span><span class="deliver-right">3,500원</span>
+                            <span class="deliver-left">배달요금</span><span class="deliver-right" th:text="|${#numbers.formatDecimal(cartShop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원 별도|">3,500원</span>
                         </div>
                         <div class="total">
-                            <span class="total-left">합계</span><span class="total-right">3500원</span>
+                            <span class="total-left">합계</span><span class="total-right total-price" th:text="|${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')}원|">3500원</span>
                         </div>
                         <div class="total-button">
                             <div class="order-btn">
@@ -273,7 +398,7 @@
                             </div>
 
                             <div class="cancel-btn">
-                                <button type="button" class="btn btn-secondary">취소하기</button>
+                                <button type="button" class="btn btn-secondary" th:id="cancelButton" th:data-shopid="${shop.id}">취소하기</button>
                             </div>
 
 
@@ -287,62 +412,33 @@
 
         </div>
 
+
+
+
+        <!-- ----------------------------------------------------------------- -->
+
+
+        <!-- footer -->
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                <p class="col-md-4 mb-0 text-muted">&copy; 2024 먹고해</p>
+
+                <img th:src="@{/img/logo.png}" alt="로고" width="15%" height="auto">
+
+                <ul class="nav col-md-4 justify-content-end">
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">사장님페이지</a></li>
+                </ul>
+            </footer>
+        </div>
     </div>
 
 
 
 
-    <!-- 수량 변경 -->
-    <script>
-        // 모든 minus 버튼에 대해 이벤트 리스너 추가
-        document.querySelectorAll('.minus').forEach(function (button) {
-            button.addEventListener('click', function () {
-                var quantityNumber = button.nextElementSibling;
-                var currentQuantity = parseInt(quantityNumber.textContent);
-                if (currentQuantity > 1) {
-                    quantityNumber.textContent = currentQuantity - 1;
-                }
-            });
-        });
 
-        // 모든 plus 버튼에 대해 이벤트 리스너 추가
-        document.querySelectorAll('.plus').forEach(function (button) {
-            button.addEventListener('click', function () {
-                var quantityNumber = button.previousElementSibling;
-                var currentQuantity = parseInt(quantityNumber.textContent);
-                quantityNumber.textContent = currentQuantity + 1;
-            });
-        });
-    </script>
 
-    <!-- 총계 -->
-    <script>
-        // 페이지가 로드될 때 실행되는 함수
-        window.addEventListener('DOMContentLoaded', function () {
-            // 각 제품의 가격을 가져와서 총 가격을 계산하기 위한 변수 초기화
-            var totalPrice = 0;
 
-            // 모든 카트 카드 요소를 가져옴
-            var cartCards = document.querySelectorAll('.cart-card');
-            // 각 카트 카드 요소에 대해 반복
-            cartCards.forEach(function (cartCard) {
-                // 가격 요소를 가져와서 쉼표(,) 제거하고 숫자로 변환하여 가격에 추가
-                var priceElement = cartCard.querySelector('.cart-price');
-                var price = parseInt(priceElement.textContent.replace(',', '').replace('원', ''));
-                totalPrice += price;
-            });
-
-            // 배달 요금을 가져와서 총 가격에 추가
-            var deliverRight = document.querySelector('.deliver-right');
-            var deliveryFee = parseInt(deliverRight.textContent.replace(',', '').replace('원', ''));
-            totalPrice += deliveryFee;
-
-            // 합계를 표시할 요소를 가져옴
-            var totalRight = document.querySelector('.total-right');
-            // 합계를 표시
-            totalRight.textContent = totalPrice.toLocaleString() + '원';
-        });
-    </script>
 
 
 

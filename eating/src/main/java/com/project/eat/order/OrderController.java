@@ -38,10 +38,10 @@ public class OrderController {
         model.addAttribute("orderForm", orderForm);
 
         if (orderForm.getOrderType() == OrderType.DELIVERY) {
-        return "thymeleaf/orderPage";
+        return "pay/orderPage";
 
         }else {
-            return "thymeleaf/takeOutOrderPage";
+            return "pay/takeoutPage";
         }
     }
 
@@ -132,7 +132,7 @@ public class OrderController {
         orderService.update(order);
         model.addAttribute("order", order);
 
-        return "thymeleaf/pay_confirm";
+        return "pay/pay_confirm";
     }
 
     // 결제 취소시 실행 url
