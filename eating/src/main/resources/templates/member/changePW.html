@@ -30,16 +30,24 @@
             </div>
 
 
-            <form  id="usernameDisplay" class="hidden">
+            <form  id="usernameDisplay" class="hidden validation-form" novalidate action="updateOK"
+                   method="post">
+
+                <div class="form-group mb-3 hidden">
+                    <label for="id"></label> <span th:text="${vo2.id}"></span><input
+                        type="hidden" class="form-control" name="id" id="id"
+                        placeholder="" th:value="${vo2.id}" required>
+                    <div class="invalid-feedback"></div>
+                </div>
 
                 <div class="form-login">
-                    <input type="password" class="form-control" id="InputID" placeholder="새 비밀번호 입력"
+                    <input type="password" class="form-control" name="pw" id="InputID" placeholder="새 비밀번호 입력"  required
                         oninput="checkPasswordMatch()">
                 </div>
 
 
                 <div class="form-login">
-                    <input type="password" class="form-control" id="InputPassword1" placeholder="비밀번호 재입력"
+                    <input type="password" class="form-control" id="InputPassword1" placeholder="비밀번호 재입력" required
                         oninput="checkPasswordMatch()">
                 </div>
                 <div id="form-changePW-small">
@@ -49,7 +57,7 @@
 
 
                 <div class="centered-button-container">
-                    <button type="submit" class="btn btn-primary centered-button">비밀번호 변경하기</button>
+                    <button id="updateBtn" type="submit" class="btn btn-primary centered-button" disabled>비밀번호 변경하기</button>
                 </div>
             </form>
 
@@ -75,15 +83,19 @@
             if (password1 === '' || password2 === '') {
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.add("hidden");
+                document.getElementById("updateBtn").disabled = true;
                 return; // 하나 이상의 입력란이 비어 있으면 메시지를 표시하지 않고 함수 종료
             }
 
             if (password1 === password2) {
                 verificationSuccessMessage.classList.remove("hidden");
                 verificationFailureMessage.classList.add("hidden");
+                // 회원정보 수정 버튼 활성화
+                document.getElementById("updateBtn").disabled = false;
             } else {
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.remove("hidden");
+                document.getElementById("updateBtn").disabled = true;
             }
         }
     </script>

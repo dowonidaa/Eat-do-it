@@ -198,6 +198,7 @@ public class MemberController {
     @PostMapping("/member/updateOK")
     public String updateOK(MemberVO_JPA vo) {
         log.info("/member/updateOK...");
+        log.info("Original password: {}", vo.getPw()); // 원본 비밀번호 로깅
         log.info("vo:{}",vo);
 
         String salt = User_pwSHA512.Salt();
@@ -208,6 +209,7 @@ public class MemberController {
         String hex_password = User_pwSHA512.getSHA512(vo.getPw(),salt);//암호화
         log.info("암호화 결과 : {}", hex_password);
         //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
+        log.info("Hashed password: {}", hex_password.substring(0, 10) + "********");
         vo.setPw(hex_password);//디비에 저장
 
 

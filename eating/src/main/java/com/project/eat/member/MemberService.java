@@ -56,6 +56,9 @@ public class MemberService {
 	public MemberVO_JPA selectOneById(MemberVO_JPA vo) {
 		return jpa.findById(vo.getId());
 	}
+	public MemberVO_JPA selectOneByEmail(MemberVO_JPA vo) {
+		return jpa.findByEmail(vo.getEmail());
+	}
 	
 	public List<MemberVO_JPA> searchList(String searchKey, String searchWord) {
 		
