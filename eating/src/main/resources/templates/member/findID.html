@@ -33,7 +33,7 @@
 <!--            <form action="/api/find/sendUsernames" method="POST">-->
             <form action="/api/find/sendVerificationCode" method="POST">
                 <div class="form-findID">
-                    <input type="text" class="form-control" id="InputEmail" name="email" placeholder="이메일 주소를 입력하세요">
+                    <input type="text" class="form-control" id="InputEmail" name="email" placeholder="가입한 이메일 주소를 입력하세요">
                     <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 전송</button>
                 </div>
                 <div id="form-findID-small">
@@ -51,11 +51,7 @@
 
                 <!-- 버튼 클릭 시 findID_confirm.html로 이동하도록 수정 -->
                 <div class="centered-button-container">
-                    <button type="button" class="btn btn-primary centered-button" onclick="ConfirmID()">아이디 확인</button>
-                </div>
-
-                <div id="usernameDisplay" class="hidden">
-                    <!-- 아이디가 여기에 표시될 것입니다. -->
+                    <button id="changeIDBtn" type="button" class="btn btn-primary centered-button" onclick="ConfirmID()" disabled>아이디 확인</button>
                 </div>
             </form>
 
@@ -108,17 +104,21 @@
                     // 인증 성공 시
                     document.getElementById("VerificationSuccess").classList.remove("hidden");
                     document.getElementById("VerificationFailure").classList.add("hidden");
+                    // 아이디 확인 버튼 활성화
+                    document.getElementById("changeIDBtn").disabled = false;
                 } else if (xhr.readyState === 4 && xhr.status !== 200) {
                     // 인증 실패 시
                     document.getElementById("VerificationSuccess").classList.add("hidden");
                     document.getElementById("VerificationFailure").classList.remove("hidden");
+                    // 아이디 확인 버튼 비활성화
+                    document.getElementById("changeIDBtn").disabled = true;
                 }
             };
             xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(verificationCode));
         }
     </script>
 
-
+    <!--   "아이디 확인" 버튼 누르면 findID_confirm 페이지로 이메일 값 넘겨서 이동 -->
     <script>
         // 이메일 값 가져오기 및 페이지 이동
         function ConfirmID() {

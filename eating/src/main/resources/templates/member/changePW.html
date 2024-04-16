@@ -30,7 +30,7 @@
             </div>
 
 
-            <form>
+            <form  id="usernameDisplay" class="hidden">
                 <div class="form-login">
                     <input type="password" class="form-control" id="InputID" placeholder="새 비밀번호 입력"
                         oninput="checkPasswordMatch()">
@@ -56,7 +56,7 @@
 
 
         </div>
-    </div>
+
 
 
 
@@ -84,6 +84,46 @@
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.remove("hidden");
             }
+        }
+    </script>
+
+    <!--   이메일로 등록된 아이디가 없는 경우 -->
+    <script>
+        // 페이지 로드 시 URL에서 이메일 값 추출하여 사용
+        window.onload = function() {
+            // URL에서 쿼리 매개변수 파싱
+            var params = new URLSearchParams(window.location.search);
+            // 이메일 값 가져오기
+            var email = params.get('email');
+            // 가져온 이메일 값이 있다면 해당 이메일로 아이디 확인 수행
+            if (email) {
+                getAndDisplayUsername(email);
+            } else {
+                // 이메일 값이 없으면 예외 처리 또는 사용자에게 알림
+                alert("이메일 주소를 찾을 수 없습니다.");
+            }
+        };
+
+        // 서버로부터 아이디를 가져와서 화면에 표시
+        function getAndDisplayUsername(email) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/sendUsernames", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        var usernames = JSON.parse(xhr.responseText);
+                        if (usernames && usernames.length > 0) {
+                            usernameDisplay.classList.remove("hidden");
+                        } else {
+                            alert("해당 이메일 주소로 등록된 아이디가 없습니다.");
+                        }
+                    } else {
+                        alert("서버 오류가 발생했습니다.");
+                    }
+                }
+            };
+            xhr.send("email=" + email);
         }
     </script>
 

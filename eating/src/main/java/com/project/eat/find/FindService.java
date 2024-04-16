@@ -30,7 +30,7 @@ public class FindService {
         // 인증번호를 해당 이메일 주소에 전송
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setSubject("아이디 찾기를 위한 인증번호");
+        message.setSubject("먹고해 인증번호입니다.");
         message.setText("인증번호: " + verificationCode);
         mailSender.send(message);
 

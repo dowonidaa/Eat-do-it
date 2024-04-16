@@ -241,22 +241,6 @@ public class MemberController {
         return "redirect:selectAll";
     }
 
-
-    @GetMapping({"/member/changePW"})
-    public String changePW() {
-        log.info("/member/changePW...");
-
-
-        return "member/changePW";
-    }
-
-    @GetMapping({"/member/findPW"})
-    public String findPW() {
-        log.info("/member/findPW...");
-
-        return "member/findPW";
-    }
-
     @GetMapping({"/member/join"})
     public String join() {
         log.info("/member/join...");

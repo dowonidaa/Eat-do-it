@@ -20,7 +20,7 @@ public interface MemberDAO_JPA extends JpaRepository<MemberVO_JPA, Object>{
 	//***네이티브쿼리(SQL) : @Query(nativeQuery=true,value="일반쿼리문") //복잡한쿼리:서브쿼리,조인
 	//비밀번호가 너무길어서 10글자만 잘라서 반환함.
 	@Query(nativeQuery=true,
-			value="select num,member_id,substring(pw,1,10) pw,name,tel,regdate,user_salt from member order by num desc limit ?1 , ?2")
+			value="select num,created_at, email, member_id, member_status, name, nickname, substring(pw,1,10) pw,tel, user_salt, regdate from member order by num desc limit ?1 , ?2")
 	public List<MemberVO_JPA> selectAllPageBlock(Integer startRow, Integer pageBlock);
 	
 	//대소분자구분하는 검색
