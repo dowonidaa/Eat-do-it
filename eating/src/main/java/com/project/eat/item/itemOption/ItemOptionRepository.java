@@ -1,6 +1,5 @@
 package com.project.eat.item.itemOption;
 
-import com.project.eat.item.ItemOption;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,10 +1,10 @@
 package com.project.eat.cart.cartItem;
 
 import com.project.eat.cart.Cart;
-import com.project.eat.cart.CartItemOption;
+import com.project.eat.cart.cartOption.CartItemOption;
 import com.project.eat.cart.cartOption.CartItemOptionRepository;
 import com.project.eat.item.Item;
-import com.project.eat.item.ItemOption;
+import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.item.ItemRepository;
 import com.project.eat.item.itemOption.ItemOptionRepository;
 import com.project.eat.member.MemberRepositoryEM;

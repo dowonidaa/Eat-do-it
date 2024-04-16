@@ -1,6 +1,6 @@
 package com.project.eat.order.orderItemOption;
 
-import com.project.eat.item.ItemOption;
+import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.order.orderItem.OrderItem;
 import jakarta.persistence.*;
 import lombok.Getter;

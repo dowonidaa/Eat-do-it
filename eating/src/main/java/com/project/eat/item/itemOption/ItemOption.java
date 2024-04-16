@@ -1,5 +1,6 @@
-package com.project.eat.item;
+package com.project.eat.item.itemOption;
 
+import com.project.eat.item.Item;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

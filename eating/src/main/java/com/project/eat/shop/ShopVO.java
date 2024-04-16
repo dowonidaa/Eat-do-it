@@ -2,6 +2,7 @@ package com.project.eat.shop;
 
 import com.project.eat.cart.Cart;
 import com.project.eat.item.Item;
+import com.project.eat.member.Coupon;
 import com.project.eat.order.Order;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class ShopVO {
     @Id  //pk설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increament
     @Column(name = "shop_id")//컬럼이름 설정
-    private int shopId;
+    private Long shopId;
 
     @Column(name = "shop_name", nullable = false)
     private String shopName;
@@ -70,5 +71,8 @@ public class ShopVO {
 
     @OneToMany(mappedBy = "shop")
     private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "shop")
+    private List<Coupon> coupons = new ArrayList<>();
 
 }

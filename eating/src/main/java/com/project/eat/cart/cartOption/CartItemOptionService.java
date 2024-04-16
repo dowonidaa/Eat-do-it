@@ -1,6 +1,5 @@
 package com.project.eat.cart.cartOption;
 
-import com.project.eat.cart.CartItemOption;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

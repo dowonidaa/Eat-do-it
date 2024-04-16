@@ -14,6 +14,7 @@ public class OrderForm {
     private String orderAddressDetail;
     private String orderTel;
     private int discount;
+    private Long couponId;
     private OrderType orderType;
     private String orderStatus;
     private String PaymentMethod;

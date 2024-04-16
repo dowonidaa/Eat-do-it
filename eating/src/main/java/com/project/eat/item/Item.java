@@ -1,5 +1,6 @@
 package com.project.eat.item;
 
+import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.shop.ShopVO;
 import jakarta.persistence.*;
 import lombok.Getter;

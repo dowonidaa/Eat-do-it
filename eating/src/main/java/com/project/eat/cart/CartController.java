@@ -3,7 +3,7 @@ package com.project.eat.cart;
 import com.project.eat.cart.cartItem.CartItem;
 import com.project.eat.cart.cartItem.CartItemService;
 import com.project.eat.item.Item;
-import com.project.eat.item.ItemOption;
+import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.item.ItemService;
 import com.project.eat.item.itemOption.ItemOptionService;
 import com.project.eat.member.MemberService;

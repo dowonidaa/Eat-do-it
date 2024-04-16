@@ -2,7 +2,7 @@ package com.project.eat.order;
 
 import com.project.eat.cart.Cart;
 import com.project.eat.cart.cartItem.CartItem;
-import com.project.eat.cart.CartItemOption;
+import com.project.eat.cart.cartOption.CartItemOption;
 import com.project.eat.member.MemberRepositoryEM;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.orderItem.OrderItem;
@@ -21,7 +21,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberRepositoryEM memberRepository;
-    private final OrderItemRepository orderItemRepository;
 
     @Transactional
     public Order createOrder(String memberId, OrderForm form) {
@@ -29,8 +28,11 @@ public class OrderService {
         log.info("memberId = {}", findMember.getId());
         Cart cart = findMember.getCart();
         log.info("cartId = {}", cart.getId());
+        log.info("address={}",form.getOrderAddress());
+
 
         Order order = new Order();
+        order.setDiscount(form.getDiscount());
         order.setTotalPrice(cart.getTotalPrice());
         order.setShop(cart.getShop());
         order.setMember(findMember);
@@ -42,6 +44,7 @@ public class OrderService {
         order.setDiscount(form.getDiscount());
         order.setMemberNotes(form.getMemberNotes());
         order.setOrderStatus(OrderStatus.READY);
+        order.setOrderAddress(form.getOrderAddress());
         orderRepository.save(order);
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
