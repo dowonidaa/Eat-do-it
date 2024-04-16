@@ -13,7 +13,7 @@
 						method="post">
 
 						<div class="mb-3">
-							<label for="id">NUM</label> : <span th:text="${vo2.num}"></span>
+							<label for="num">NUM</label> : <span th:text="${vo2.num}"></span>
 							<input type="hidden" class="form-control" name="num" id="num"
 								placeholder="" th:value="${vo2.num}" required>
 							<div class="invalid-feedback"></div>
@@ -31,10 +31,16 @@
 							<div class="invalid-feedback">PW 입력해주세요.</div>
 						</div>
 						<div class="mb-3">
-							<label for="name">NAME</label> <input type="text"
-								class="form-control" name="name" id="name" placeholder=""
-								th:value="${vo2.name}" required>
-							<div class="invalid-feedback">NAME 입력해주세요.</div>
+							<label for="nickname">NICKNAME</label> <input type="text"
+								class="form-control" name="nickname" id="nickname" placeholder=""
+								th:value="${vo2.nickname}" required>
+							<div class="invalid-feedback">NICKNAME 입력해주세요.</div>
+						</div>
+						<div class="mb-3">
+							<label for="email">ID</label> : <span th:text="${vo2.email}"></span> <input
+								type="hidden" class="form-control" name="email" id="email"
+								placeholder="" th:value="${vo2.email}" required>
+							<div class="invalid-feedback"></div>
 						</div>
 						<div class="mb-3">
 							<label for="tel">TEL</label> <input type="text"

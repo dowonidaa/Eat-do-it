@@ -32,78 +32,85 @@
                 <h2>회원정보 수정</h2>
             </div>
 
+            <form class="validation-form" novalidate action="updateOK"
+                  method="post">
+                <div class="form-group mb-3">
+                    <label for="id"><h3>반갑습니다, </h3></label> <h2><span th:text="${vo2.id}"></span> 님</h2> <input
+                        type="hidden" class="form-control" name="id" id="id"
+                        placeholder="" th:value="${vo2.id}" required>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <hr><br><br>
 
-            <div class="form-group">
-                <label for="InputPassword1">
-                    <h2>비밀번호 변경</h2>
-                </label>
-                <input type="password" class="form-control" id="InputPassword1" placeholder="새로운 비밀번호를 입력하세요"
-                    oninput="checkPasswordMatch()">
-            </div>
-
-
-            <div class="form-group">
-                <label for="InputPassword2">
-                    <h2>비밀번호 확인</h2>
-                </label>
-                <input type="password" class="form-control" id="InputPassword2" placeholder="비밀번호를 다시 입력하세요"
-                    oninput="checkPasswordMatch()">
-                <small id="VerificationSuccess" class="hidden">비밀번호가 일치합니다.</small>
-                <small id="VerificationFailure" class="hidden">비밀번호가 일치하지 않습니다.</small>
-            </div>
-
-            <div class="form-group">
-                <label for="InputNickname">
-                    <h2>닉네임</h2>
-                </label>
-                <input type="text" class="form-control" id="InputNickame" placeholder="닉네임을 입력하세요">
-            </div>
-
-
-            <div class="form-group">
-                <label for="InputTel">
-                    <h2>전화번호</h2>
-                </label>
-                <input type="tel" class="form-control" id="InputTel" placeholder="휴대폰 번호 입력 ('-' 제외 11자리 입력)">
-            </div>
-
-
-            <div class="form-group">
-                <label for="InputEmail">
-                    <h2>이메일</h2>
-                </label>
-                <div class="form-grid">
-                    <input type="email" class="form-control" id="InputEmail" placeholder="이메일 아이디를 입력하세요">
-                    <div>@</div>
-                    <input type="email" class="form-control" id="InputEmail" placeholder="이메일 주소를 입력하세요">
-                    <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 발송</button>
+                <div class="form-group mb-3">
+                    <label for="InputPassword1">
+                        <h2>비밀번호 변경</h2>
+                    </label>
+                    <input type="password" class="form-control" name="pw" id="InputPassword1" oninput="checkPasswordMatch()" placeholder="새로운 비밀번호를 입력하세요" required>
                 </div>
 
-                <small id="NumberMsg" style="display: none;">인증번호가 발송되었습니다.</small>
-                <div class="form-grid form-number">
-                    <input type="number" class="form-control" id="inputNumber" placeholder="인증번호 입력">
-                    <button type="button" class="btn btn-dark" onclick="verifyCode()">확인</button>
-                    <small id="VerificationMsg" style="display: none;">인증이 완료되었습니다.</small>
+
+                <div class="form-group mb-3">
+                    <label for="InputPassword2">
+                        <h2>비밀번호 재입력</h2>
+                    </label>
+                    <input type="password" class="form-control" id="InputPassword2" placeholder="비밀번호를 다시 입력하세요"
+                        oninput="checkPasswordMatch()" required>
+                    <small id="VerificationSuccess" class="hidden">비밀번호가 일치합니다.</small>
+                    <small id="VerificationFailure" class="hidden">비밀번호가 일치하지 않습니다.</small>
                 </div>
-            </div>
 
-
-            <div class="form-group">
-                <label for="InputAddress">
-                    <h2>주소지</h2>
-                </label>
-                <div class="form-grid form-address">
-                    <input type="text" class="form-control" id="InputAddress" placeholder="우편번호">
-                    <button type="inputNumber" class="btn btn-dark">찾기</button>
+                <div class="form-group mb-3">
+                    <label for="nickname"><h2>닉네임</h2></label> <input type="text"
+                      class="form-control" name="nickname" id="nickname" placeholder="변경할 닉네임을 입력해 주세요"
+                      th:value="${vo2.nickname}" required>
+                    <div class="invalid-feedback">NICKNAME 입력해주세요.</div>
                 </div>
-                <input type="text" class="form-control InputAddress" id="InputAddress" placeholder="주소">
-                <input type="text" class="form-control InputAddress" id="InputAddress" placeholder="상세주소">
-            </div>
 
-            <div class="centered-button-container">
-                <button type="button" class="btn btn-primary centered-button"
-                    onclick="location.href='join_confirm.html'">회원정보 수정하기</button>
-            </div>
+
+                <div class="form-group mb-3">
+                    <label for="tel">
+                        <h2>전화번호</h2>
+                    </label>
+                    <input type="tel" class="form-control" name="tel" id="tel" placeholder="휴대폰 번호 입력 ('-' 제외 11자리 입력)" th:value="${vo2.tel}" required>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="InputEmail">
+                        <h2>이메일</h2>
+                    </label>
+                    <div class="form-grid">
+                        <input type="email" class="form-control" id="InputEmail" placeholder="이메일 아이디를 입력하세요">
+                        <div>@</div>
+                        <input type="email" class="form-control" id="InputEmail" placeholder="이메일 주소를 입력하세요">
+                        <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 발송</button>
+                    </div>
+
+                    <small id="NumberMsg" style="display: none;">인증번호가 발송되었습니다.</small>
+                    <div class="form-grid form-number">
+                        <input type="number" class="form-control" id="inputNumber" placeholder="인증번호 입력">
+                        <button type="button" class="btn btn-dark" onclick="verifyCode()">확인</button>
+                        <small id="VerificationMsg" style="display: none;">인증이 완료되었습니다.</small>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="InputAddress">
+                        <h2>주소지</h2>
+                    </label>
+                    <div class="form-grid form-address">
+                        <input type="text" class="form-control" id="InputAddress" placeholder="우편번호">
+                        <button type="inputNumber" class="btn btn-dark">찾기</button>
+                    </div>
+                    <input type="text" class="form-control InputAddress" id="InputAddress" placeholder="주소">
+                    <input type="text" class="form-control InputAddress" id="InputAddress" placeholder="상세주소">
+                </div>
+
+                <div class="centered-button-container">
+                    <button id="updateBtn" type="submit" class="btn btn-primary centered-button" disabled>회원정보 수정하기</button>
+                </div>
             </form>
         </div>
 
@@ -111,7 +118,7 @@
 
 
         <!-- ----------------------------------------------------------------- -->
-    </div>
+
 
     <!-- 아이디 중복확인 -->
     <script>
@@ -132,15 +139,19 @@
             if (password1 === '' || password2 === '') {
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.add("hidden");
+                document.getElementById("updateBtn").disabled = true;
                 return; // 하나 이상의 입력란이 비어 있으면 메시지를 표시하지 않고 함수 종료
             }
 
             if (password1 === password2) {
                 verificationSuccessMessage.classList.remove("hidden");
                 verificationFailureMessage.classList.add("hidden");
+                // 회원정보 수정 버튼 활성화
+                document.getElementById("updateBtn").disabled = false;
             } else {
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.remove("hidden");
+                document.getElementById("updateBtn").disabled = true;
             }
         }
     </script>
