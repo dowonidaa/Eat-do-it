@@ -70,6 +70,7 @@ public class MemberController {
 
         if (vo2 != null) {
             session.setAttribute("member_id", vo2.getId());
+            session.setAttribute("member", vo2.getNum());
             return "redirect:/";
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");

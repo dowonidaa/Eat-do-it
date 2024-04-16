@@ -34,7 +34,7 @@ public class CartController {
     @ResponseBody
     @PostMapping("/{shopId}/add")
     public ResponseEntity<Map<String, Object>> addCart(@PathVariable("shopId") Long shopId, Long itemId, Long itemOptionId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
-        String memberId = session.getAttribute("member_id").toString();
+        String memberId = (String)session.getAttribute("member_id");
         Map<String, Object> response = new HashMap<>();
         response.put("shopId", shopId);
         if (itemOptionId == null) {
@@ -68,7 +68,7 @@ public class CartController {
     @ResponseBody
     @DeleteMapping("/{cartItemId}/delete")
     public ResponseEntity<CartItem> deleteCartItem(@PathVariable("cartItemId") Long cartItemId, HttpSession session) {
-        String memberId = session.getAttribute("member_id").toString();
+        String memberId = (String)session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
 
         if (findMember.getCart().getCartItems().size() <= 1) {

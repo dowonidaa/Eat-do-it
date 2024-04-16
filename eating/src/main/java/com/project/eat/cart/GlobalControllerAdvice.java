@@ -27,10 +27,10 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute("shopId")
     public Long shopId(HttpSession session) {
-        Object memberId = session.getAttribute("member_id");
+        String memberId =(String) session.getAttribute("member_id");
         if (memberId != null) {
-            if(memberService.findOne(memberId.toString()).getCart()!=null) {
-                return cartService.findShopId(memberId.toString());
+            if(memberService.findOne(memberId).getCart()!=null) {
+                return cartService.findShopId(memberId);
             }
         }
         return null;

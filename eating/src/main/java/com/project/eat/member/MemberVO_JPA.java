@@ -31,6 +31,7 @@ public class MemberVO_JPA {
     @Column(name = "email")
     private String email;
 
+
     @Column(name = "member_id", nullable = false)
     private String id;
 
