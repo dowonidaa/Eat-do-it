@@ -44,12 +44,12 @@ public class OrderController {
         String memberId = (String)session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         if (findMember.getCart().getTotalPrice() < findMember.getCart().getShop().getMinPriceInt()) {
-            return "redirect:/shop/" + findMember.getCart().getShop().getShopId();
+            return "redirect:/shop/" + findMember.getCart().getShop().getId();
         }
         Cart cart = findMember.getCart();
 
         List<Coupon> coupons = findMember.getCoupons();
-        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.getShop()==null ||  c.getShop().getShopId().equals(cart.getShop().getShopId())).toList();
+        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.getShop()==null ||  c.getShop().getId().equals(cart.getShop().getId())).toList();
 
         model.addAttribute("coupons", filteredCoupons);
         model.addAttribute("cart", cart);
@@ -89,7 +89,7 @@ public class OrderController {
     @GetMapping("/orders")
     public String orderList(HttpSession session, Model model) {
 
-        String memberId = session.getAttribute("member_id").toString();
+        String memberId =(String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         List<Order> orders = findMember.getOrders();
         model.addAttribute("orders", orders);
@@ -109,10 +109,10 @@ public class OrderController {
         MemberVO_JPA member = findOrder.getMember();
         if (member.getCart() == null) {
             cartService.createCart(member.getId());
-            cartService.setShopCart(member.getId(), findOrder.getShop().getShopId());
+            cartService.setShopCart(member.getId(), findOrder.getShop().getId());
 
         } else {
-            cartService.deleteAndCreateCart(member.getId(), findOrder.getShop().getShopId());
+            cartService.deleteAndCreateCart(member.getId(), findOrder.getShop().getId());
         }
         for (OrderItem orderItem : findOrder.getOrderItems()) {
             for (OrderItemOption orderItemOption : orderItem.getOrderItemOptions()) {

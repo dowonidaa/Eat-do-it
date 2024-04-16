@@ -11,9 +11,7 @@ public class MemberRepositoryEM {
     private final EntityManager em;
 
     public MemberVO_JPA findOne(String memberId) {
-        return em.createQuery("select m from MemberVO_JPA m where m.id = :memberId", MemberVO_JPA.class)
-                .setParameter("memberId", memberId)
-                .getSingleResult();
+        return em.find(MemberVO_JPA.class, memberId);
 
     }
 

@@ -1,21 +1,25 @@
 package com.project.eat.shop;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name="category",uniqueConstraints = {
-        @UniqueConstraint(
-                columnNames= {"cate_id"}
-        )
-})
+@Getter
+@Setter
 public class CategoryVO {
-    @Id  //pk설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increament
-    @Column(name="cate_id")
-    private int cateId;
 
-    @Column(name="cate_name",nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cate_id")
+    private Long id;
+
     private String cateName;
+
+    @OneToMany(mappedBy = "category")
+    private List<ShopVO> shops = new ArrayList<>();
+
 }

@@ -42,7 +42,7 @@
             </thead>
             <tbody>
             <tr th:each="order : ${orders}">
-                <td th:text="${order.shop.shopThum}"></td>
+                <td th:text="${order.getShop().getShopThum()}"></td>
                 <td th:text="${order.shop.shopName}"></td>
                 <td th:text="${order.orderType}"></td>
                 <td th:text="${order.orderDate}"></td>

@@ -5,64 +5,55 @@ import com.project.eat.item.Item;
 import com.project.eat.member.Coupon;
 import com.project.eat.order.Order;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
-@Table(name = "shop", uniqueConstraints = {
-        @UniqueConstraint(
-                columnNames = {"shop_id"}
-        )
-})
+@Getter
+@Setter
+@Table(name = "shop")
 public class ShopVO {
-    @Id  //pk설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increament
-    @Column(name = "shop_id")//컬럼이름 설정
-    private Long shopId;
 
-    @Column(name = "shop_name", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shop_id", nullable = false)
+    @Comment("가게 id")
+    private Long id;
+
+    @Comment("가게 이름")
+    @Column(nullable = false, unique = true)
     private String shopName;
 
-    @Column(name = "star_avg")
-    private String starAvg;
+    @ColumnDefault("0")
+    private Double starAvg;
 
-    @Column(name = "review_count")
-    private int reviewCount;
+    @ColumnDefault("0")
+    private Integer reviewCount;
 
-    @Column(name = "delivery_time")
     private String deliveryTime;
-
-    @Column(name = "delivery_price")
-    private int deliveryPrice;
-
-    @Column(name = "run_time")
     private String runTime;
-
-    @Column(name = "shop_tel")
     private String shopTel;
-
-    @Column(name = "shop_addr")
     private String shopAddr;
-
-    @Column(name = "min_price")
     private String minPrice;
-
-    @Column(name = "tag")
     private String tag;
+    private Integer deliveryPrice;
+    private Integer minPriceInt;
 
-    @Column(name = "cate_id", nullable = false)
-    private int cateId;
-
-    @Column(name = "shop_thum")
+    @ColumnDefault("'default.png'")
     private String shopThum;
 
-    @Column(name = "min_price_int")
-    private int minPriceInt;
+    @ManyToOne
+    @JoinColumn(name = "cate_id")
+    private CategoryVO category;
 
-    //    private String cateName;
+    @OneToMany(mappedBy = "shop")
+    private List<Coupon> coupons = new ArrayList<>();
+
     @OneToMany(mappedBy = "shop")
     private List<Cart> carts = new ArrayList<>();
 
@@ -73,6 +64,5 @@ public class ShopVO {
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "shop")
-    private List<Coupon> coupons = new ArrayList<>();
-
+    private List<Menu> menus = new ArrayList<>();
 }

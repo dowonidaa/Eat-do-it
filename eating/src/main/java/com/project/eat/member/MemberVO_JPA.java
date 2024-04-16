@@ -4,59 +4,49 @@ import com.project.eat.address.Address;
 import com.project.eat.cart.Cart;
 import com.project.eat.order.Order;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
-@Data
 @Entity
-@Table(name = "MEMBER", uniqueConstraints = { @UniqueConstraint(columnNames = { "member_id" }) })
+@Getter
+@Setter
+@Table(name = "member")
 public class MemberVO_JPA {
-    @Id // pk설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//auto increment
-    @Column(name = "num") // 컬럼이름 설정
+
     private int num;
 
-    @Column(
-            columnDefinition = "DATETIME(0) default CURRENT_TIMESTAMP",
-            insertable = false
-    )
-    private Date created_at;
-
-//    @Column(name = "email", nullable = true)
-    @Column(name = "email")
-    private String email;
-
-
-    @Column(name = "member_id", nullable = false)
+    @Id
+    @Column(name = "member_id")
+    @Comment("회원 id")
     private String id;
 
-//    @Column(name = "member_status", nullable = false)
-    @Column(name = "member_status")
-    private String status;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-//    @Column(name = "nickname", nullable = false)
-    @Column(name = "nickname")
-    private String nickname;
-
-    @Column(name = "pw", nullable = false)
     private String pw;
 
-    @Column(name = "tel", nullable = false)
+    @Comment("회원 이름")
+    private String name;
     private String tel;
+    private String nickname;
+    private String email;
 
     @Column(name = "user_salt")
     private String salt;
 
-    @Column(columnDefinition = "DATETIME(0) default CURRENT_TIMESTAMP",insertable = false)
     private Date regdate;
+
+    @ColumnDefault("'회원'")
+    private String memberStatus;
+
+    @ColumnDefault("CURRENT_TIMESTAMP(6)")
+    private LocalDateTime createdAt;
 
     @OneToOne(mappedBy = "member", fetch = LAZY)
     private Cart cart;
