@@ -21,6 +21,7 @@
 							<a th:if="${session.member_id != null}" class="nav-link" th:href="@{/member/logout}">로그아웃</a>
 							<button type="button" class="btn btn-primary" th:if="${session.member_id != null}"
 									th:onclick="|location.href='@{/member/mypage}'|">마이페이지</button>
+							<button type="button" class="btn btn-primary" th:onclick="'location.href=\'/shop/' + ${shopId} + '\''">장바구니(<span th:text="${cartCount}">0</span>)</button>
 						</div>
 					</div>
 				</div>

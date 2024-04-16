@@ -9,11 +9,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class MemberService {
 
 	private final MemberDAO_JPA jpa;
 	private final MemberRepositoryEM memberRepository;
+
 
 	public MemberVO_JPA insertOK(MemberVO_JPA vo) {
 		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음
@@ -108,7 +109,6 @@ public class MemberService {
 
 
 
-	@Transactional(readOnly = true)
 	public MemberVO_JPA findOne(String memberId) {
 		return memberRepository.findOne(memberId);
 	}

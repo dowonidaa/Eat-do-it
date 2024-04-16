@@ -36,7 +36,7 @@ public class ShopController {
         model.addAttribute("items", items);
         model.addAttribute("itemOptions", itemOptions);
 
-        Object memberId = session.getAttribute("memberId");
+        Object memberId = session.getAttribute("member_id");
         if(memberId != null) {
             MemberVO_JPA findMember = memberService.findOne(memberId.toString());
             if (findMember.getCart() == null) {

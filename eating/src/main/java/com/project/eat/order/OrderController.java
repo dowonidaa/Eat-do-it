@@ -223,7 +223,7 @@ public class OrderController {
 @ResponseBody
 public ResponseEntity<Map<String, Integer>> getCouponDiscount(@RequestBody CouponForm form, HttpSession session) {
     Map<String, Integer> response = new HashMap<>();
-    String memberId =(String) session.getAttribute("memberId");
+    String memberId =(String) session.getAttribute("member_id");
     MemberVO_JPA findMember = memberService.findOne(memberId);
     response.put("totalPrice", findMember.getCart().getTotalPrice());
     response.put("deliveryPrice", findMember.getCart().getShop().getDeliveryPrice());
