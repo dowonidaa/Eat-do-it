@@ -1,4 +1,4 @@
-package com.project.eat.shop;
+package com.project.eat.review;
 
 import jakarta.persistence.*;
 import lombok.Data;
