@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8638ad31-44da-4d8e-95f1-094d670e86ec" name="Changes" comment="- 오류 수정">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/footer.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/layout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/layout2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/main.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/changePW.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/findID.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/findID_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/findPW.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/join.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/join_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/member/mypage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/pay/pay.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/pay/pay_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/pay/pay_out.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/shop/findLocation.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/shop/shop_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/shop/shop_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/shop/shop_review.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/footer.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/layout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/layout2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/main.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/changePW.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/findID.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/findID_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/findPW.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/join.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/join_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/member/mypage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/orderPage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/pay_confirm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/shop/shopPage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/shop_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/takeOutOrderPage.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/top_menu.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/top_menu2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/top_menu.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/top_menu2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/project/eat/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/project/eat/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/project/eat/cart/CartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/project/eat/cart/CartController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/project/eat/cart/GlobalControllerAdvice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/project/eat/cart/GlobalControllerAdvice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/project/eat/member/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/project/eat/member/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/project/eat/order/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/project/eat/order/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2f7HRRGdNNUfuTY30nWQTnS4w3t" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "android.gradle.sync.needed": "true",
+    "git-widget-placeholder": "dowon",
+    "last_opened_file_path": "/Users/uhmdowon/Desktop/eating-project/project/src/main/resources/templates",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/templates" />
+      <recent name="$PROJECT_DIR$/src/main/resources/templates/thymeleaf" />
+      <recent name="$PROJECT_DIR$/src/main/resources/templates/thymeleaf/shop" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/com/project/eat/member" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/templates/thymeleaf" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.project.eat.shop" />
+      <recent name="com.project.eat.member" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="EatApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="eat.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.project.eat.EatApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8638ad31-44da-4d8e-95f1-094d670e86ec" name="Changes" comment="" />
+      <created>1713145187437</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713145187437</updated>
+      <workItem from="1713145188456" duration="7895000" />
+      <workItem from="1713244870388" duration="126000" />
+      <workItem from="1713246753595" duration="1500000" />
+    </task>
+    <task id="LOCAL-00001" summary="- application-db 파일 gitignore에 등록">
+      <option name="closed" value="true" />
+      <created>1713145258514</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713145258514</updated>
+    </task>
+    <task id="LOCAL-00002" summary="- cart order item 저장">
+      <option name="closed" value="true" />
+      <created>1713145789609</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713145789609</updated>
+    </task>
+    <task id="LOCAL-00003" summary="- EntityManager사용 repository 추가 내가 사용하는 domain 클래스 VO로 변경통합">
+      <option name="closed" value="true" />
+      <created>1713147845820</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713147845820</updated>
+    </task>
+    <task id="LOCAL-00004" summary="- 오류 수정">
+      <option name="closed" value="true" />
+      <created>1713148864590</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1713148864590</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="- application-db 파일 gitignore에 등록" />
+    <MESSAGE value="- cart order item 저장" />
+    <MESSAGE value="- EntityManager사용 repository 추가 내가 사용하는 domain 클래스 VO로 변경통합" />
+    <MESSAGE value="- 오류 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="- 오류 수정" />
+  </component>
+</project>
