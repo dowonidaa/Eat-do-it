@@ -55,15 +55,15 @@
 
 </script>
 
-<body>
+<body th:replace="~{layout :: layout}">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 
 
-<div class="container py-3">
+<div th:fragment="content" class="container py-3">
     <!-- header -->
-    <div th:replace="~{header :: header}"></div>
+
 
 
     <!-- ----------------------------------------------------------------- -->
@@ -85,7 +85,7 @@
             <div class="container text-center">
                 <div class="pay-container">
                     <div class="sub-title">
-                        <h3>배달정보</h3>
+                        <h3>포장 주문</h3>
                     </div>
                     <div>
                         <input th:name="orderStatus" type="hidden" th:value="${orderForm.orderStatus}" >
@@ -208,13 +208,7 @@
                                 <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice">
                             </div>
                         </div>
-                        <div class="sub-title">
-                            <h4>배달금액</h4>
-                            <div  th:text="|${#numbers.formatDecimal(cart.shop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
-                                60,000원
-                                <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice">
-                            </div>
-                        </div>
+
                         <div class="sub-title">
                             <h4>쿠폰할인</h4>
                             <div  id="couponDiscount" style="font-size: 1.5em; font-weight: bold;">
