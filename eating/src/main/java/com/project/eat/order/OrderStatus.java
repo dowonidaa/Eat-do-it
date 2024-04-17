@@ -1,6 +1,5 @@
 package com.project.eat.order;
 
-import lombok.ToString;
 
 public enum OrderStatus {
     READY("결제 준비"),
@@ -9,7 +8,7 @@ public enum OrderStatus {
     COOKING("주문요리중"),
     DELIVERY("배달중"),
     COMPLETE("배달완료"),
-    CANCEL("주문취소");
+    CANCEL("주문취소 완료");
 
     private final String description;
 

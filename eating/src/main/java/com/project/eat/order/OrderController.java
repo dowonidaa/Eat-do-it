@@ -24,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class OrderController {
 
     @GetMapping("/order")
     public String orderPage(Model model, HttpSession session, OrderForm orderForm) {
-        String memberId = (String)session.getAttribute("member_id");
+        String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         if (findMember.getCart().getTotalPrice() < findMember.getCart().getShop().getMinPriceInt()) {
             return "redirect:/shop/" + findMember.getCart().getShop().getId();
@@ -49,7 +48,7 @@ public class OrderController {
         Cart cart = findMember.getCart();
 
         List<Coupon> coupons = findMember.getCoupons();
-        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.getShop()==null ||  c.getShop().getId().equals(cart.getShop().getId())).toList();
+        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.getShop() == null || c.getShop().getId().equals(cart.getShop().getId())).toList();
 
         model.addAttribute("coupons", filteredCoupons);
         model.addAttribute("cart", cart);
@@ -57,16 +56,16 @@ public class OrderController {
         model.addAttribute("orderForm", orderForm);
 
         if (orderForm.getOrderType() == OrderType.DELIVERY) {
-        return "pay/orderPage";
+            return "pay/orderPage";
 
-        }else {
+        } else {
             return "pay/takeoutPage";
         }
     }
 
     @PostMapping("/order")
-    public String order(HttpSession session, OrderForm form,  RedirectAttributes attributes) {
-        if(form.getPaymentMethod().equals("kakaoPay")){
+    public String order(HttpSession session, OrderForm form, RedirectAttributes attributes) {
+        if (form.getPaymentMethod().equals("kakaoPay")) {
             attributes.addFlashAttribute("form", form);
             return "redirect:/order/kakao";
         }
@@ -79,7 +78,7 @@ public class OrderController {
         order.setOrderStatus(OrderStatus.CHECKING);
         orderService.update(order);
         cartService.deleteCart(memberId);
-        if(form.getCouponId()!=null) {
+        if (form.getCouponId() != null) {
             couponService.deleteCoupon(form.getCouponId());
         }
         return "redirect:/orders";
@@ -89,7 +88,7 @@ public class OrderController {
     @GetMapping("/orders")
     public String orderList(HttpSession session, Model model) {
 
-        String memberId =(String) session.getAttribute("member_id");
+        String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         List<Order> orders = findMember.getOrders();
         model.addAttribute("orders", orders);
@@ -97,8 +96,11 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public String orderDetail(@PathVariable("orderId")Long orderId, HttpSession session, Model model) {
+    public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model) {
         Order findOrder = orderService.findOne(orderId);
+        if (!findOrder.getMember().getId().equals((String) session.getAttribute("member_id"))) {
+            return "redirect:/";
+        }
         log.info("orderStatus = {}", findOrder.getOrderStatus());
         model.addAttribute("order", findOrder);
         List<OrderItem> orderItems = findOrder.getOrderItems();
@@ -131,18 +133,24 @@ public class OrderController {
         return "redirect:/order";
     }
 
-    @PostMapping("/orders/{orderId}/delete")
-    public String orderDelete(@PathVariable("orderId") Long orderId) {
+    @GetMapping("/orders/{orderId}/delete")
+    public String orderDelete(@PathVariable("orderId") Long orderId, HttpSession session, RedirectAttributes attributes) {
+        String memberId = (String) session.getAttribute("member_id");
         Order order = orderService.findOne(orderId);
-        if (order.getOrderStatus() == OrderStatus.COMPLETE) {
-            orderService.deleteOne(orderId);
+        if (order.getMember().getId().equals(memberId)) {
+            if (order.getOrderStatus() == OrderStatus.COMPLETE || order.getOrderStatus() == OrderStatus.CANCEL) {
+                attributes.addFlashAttribute("message", "주문내역이 삭제 되었습니다.");
+                orderService.deleteOne(orderId);
+                return "redirect:/orders";
+            }
         }
-        return "redirect:/orders";
+        attributes.addFlashAttribute("message", "(" + order.getOrderStatus().toString() + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
+        return "redirect:/orders/{orderId}";
     }
 
     @GetMapping("/order/kakao")
     public String payReady(Model model, HttpSession session) {
-        OrderForm form =(OrderForm) model.getAttribute("form");
+        OrderForm form = (OrderForm) model.getAttribute("form");
         String memberId = session.getAttribute("member_id").toString();
         Coupon findCoupon = couponService.findOne(form.getCouponId());
         form.setDiscount(findCoupon.getPrice());
@@ -173,16 +181,16 @@ public class OrderController {
 
         session.setAttribute("order", order);
         session.setAttribute("couponId", form.getCouponId());
-        log.info("{}",readyResponse.getNext_redirect_pc_url());
-        return "redirect:"+readyResponse.getNext_redirect_pc_url(); // 클라이언트에 보냄.(tid,next_redirect_pc_url이 담겨있음.)
+        log.info("{}", readyResponse.getNext_redirect_pc_url());
+        return "redirect:" + readyResponse.getNext_redirect_pc_url(); // 클라이언트에 보냄.(tid,next_redirect_pc_url이 담겨있음.)
     }
 
     // 결제승인요청
     @GetMapping("/order/kakao/success")
     public String payCompleted(@RequestParam("pg_token") String pgToken, HttpSession session, Model model) {
-        Order order = (Order)session.getAttribute("order");
+        Order order = (Order) session.getAttribute("order");
         String tid = order.getTid();
-        String memberId = (String)session.getAttribute("member_id");
+        String memberId = (String) session.getAttribute("member_id");
         log.info("결제승인 요청을 인증하는 토큰: " + pgToken);
         log.info("주문정보: " + order.getId());
         log.info("결재고유 번호: " + tid);
@@ -195,7 +203,7 @@ public class OrderController {
         session.removeAttribute("couponId");
         session.removeAttribute("order");
         order.setOrderStatus(OrderStatus.PAYMENT);
-        log.info("{}",order.getOrderStatus());
+        log.info("{}", order.getOrderStatus());
         orderService.update(order);
         model.addAttribute("order", order);
 
@@ -204,47 +212,65 @@ public class OrderController {
 
     // 결제 취소시 실행 url
     @GetMapping("/order/kakao/cancel")
-    public String payCancel(Long orderId) {
+    public String payCancel(Long orderId, RedirectAttributes attributes) {
         Order order = orderService.findOne(orderId);
         OrderStatus orderStatus = order.getOrderStatus();
-        if(orderStatus==OrderStatus.DELIVERY || orderStatus == OrderStatus.COMPLETE || orderStatus == OrderStatus.COOKING){
-            return "redirect:/orders/" + orderId;
+        if (orderStatus == OrderStatus.DELIVERY || orderStatus == OrderStatus.COMPLETE || orderStatus == OrderStatus.COOKING) {
+            attributes.addFlashAttribute("message", "(" + orderStatus.toString() + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
+            return "redirect:/orders/{orderId}";
         }
 
         kakaopayService.payCancel(order);
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
-        return "redirect:/orders?status=cancel";
+        attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
+        return "redirect:/orders/{orderId}";
     }
-//
+
+    @GetMapping("/order/cancel")
+    public String cancel(Long orderId, RedirectAttributes attributes) {
+        Order order = orderService.findOne(orderId);
+        OrderStatus orderStatus = order.getOrderStatus();
+        if (orderStatus == OrderStatus.DELIVERY || orderStatus == OrderStatus.COMPLETE || orderStatus == OrderStatus.COOKING) {
+            attributes.addFlashAttribute("message", "(" + orderStatus.toString() + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
+            return "redirect:/orders/" + orderId;
+        }
+
+        order.setOrderStatus(OrderStatus.CANCEL);
+        orderService.update(order);
+        attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
+        return "redirect:/orders/{orderId}";
+    }
+
+    //
 //    // 결제 실패시 실행 url
 //    @GetMapping("/order//kakaofail")
 //    public String payFail() {
 //        return "redirect:/order";
 //    }
 //
-@PostMapping("/order/coupon")
-@ResponseBody
-public ResponseEntity<Map<String, Integer>> getCouponDiscount(@RequestBody CouponForm form, HttpSession session) {
-    Map<String, Integer> response = new HashMap<>();
-    String memberId =(String) session.getAttribute("member_id");
-    MemberVO_JPA findMember = memberService.findOne(memberId);
-    response.put("totalPrice", findMember.getCart().getTotalPrice());
-    response.put("deliveryPrice", findMember.getCart().getShop().getDeliveryPrice());
+    @PostMapping("/order/coupon")
+    @ResponseBody
+    public ResponseEntity<Map<String, Integer>> getCouponDiscount(@RequestBody CouponForm form, HttpSession session) {
+        Map<String, Integer> response = new HashMap<>();
+        String memberId = (String) session.getAttribute("member_id");
+        MemberVO_JPA findMember = memberService.findOne(memberId);
+        response.put("totalPrice", findMember.getCart().getTotalPrice());
+        response.put("deliveryPrice", findMember.getCart().getShop().getDeliveryPrice());
 
-    List<Coupon> coupons = findMember.getCoupons();
-    log.info("coupons = {}", coupons);
-    if (coupons != null) {
-        for (Coupon coupon : coupons) {
-            if (coupon.getId().equals(form.getCouponId())) {
-                log.info("{}", coupon.getPrice());
-                response.put("discount", coupon.getPrice());
-                return ResponseEntity.ok().body(response); // Explicitly mentioning .body() for clarity
+        List<Coupon> coupons = findMember.getCoupons();
+        log.info("coupons = {}", coupons);
+        if (coupons != null) {
+            for (Coupon coupon : coupons) {
+                if (coupon.getId().equals(form.getCouponId())) {
+                    log.info("{}", coupon.getPrice());
+                    response.put("discount", coupon.getPrice());
+                    return ResponseEntity.ok().body(response); // Explicitly mentioning .body() for clarity
+                }
             }
         }
+        return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.notFound().build();
-}
 
 }
 

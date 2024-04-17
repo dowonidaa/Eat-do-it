@@ -17,6 +17,15 @@
 <body th:replace="~{layout :: layout}">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+
+    window.onload = function() {
+        // 메시지가 있을 경우 경고창을 띄웁니다.
+        var message = [[${message}]];
+        if (message) {
+            alert(message);
+            window.location.href = '/orders/{{orderId}}';  // orderId는 적절하게 대체해야 합니다.
+        }
+    };
 </script>
 
 
@@ -43,17 +52,17 @@
                 <div class="button-container">
                 <button class="btn btn-primary" th:onclick="'window.location.href=\'/shop/' + ${order.shop.id} + '\''">음식점 보기</button>
                 <button class="btn btn-primary" th:onclick="|window.location.href='@{/orders/{id}/reorder(id=${order.id})}'|">재주문</button>
-                <div th:switch="${order.paymentMethod}">
+                <div th:if="${order.orderStatus.toString() == '결제 준비' or order.orderStatus.toString() == '결제완료' or order.orderStatus.toString() == '주문확인중'}" th:switch="${order.paymentMethod}">
                     <button th:case="'kakaoPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
                     <button th:case="'tossPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/toss/cancel(orderId=${order.id})}'|">주문취소</button>
                     <button th:case="'naverPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/naver/cancel(orderId=${order.id})}'|">주문취소</button>
                     <button th:case="'cardPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
-                    <button th:case="'cashPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
-                    <button th:case="'creditCard'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'cashPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'creditCard'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                 </div>
-                <button class="btn btn-primary"
-                        th:if="${order.orderStatus.equals('COMPLETE')}"
-                        th:onclick="|window.location.href='@{/order/{orderId}/delete(orderId=${order.id})}'|">주문내역 삭제</button>
+                    <button class="btn btn-outline-danger"
+                            th:if="${order.orderStatus.toString() == '배달완료' or order.orderStatus.toString() == '주문취소 완료'}"
+                            th:onclick="|window.location.href='@{/orders/{orderId}/delete(orderId=${order.id})}'|">주문내역 삭제</button>
                 </div>
             </section>
 
