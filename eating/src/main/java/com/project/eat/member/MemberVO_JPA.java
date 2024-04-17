@@ -61,9 +61,7 @@ public class MemberVO_JPA {
     private List<Coupon> coupons = new ArrayList<>();
 
     public void addCart(Cart cart) {
-
         this.setCart(cart);
         cart.setMember(this);
-
     }
 }
