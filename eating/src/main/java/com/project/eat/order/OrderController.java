@@ -99,8 +99,12 @@ public class OrderController {
     @GetMapping("/orders/{orderId}")
     public String orderDetail(@PathVariable("orderId")Long orderId, HttpSession session, Model model) {
         Order findOrder = orderService.findOne(orderId);
+        log.info("orderStatus = {}", findOrder.getOrderStatus());
         model.addAttribute("order", findOrder);
-        return "/order/orderDetail";
+        List<OrderItem> orderItems = findOrder.getOrderItems();
+        String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? "그외 " + (orderItems.size() - 1) : "");
+        model.addAttribute("orderItems", itemName);
+        return "/order/orderDetail2";
     }
 
     @GetMapping("/orders/{orderId}/reorder")

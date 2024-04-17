@@ -42,7 +42,7 @@ h1 {
 
 h2 {
   font-family: 'Inter', sans-serif; /* Inter 폰트 사용 */
-  font-weight: medium;
+  font-weight: normal;
 }
 
 h3 {
@@ -637,3 +637,157 @@ footer{
 .btn-square {
   border-radius: 0 !important; /* Important to override any existing styles */
 }
+
+ .order-status {
+   align-self: center;
+   display: flex;
+   width: 100%;
+   max-width: 1051px;
+   flex-direction: column;
+   font-size: 16px;
+   color: #000;
+   font-weight: 400;
+   letter-spacing: -0.3px;
+ }
+
+.restaurant-info {
+  border-radius: 10px;
+  border: 3px solid rgba(236, 240, 241, 0.46);
+  background-color: rgba(217, 217, 217, 0);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 14px 13px;
+}
+
+.view-restaurant {
+  font-family: Roboto, sans-serif;
+  border-radius: 10px;
+  border: none;
+  background-color: #006FCA;
+  color: aliceblue;
+  align-self: end;
+  margin-top: 97px;
+  justify-content: center;
+  padding: 12px 24px;
+}
+
+.order-items {
+  border-radius: 10px;
+  border: 3px solid rgba(236, 240, 241, 0.46);
+  background-color: rgba(217, 217, 217, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 14px 80px 14px 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* 버튼 간격 동일하게 */
+  align-items: center; /* 세로 중앙 정렬 */
+  padding: 10px; /* 적당한 패딩 */
+  gap: 10px; /* 버튼 사이의 간격 */
+}
+
+.order-container {
+  border-radius: 10px;
+  border: 1px solid #ececec;  /* 경계선 색상을 조금 더 세밀하게 조정 */
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 20px;  /* 패딩을 좌우 동일하게 조정 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* 상자 그림자 추가 */
+  width: 100%; /* 너비 설정 */
+  margin: 20px auto; /* 중앙 정렬 */
+}
+
+h3, h5 { /* 제목 스타일 조정 */
+  margin-bottom: 5px;
+  color: #333; /* 글자 색상 조정 */
+}
+
+.address-title, .tel-title, .restaurant-request { /* 각 제목에 대한 스타일 */
+  margin-top: 10px; /* 위쪽 마진 추가 */
+  font-size: 16px; /* 글자 크기 조정 */
+}
+
+.address-details, .tel-details, .request { /* 상세 정보 스타일 */
+  margin-left: 10px; /* 왼쪽 마진 추가 */
+  color: #555; /* 글자 색상 어둡게 */
+  font-size: 14px; /* 글자 크기 줄임 */
+}
+
+
+.restaurant-request {
+  font-family: Roboto, sans-serif;
+  margin-top: 24px;
+}
+
+.rider-request {
+  font-family: Roboto, sans-serif;
+  margin-top: 24px;
+  /*높낮이 차이*/
+}
+
+.payment-amount-title-all { /*border 을 지정해주는 친구;*/
+  align-self: start;
+  margin: 27px 3px 0 45px;
+  font: 14px Roboto, sans-serif;
+  border-radius: 10px;
+  border: 3px solid rgba(236, 240, 241, 0.46);
+  padding: 15px 200px 30px 12px;
+}
+
+
+.payment-method-container1 {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+
+.payment-method-container2 {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+
+.payment-method-container3 {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+
+.payment-method-container {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 2000px;
+  gap: 700px;
+  justify-content: space-between;
+
+
+}
+
+

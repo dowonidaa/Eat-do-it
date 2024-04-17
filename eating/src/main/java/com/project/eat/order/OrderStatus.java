@@ -1,5 +1,7 @@
 package com.project.eat.order;
 
+import lombok.ToString;
+
 public enum OrderStatus {
     READY("결제 준비"),
     PAYMENT("결제완료"),
@@ -13,5 +15,10 @@ public enum OrderStatus {
 
     OrderStatus(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString(){
+        return this.description;
     }
 }

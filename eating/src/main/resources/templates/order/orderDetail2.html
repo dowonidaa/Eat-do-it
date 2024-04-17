@@ -1,0 +1,168 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/eat.css}" rel="stylesheet">
+
+</head>
+
+<body th:replace="~{layout :: layout}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
+
+
+<div th:fragment="content" class="container py-3">
+    <!-- header -->
+
+
+    <!-- ----------------------------------------------------------------- -->
+    <!-- content 넣으실 부분 -->
+    <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
+    <div id='wrapper'>
+        <section class="order-container">
+            <section class="order-container">
+                <div class="order-details">
+                    <H4 class="delivery-status" th:text="${order.orderStatus}"></H4>
+                    <h1 class="restaurant-name" th:text="${order.shop.shopName}">음식점</h1>
+                    <div class="order-summary" th:text="${orderItems}">주문 메뉴 및 수량 요약</div>
+                    <div class="order-datetime"
+                         th:text="${#temporals.format(order.orderDate, 'yyyy년 MM월 dd일 (E) a hh:mm')}">주문일시 : 2024년 4월
+                        00일 (요일) 오후 2:22
+                    </div>
+                    <div class="order-number" th:text="|주문번호 : ${order.id}|">주문번호 : 0000</div>
+                </div>
+                <div class="button-container">
+                <button class="btn btn-primary" th:onclick="'window.location.href=\'/shop/' + ${order.shop.id} + '\''">음식점 보기</button>
+                <button class="btn btn-primary" th:onclick="|window.location.href='@{/orders/{id}/reorder(id=${order.id})}'|">재주문</button>
+                <div th:switch="${order.paymentMethod}">
+                    <button th:case="'kakaoPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'tossPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/toss/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'naverPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/naver/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'cardPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'cashPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'creditCard'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
+                </div>
+                <button class="btn btn-primary"
+                        th:if="${order.orderStatus.equals('COMPLETE')}"
+                        th:onclick="|window.location.href='@{/order/{orderId}/delete(orderId=${order.id})}'|">주문내역 삭제</button>
+                </div>
+            </section>
+
+            <section class="order-container">
+                <h3>주문 상세 내역</h3>
+                <div class="order-item" th:each="orderItem: ${order.orderItems}">
+                    <h5 class="order-items-title" th:text="|${orderItem.item.itemName} ${orderItem.quantity}개|">주문 메뉴 및
+                        수량(상세)</h5>
+                    <div class="base-price"
+                         th:text="|기본 : ${#numbers.formatDecimal(orderItem.price, 0, 'COMMA', 0, 'POINT')}원|">기본 :
+                        10,000원
+                    </div>
+                    <div class="option-price" th:if="${orderItem.orderItemOptions!=null}"
+                         th:text="|${orderItem.orderItemOptions.get(0).itemOption.content} : ${#numbers.formatDecimal(orderItem.orderItemOptions.get(0).itemOption.price, 0, 'COMMA', 0, 'POINT')}원|">
+                        기본 : 10,000원
+                    </div>
+                    <div class="total-price"
+                         th:text="|합계 : ${#numbers.formatDecimal(orderItem.price+orderItem.orderItemOptions.get(0).itemOption.price, 0, 'COMMA', 0, 'POINT')}원|">
+                        총 합계: 20,000원
+                    </div>
+                </div>
+            </section>
+            <section class="order-container">
+                <h3 class="payment-amount-title">결제금액</h3>
+                <section class="payment-method-container1">
+                    <div class="total-payment">주문금액</div>
+                    <div class="payment-method"
+                         th:text="|${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')}원|">20,000원
+                    </div>
+                </section>
+                <section class="payment-method-container2">
+                    <div class="payment-method-title">배달비</div>
+                    <div class="payment-method"
+                         th:text="|${#numbers.formatDecimal(order.orderPrice, 0, 'COMMA', 0, 'POINT')}원|">20,000원
+                    </div>
+                </section>
+                <section class="payment-method-container3" th:if="${order.discount!=0}">
+                    <div class="payment-method-title">쿠폰할인</div>
+                    <div class="payment-method"
+                         th:text="|-${#numbers.formatDecimal(order.discount, 0, 'COMMA', 0, 'POINT')}원|">20,000원
+                    </div>
+                </section>
+                <section class="payment-method-container3">
+                    <h5 class="payment-method-title">총 결제 금액</h5>
+                    <h5 class="payment-method"
+                        th:text="|${#numbers.formatDecimal(order.totalPrice + order.orderPrice - order.discount, 0, 'COMMA', 0, 'POINT')}원|">
+                        23,000원</h5>
+                </section>
+                <section class="payment-method-container">
+                    <div class="payment-method-title">결제방법</div>
+                    <div class="delivery-status">
+                        <div th:switch="${order.paymentMethod}">
+                            <div th:case="'kakaoPay'">카카오페이</div>
+                            <div th:case="'tossPay'">토스페이</div>
+                            <div th:case="'naverPay'">네이버페이</div>
+                            <div th:case="'cardPayment'">만나서카드결제</div>
+                            <div th:case="'cashPayment'">만나서현금결제</div>
+                            <div th:case="'creditCard'">카드결제</div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+            <section class="order-container">
+                <h3>주문자 정보</h3>
+                <section>
+                    <h5 class="address-title">배달주소</h5>
+                    <div class="address-details" th:text="${order.orderAddress}">상세주소: 경기도 성남시 분당구 정자일로 95</div>
+                </section>
+                <section>
+                    <h5 class="tel-title">전화번호</h5>
+                    <div class="tel-details" th:text="${order.orderTel}">010-0000-0000</div>
+                </section>
+                <section>
+                    <h5 class="restaurant-request">요청사항</h5>
+                    <div class="request" th:text="${order.memberNotes}"></div>
+                </section>
+            </section>
+
+
+    </div>
+</div>
+</div>
+</div>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+
+<!-- footer -->
+
+
+<!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.nav-link, .btn');
+
+        // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+        navLinks.forEach(function (link) {
+            // 글자 크기에 따라 가로폭 조정
+            const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
+            const textLength = link.textContent.length; // 텍스트 길이
+
+            // 가로폭 조정
+            const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+            link.style.width = dynamicWidth + 'px';
+        });
+    });
+</script>
+</body>
+
+
+</html>
