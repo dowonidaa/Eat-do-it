@@ -29,6 +29,7 @@ public class OrderService {
         Cart cart = findMember.getCart();
         log.info("cartId = {}", cart.getId());
         log.info("address={}",form.getOrderAddress());
+        log.info("orderType= {}", form.getOrderType());
 
 
         Order order = new Order();

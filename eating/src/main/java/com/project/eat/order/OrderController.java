@@ -54,11 +54,12 @@ public class OrderController {
         model.addAttribute("cart", cart);
         model.addAttribute("member", findMember);
         model.addAttribute("orderForm", orderForm);
+        log.info("/order orderType={}", orderForm.getOrderType());
 
         if (orderForm.getOrderType() == OrderType.DELIVERY) {
             return "pay/orderPage";
 
-        } else {
+        } else  {
             return "pay/takeoutPage";
         }
     }
@@ -69,7 +70,7 @@ public class OrderController {
             attributes.addFlashAttribute("form", form);
             return "redirect:/order/kakao";
         }
-        String memberId = session.getAttribute("member_id").toString();
+        String memberId =(String) session.getAttribute("member_id");
         if(form.getCouponId()!=null) {
             Coupon findCoupon = couponService.findOne(form.getCouponId());
             form.setDiscount(findCoupon.getPrice());
@@ -133,7 +134,7 @@ public class OrderController {
         }
 
 
-        return "redirect:/order";
+        return "redirect:/order?orderType=" + findOrder.getOrderType();
     }
 
     @GetMapping("/orders/{orderId}/delete")
