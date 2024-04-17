@@ -22,10 +22,8 @@ public class ShopVO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shop_id", nullable = false)
-    @Comment("가게 id")
     private Long id;
 
-    @Comment("가게 이름")
     @Column(nullable = false, unique = true)
     private String shopName;
 
