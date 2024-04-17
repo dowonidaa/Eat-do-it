@@ -90,6 +90,15 @@
                 link.style.width = dynamicWidth + 'px';
             });
         });
+        window.onload = function() {
+            var message = '[[${message}]]';
+            console.log("Received message: " + message);  // 메시지 로깅
+            if (message) {
+                alert(message);
+            }else{
+                console.log("aaaa")
+            }
+        };
     </script>
 </body>
 

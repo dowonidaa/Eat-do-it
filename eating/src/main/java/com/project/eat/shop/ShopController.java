@@ -60,8 +60,8 @@ public class ShopController {
 
 
 
-//        return "/thymeleaf/shop_detail";
-        return "shop/shop_detail";
+        return "/thymeleaf/shopPage";
+//        return "shop/shop_detail";
     }
 
 

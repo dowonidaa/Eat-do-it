@@ -67,6 +67,7 @@ public class OrderService {
         return orderRepository.findOne(orderId);
     }
 
+    @Transactional
     public void deleteOne(Long orderId) {
         Order one = orderRepository.findOne(orderId);
         orderRepository.deleteOne(one);

@@ -70,8 +70,10 @@ public class OrderController {
             return "redirect:/order/kakao";
         }
         String memberId = session.getAttribute("member_id").toString();
-        Coupon findCoupon = couponService.findOne(form.getCouponId());
-        form.setDiscount(findCoupon.getPrice());
+        if(form.getCouponId()!=null) {
+            Coupon findCoupon = couponService.findOne(form.getCouponId());
+            form.setDiscount(findCoupon.getPrice());
+        }
 
         // 주문 완료 오더테이블 저장하면 장바구니 삭제 쿠폰 사용했으면 삭제
         Order order = orderService.createOrder(memberId, form);
@@ -86,7 +88,7 @@ public class OrderController {
 
 
     @GetMapping("/orders")
-    public String orderList(HttpSession session, Model model) {
+    public String orderList(HttpSession session, Model model, @ModelAttribute("message")String message) {
 
         String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
@@ -96,7 +98,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}")
-    public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model) {
+    public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model, @ModelAttribute("message")String message) {
         Order findOrder = orderService.findOne(orderId);
         if (!findOrder.getMember().getId().equals((String) session.getAttribute("member_id"))) {
             return "redirect:/";
@@ -106,6 +108,7 @@ public class OrderController {
         List<OrderItem> orderItems = findOrder.getOrderItems();
         String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? "그외 " + (orderItems.size() - 1) : "");
         model.addAttribute("orderItems", itemName);
+        log.info(message);
         return "/order/orderDetail2";
     }
 
@@ -217,14 +220,14 @@ public class OrderController {
         OrderStatus orderStatus = order.getOrderStatus();
         if (orderStatus == OrderStatus.DELIVERY || orderStatus == OrderStatus.COMPLETE || orderStatus == OrderStatus.COOKING) {
             attributes.addFlashAttribute("message", "(" + orderStatus.toString() + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
-            return "redirect:/orders/{orderId}";
+            return "redirect:/orders/" + orderId;
         }
 
         kakaopayService.payCancel(order);
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
         attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
-        return "redirect:/orders/{orderId}";
+        return "redirect:/orders/" + orderId;
     }
 
     @GetMapping("/order/cancel")
@@ -239,7 +242,7 @@ public class OrderController {
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
         attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
-        return "redirect:/orders/{orderId}";
+        return "redirect:/orders/" + orderId;
     }
 
     //

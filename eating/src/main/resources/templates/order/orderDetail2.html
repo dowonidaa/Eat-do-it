@@ -16,16 +16,9 @@
 
 <body th:replace="~{layout :: layout}">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
+       >
 
-    window.onload = function() {
-        // 메시지가 있을 경우 경고창을 띄웁니다.
-        var message = [[${message}]];
-        if (message) {
-            alert(message);
-            window.location.href = '/orders/{{orderId}}';  // orderId는 적절하게 대체해야 합니다.
-        }
-    };
 </script>
 
 
@@ -140,11 +133,8 @@
                     <div class="request" th:text="${order.memberNotes}"></div>
                 </section>
             </section>
-
-
+        </section>
     </div>
-</div>
-</div>
 </div>
 
 
@@ -170,7 +160,19 @@
             link.style.width = dynamicWidth + 'px';
         });
     });
-</script>
+
+        window.onload = function() {
+            var message = '[[${message}]]';
+            console.log("Received message: " + message);  // 메시지 로깅
+            if (message) {
+                alert(message);
+            }else{
+                console.log("aaaa")
+            }
+        };
+
+    </script>
+
 </body>
 
 

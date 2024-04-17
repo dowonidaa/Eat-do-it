@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 @Slf4j
@@ -31,7 +31,6 @@ public class CartController {
     private final ItemOptionService itemOptionService;
 
 
-    @ResponseBody
     @PostMapping("/{shopId}/add")
     public ResponseEntity<Map<String, Object>> addCart(@PathVariable("shopId") Long shopId, Long itemId, Long itemOptionId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
         String memberId = (String)session.getAttribute("member_id");
@@ -65,7 +64,6 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @ResponseBody
     @DeleteMapping("/{cartItemId}/delete")
     public ResponseEntity<CartItem> deleteCartItem(@PathVariable("cartItemId") Long cartItemId, HttpSession session) {
         String memberId = (String)session.getAttribute("member_id");
@@ -81,7 +79,6 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @ResponseBody
     @PostMapping("/{cartItemId}/increment")
     public ResponseEntity<Map<String, Object>> increment(@PathVariable("cartItemId") Long cartItemId) {
         CartItem cartItem = cartItemService.increaseQuantity(cartItemId);
@@ -92,7 +89,6 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @ResponseBody
     @PostMapping("/{cartItemId}/decrement")
     public ResponseEntity<Map<String, Object>> decrement(@PathVariable("cartItemId") Long cartItemId) {
         CartItem cartItem = cartItemService.decreaseQuantity(cartItemId);
@@ -103,7 +99,6 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @ResponseBody
     @GetMapping("/total-price")
     public ResponseEntity<Map<String, Integer>> totalPrice(HttpSession session) {
         String memberId = session.getAttribute("member_id").toString();
@@ -113,7 +108,6 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @ResponseBody
     @PostMapping("/remove")
     public ResponseEntity<Map<String, Object>> cartRemove(HttpSession session, Long shopId) {
         log.info("{}", shopId);
