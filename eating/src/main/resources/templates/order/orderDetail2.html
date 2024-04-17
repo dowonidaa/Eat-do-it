@@ -118,7 +118,7 @@
                     </div>
                 </section>
             </section>
-            <section class="order-container">
+            <section class="order-container" th:if="${order.orderType == T(com.project.eat.order.OrderType).DELIVERY}">
                 <h3>주문자 정보</h3>
                 <section>
                     <h5 class="address-title">배달주소</h5>
@@ -133,6 +133,21 @@
                     <div class="request" th:text="${order.memberNotes}"></div>
                 </section>
             </section>
+            <section class="order-container" th:if="${order.orderType == T(com.project.eat.order.OrderType).TAKEOUT}">
+            <h3>가게 정보</h3>
+            <section>
+                <h5 class="address-title">가게 주소</h5>
+                <div class="address-details" th:text="${order.orderAddress}">상세주소: 경기도 성남시 분당구 정자일로 95</div>
+            </section>
+            <section>
+                <h5 class="tel-title">전화번호</h5>
+                <div class="tel-details" th:text="${order.shop.shopTel}">010-0000-0000</div>
+            </section>
+            <section>
+                <h5 class="restaurant-request">요청사항</h5>
+                <div class="request" th:text="${order.memberNotes}"></div>
+            </section>
+        </section>
         </section>
     </div>
 
