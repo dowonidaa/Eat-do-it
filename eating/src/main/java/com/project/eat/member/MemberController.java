@@ -1,5 +1,7 @@
 package com.project.eat.member;
 
+import com.project.eat.address.AddService;
+import com.project.eat.address.Address;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -23,6 +25,9 @@ import java.util.Map;
 public class MemberController {
     @Autowired
     private MemberService service;
+
+    @Autowired
+    private AddService service_add;
 
     @Autowired
     private HttpSession session;
@@ -221,7 +226,7 @@ public class MemberController {
         MemberVO_JPA result = service.updateOK(vo);
         log.info("result:{}", result);
 
-        return "redirect:selectAll";
+        return "redirect:/";
 
     }
 
@@ -264,6 +269,13 @@ public class MemberController {
     @GetMapping({"/member/mypage"})
     public String mypage(Model model, HttpSession session) {
         log.info("/member/mypage...");
+
+        //주소 제대로 표시되는지 테스트
+        List<Address> vos = service_add.selectAll_add();
+
+        model.addAttribute("vos", vos);
+
+        log.info("Address 테이블에 있는 데이터 : {}", vos.toString());
 
         // 세션에서 로그인한 사용자의 아이디 가져오기
         String memberId = (String) session.getAttribute("member_id");
