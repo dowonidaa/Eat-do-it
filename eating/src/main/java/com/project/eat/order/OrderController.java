@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,20 +92,30 @@ public class OrderController {
 
 
     @GetMapping("/orders")
-    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message) {
+    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, @RequestParam(defaultValue = "all")String type) {
 
 //        String memberId = (String) session.getAttribute("member_id");
         String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
+        List<Order> orders = new ArrayList<>();
+        if (type.equals("all")){
+            orders = findMember.getOrders();
+        }
+        else if (type.equals("delivery")) {
+            orders = orderService.findByOrderType(memberId, OrderType.DELIVERY);
+        }
+        else if (type.equals("takeout")) {
+            orders = orderService.findByOrderType(memberId, OrderType.TAKEOUT);
+        }
         Map<Long, String> itemNames = new HashMap<>();
-        for (Order order : findMember.getOrders()) {
+        for (Order order : orders) {
             List<OrderItem> orderItems = order.getOrderItems();
             String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
             itemNames.put(order.getId(), itemName);
         }
-        List<Order> orders = findMember.getOrders();
         model.addAttribute("itemNames", itemNames);
         model.addAttribute("orders", orders);
+        model.addAttribute("selectedType", type);
         return "/order/orderList";
     }
 
@@ -114,11 +125,9 @@ public class OrderController {
 //            orderService.find
         }
 
-
-
-
         return null;
     }
+
 
     @GetMapping("/orders/{orderId}")
     public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model, @ModelAttribute("message") String message) {
