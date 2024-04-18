@@ -1,6 +1,5 @@
 package com.project.eat.member;
 
-import com.project.eat.address.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

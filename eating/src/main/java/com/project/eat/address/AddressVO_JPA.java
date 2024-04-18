@@ -2,22 +2,26 @@ package com.project.eat.address;
 
 import com.project.eat.member.MemberVO_JPA;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class Address {
+@Data
+@Table(name = "Address")
+public class AddressVO_JPA {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_Id")
-    private Long id;
+    private Long aId;
 
 //    @OneToOne(fetch = FetchType.LAZY ,cascade = CascadeType.REMOVE)
 //    @JoinColumn(name = "member_id")
 //    private MemberVO_JPA member;
 
-    @Column(name = "member_id", nullable = false)
-    private String member;
+    @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계 설정
+    @JoinColumn(name = "member_id") // 외래키 설정
+    private MemberVO_JPA mId;
 
     private String address;
 
@@ -26,6 +30,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "주소: " + address + ", 사용자: " + member;
+        return "주소: " + address + ", 사용자: " + (mId != null ? mId.getId() : "null");
     }
 }

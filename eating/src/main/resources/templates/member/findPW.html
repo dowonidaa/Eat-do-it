@@ -30,7 +30,7 @@
             </div>
 
 
-            <form action="/api/find/sendVerificationCode" method="POST">
+            <form action="/member/changePW" method="POST">
                 <div class="form-findID">
                     <input type="text" class="form-control" id="InputEmail" name="email" placeholder="가입한 이메일 주소를 입력하세요">
                     <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 전송</button>
@@ -53,7 +53,7 @@
                 <!-- 버튼 클릭 시 changePW.html로 이동하도록 수정 -->
                 <!--  인증번호 확인되지 않을 시, 눌러도 안 넘어가야함-->
                 <div class="centered-button-container">
-                    <button id="changePasswordBtn" type="button" class="btn btn-primary centered-button" onclick="ConfirmPW()" disabled>비밀번호 변경하기</button>
+                    <button id="changePasswordBtn" type="submit" class="btn btn-primary centered-button" disabled>비밀번호 변경하기</button>
                 </div>
             </form>
         </div>
@@ -78,15 +78,6 @@
                 xhr.send("email=" + email);
             }
         </script>
-
-        <!-- 버튼 누르면 메세지 띄우기 -->
-        <script>
-            function showMessage(id) {
-                var message = document.getElementById(id);
-                message.classList.remove("hidden");
-            }
-        </script>
-
 
 
         <!--  인증번호가 일치하는지 확인 && 버튼 활성화 -->
@@ -121,15 +112,6 @@
         </script>
 
 
-
-        <script>
-            // 이메일 값 가져오기 및 페이지 이동
-            function ConfirmPW() {
-                var email = document.getElementById('InputEmail').value;
-                // 이메일 값 추가하여 페이지 이동
-                window.location.href = "/member/changePW?email=" + email;
-            }
-        </script>
 
     <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
     <script>

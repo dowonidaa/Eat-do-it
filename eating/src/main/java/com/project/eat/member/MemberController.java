@@ -1,7 +1,8 @@
 package com.project.eat.member;
 
 import com.project.eat.address.AddService;
-import com.project.eat.address.Address;
+import com.project.eat.address.AddressDAO_JPA;
+import com.project.eat.address.AddressVO_JPA;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -11,14 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.reflect.Member;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -28,6 +28,12 @@ public class MemberController {
 
     @Autowired
     private AddService service_add;
+
+    @Autowired
+    private MemberDAO_JPA jpa;
+
+    @Autowired
+    private AddressDAO_JPA jpa_add;
 
     @Autowired
     private HttpSession session;
@@ -200,31 +206,69 @@ public class MemberController {
         return "member/selectOne";
     }
 
+
+
+
+    //member 테이블 정보, address 테이블 정보
     @PostMapping("/member/updateOK")
-    public String updateOK(MemberVO_JPA vo) {
+    public String updateOK(MemberVO_JPA memberVO, AddressVO_JPA addressVO, HttpServletRequest request) {
         log.info("/member/updateOK...");
-        log.info("Original password: {}", vo.getPw()); // 원본 비밀번호 로깅
-        log.info("vo:{}",vo);
 
-        String salt = User_pwSHA512.Salt();
-        log.info("Salt : {}",salt);
-        //k8C2IX+McOvgwDRYrnjeLw==
-        vo.setSalt(salt);//디비에 저장-복호화 할때 사용
+        // 비밀번호 변경
+        String newPassword = request.getParameter("pw");
+        String newAddress = request.getParameter("address");
+        String newEmail = request.getParameter("email");
+        String dbEmail = request.getParameter("dbEmail");
+        log.info("newEmail : {}끝", newEmail);
 
-        String hex_password = User_pwSHA512.getSHA512(vo.getPw(),salt);//암호화
-        log.info("암호화 결과 : {}", hex_password);
-        //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
-        log.info("Hashed password: {}", hex_password.substring(0, 10) + "********");
-        vo.setPw(hex_password);//디비에 저장
+        // 비밀번호 변경
+        if (newPassword != null && !newPassword.isEmpty()) {
+            //Member 정보 수정
+            log.info("Original password: {}", memberVO.getPw()); // 원본 비밀번호 로깅
+            log.info("memberVO:{}",memberVO);
 
+            // 새로운 비밀번호가 입력되었을 때만 업데이트
+            String salt = User_pwSHA512.Salt();
+            log.info("Salt : {}",salt);
+            //k8C2IX+McOvgwDRYrnjeLw==
+            String hex_password = User_pwSHA512.getSHA512(newPassword, salt); //암호화
+            log.info("암호화 결과 : {}", hex_password);
+            //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
+            memberVO.setPw(hex_password);//디비에 저장
+            memberVO.setSalt(salt); //디비에 저장-복호화 할때 사용
 
-        //수정일자 반영안하면 null값이 들어가는 것을 방지하기위해...
-        if(vo.getRegdate()==null) {
-            vo.setRegdate(new Date());
+            //수정일자 반영안하면 null값이 들어가는 것을 방지하기위해
+            if(memberVO.getRegdate()==null) {
+                memberVO.setRegdate(new Date());
+            }
+            
+            // Member 정보를 각각 업데이트
+            MemberVO_JPA updatedMember = service.updateOK(memberVO);
+            log.info("Updated member: {}", updatedMember);
         }
 
-        MemberVO_JPA result = service.updateOK(vo);
-        log.info("result:{}", result);
+        // 이메일 변경
+        // 비밀번호랑 이메일을 동시에 바꿀 경우, 이미 비밀번호에서 이메일을 바꾸기 때문에 또 돌릴 필요가 없음.
+        if (newEmail != null && !newEmail.isEmpty() || (newPassword == null && newPassword.isEmpty())){
+            MemberVO_JPA existingEmail = jpa.findByEmail(dbEmail);
+            existingEmail.setEmail(memberVO.getEmail());
+
+            MemberVO_JPA updatedEmail = service.updateOK(existingEmail);
+
+            log.info("Updated email : {}", updatedEmail);
+        }
+
+
+        // 주소 변경
+        if (newAddress != null && !newAddress.isEmpty()){
+            AddressVO_JPA existingAddress = jpa_add.findBymId(addressVO.getMId()); // 기존의 주소 정보를 조회
+            existingAddress.setAddress(addressVO.getAddress());
+
+            AddressVO_JPA updatedAddress = service_add.updateOK(existingAddress);
+
+            log.info("Updated address: {}", updatedAddress);
+        }
+
 
         return "redirect:/";
 
@@ -270,38 +314,60 @@ public class MemberController {
     public String mypage(Model model, HttpSession session) {
         log.info("/member/mypage...");
 
+
+        //--------------나중에 지울 거------------------
         //주소 제대로 표시되는지 테스트
-        List<Address> vos = service_add.selectAll_add();
+        List<AddressVO_JPA> vos = service_add.selectAll_add();
 
         model.addAttribute("vos", vos);
 
         log.info("Address 테이블에 있는 데이터 : {}", vos.toString());
 
-        // 세션에서 로그인한 사용자의 아이디 가져오기
+
+
+
+        //---------------여기부터가 진짜-------------------
+        // 세션에서 로그인한 사용자의 아이디 가져오기 : member 테이블에 사용할 거
         String memberId = (String) session.getAttribute("member_id");
         log.info("Logged in member ID: {}", memberId);
 
         // 로그인한 사용자의 아이디를 이용하여 해당 회원 정보 조회
-        MemberVO_JPA vo = new MemberVO_JPA();
-        vo.setId(memberId); // 로그인한 사용자의 아이디 설정
+        MemberVO_JPA memberVO = new MemberVO_JPA();
+        memberVO.setId(memberId);
 
-        log.info("vo : {}", vo);
+        // 회원 정보 조회
+        MemberVO_JPA memberInfo = service.selectOneById(memberVO);
+        log.info("Member info: {}", memberInfo);
 
-        //MemberVO_JPA vo2 = service.selectOne(vo);
-        MemberVO_JPA vo2 = service.selectOneById(vo);
-        log.info("vo2 : {}", vo);
 
-        if (vo2 != null) {
-            vo2.setPw(vo2.getPw().substring(0, 10));
-            model.addAttribute("vo2", vo2);
-            log.info("vo2:{}", vo2);
-            return "member/mypage";
+        // 멤버 아이디를 사용하여 해당 멤버 정보를 데이터베이스에서 조회 : address 테이블에 사용할 거
+        MemberVO_JPA memberId_add = jpa.findById(memberVO.getId());
+
+        // 주소 정보 조회
+        AddressVO_JPA addressVO = new AddressVO_JPA();
+        //memberId를 MemberVO_JPA로 바꿔야함.
+        addressVO.setMId(memberId_add);
+
+        // 주소 정보 조회
+        AddressVO_JPA addressInfo = service_add.selectOneById(addressVO);
+        log.info("Address info: {}", addressInfo);
+
+        if (memberInfo != null) {
+            memberInfo.setPw(memberInfo.getPw().substring(0, 10));
+            model.addAttribute("memberInfo", memberInfo);
         } else {
             // 회원 정보가 없는 경우에 대한 처리
             log.error("Member not found for ID: {}", memberId);
-            // 에러 페이지로 리다이렉트 또는 에러 메시지를 전달할 수 있음
             return "redirect:/"; // 예시로 에러 페이지로 리다이렉트
         }
+
+        if (addressInfo != null) {
+            model.addAttribute("addressInfo", addressInfo);
+        } else {
+            log.warn("Address not found for member ID: {}", memberId);
+        }
+
+        return "member/mypage";
     }
 
 }
