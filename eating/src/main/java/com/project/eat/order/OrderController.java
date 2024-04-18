@@ -59,7 +59,7 @@ public class OrderController {
         if (orderForm.getOrderType() == OrderType.DELIVERY) {
             return "pay/orderPage";
 
-        } else  {
+        } else {
             return "pay/takeoutPage";
         }
     }
@@ -70,8 +70,8 @@ public class OrderController {
             attributes.addFlashAttribute("form", form);
             return "redirect:/order/kakao";
         }
-        String memberId =(String) session.getAttribute("member_id");
-        if(form.getCouponId()!=null) {
+        String memberId = (String) session.getAttribute("member_id");
+        if (form.getCouponId() != null) {
             Coupon findCoupon = couponService.findOne(form.getCouponId());
             form.setDiscount(findCoupon.getPrice());
         }
@@ -89,17 +89,24 @@ public class OrderController {
 
 
     @GetMapping("/orders")
-    public String orderList(HttpSession session, Model model, @ModelAttribute("message")String message) {
+    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message) {
 
         String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
+        Map<Long, String> itemNames = new HashMap<>();
+        for (Order order : findMember.getOrders()) {
+            List<OrderItem> orderItems = order.getOrderItems();
+            String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
+            itemNames.put(order.getId(), itemName);
+        }
         List<Order> orders = findMember.getOrders();
+        model.addAttribute("itemNames", itemNames);
         model.addAttribute("orders", orders);
         return "/order/orderList";
     }
 
     @GetMapping("/orders/{orderId}")
-    public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model, @ModelAttribute("message")String message) {
+    public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model, @ModelAttribute("message") String message) {
         Order findOrder = orderService.findOne(orderId);
         if (!findOrder.getMember().getId().equals((String) session.getAttribute("member_id"))) {
             return "redirect:/";
@@ -107,7 +114,7 @@ public class OrderController {
         log.info("orderStatus = {}", findOrder.getOrderStatus());
         model.addAttribute("order", findOrder);
         List<OrderItem> orderItems = findOrder.getOrderItems();
-        String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? "그외 " + (orderItems.size() - 1) : "");
+        String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
         model.addAttribute("orderItems", itemName);
         log.info(message);
         return "/order/orderDetail2";

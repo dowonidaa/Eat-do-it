@@ -10,7 +10,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link th:href="@{../static/eat.css}"
+    <link th:href="@{/css/eat.css}"
           href="../static/eat.css" rel="stylesheet">
 </head>
 
@@ -27,8 +27,27 @@
     <!-- ----------------------------------------------------------------- -->
     <!-- content 넣으실 부분 -->
 
-    <div>
-        <section class="order-container">
+    <div id="wrapper">
+        <h3>주문내역</h3>
+        <form>
+            <select>
+                <option></option>
+                <option name="shopName">음식점명</option>
+                <option name="menu">메뉴</option>
+            </select>
+        <section class="order-container" th:each="order : ${orders}">
+            <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus}|"></div>
+            <img th:src="${order.shop.shopThum}" th:style="'width: 10%; height: auto;'">
+            <h4 th:text="${order.shop.shopName}"></h4>
+            <div th:text="${itemNames[order.id]}"></div>
+
+            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
+            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>
+            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '/cancel\''">주문취소</button>
+            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/reivew/' + ${order.shop.id} + '\''">리뷰작성</button>
+
+        </section>
+        </form>>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -59,7 +78,6 @@
             </tr>
             </tbody>
         </table>
-        </section>
     </div>
 
 
