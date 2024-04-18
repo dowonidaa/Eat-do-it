@@ -94,7 +94,8 @@
                     <div class="pay-content-container">
                         <img th:src="@{/img/home.png}" alt="로고" width="50%" height="auto">
                         <div class="pay-content-title">가게 주소</div>
-                        <input type="text" th:name="orderAddress" th:value="${cart.shop.shopAddr}" style="width: 70%;">
+                        <input type="hidden" id="address" th:name="orderAddress" th:value="${cart.shop.shopAddr}" style="width: 70%;">
+                        <label for="address" th:text="${cart.shop.shopAddr}" ></label>
                     </div>
                     <div class="pay-content-container">
                         <img th:src="@{/img/phone.png}" alt="로고" width="70%" height="auto">

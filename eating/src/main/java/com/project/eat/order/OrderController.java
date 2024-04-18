@@ -56,12 +56,12 @@ public class OrderController {
         model.addAttribute("orderForm", orderForm);
         log.info("/order orderType={}", orderForm.getOrderType());
 
-        if (orderForm.getOrderType() == OrderType.DELIVERY) {
+//        if (orderForm.getOrderType() == OrderType.DELIVERY) {
             return "pay/orderPage";
 
-        } else {
-            return "pay/takeoutPage";
-        }
+//        } else {
+//            return "pay/takeoutPage";
+//        }
     }
 
     @PostMapping("/order")
@@ -84,7 +84,14 @@ public class OrderController {
         if (form.getCouponId() != null) {
             couponService.deleteCoupon(form.getCouponId());
         }
-        return "redirect:/orders";
+        return "redirect:/order/success?orderId="+order.getId();
+    }
+
+    @GetMapping("/order/success")
+    public String success(Long orderId, Model model) {
+        Order order = orderService.findOne(orderId);
+        model.addAttribute("order", order);
+        return "pay/pay_confirm";
     }
 
 

@@ -91,10 +91,16 @@
                         <input th:name="orderStatus" type="hidden" th:value="${orderForm.orderStatus}" >
                         <input th:name="orderType" type="hidden" th:value="${orderForm.orderType}" >
                     </div>
-                    <div class="pay-content-container">
+                    <div class="pay-content-container" th:if="${orderForm.orderType == T(com.project.eat.order.OrderType).DELIVERY}">
                         <img th:src="@{/img/home.png}" alt="로고" width="50%" height="auto">
                         <div class="pay-content-title">집 주소</div>
                         <input type="text" th:name="orderAddress" th:value="${member.address != null ? member.address.address:''}" style="width: 70%;">
+                    </div>
+                    <div class="pay-content-container" th:if="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT}">
+                        <img th:src="@{/img/home.png}" alt="로고" width="50%" height="auto">
+                        <div class="pay-content-title">가게 주소</div>
+                        <input type="hidden" id="address" th:name="orderAddress" th:value="${cart.shop.shopAddr}" style="width: 70%;">
+                        <label for="address" th:text="${cart.shop.shopAddr}" ></label>
                     </div>
                     <div class="pay-content-container">
                         <img th:src="@{/img/phone.png}" alt="로고" width="70%" height="auto">
@@ -161,15 +167,17 @@
 
                         <!-- 만나서 결제하기 (Pay on Meeting) -->
 
-                        <div style="width: 100%; text-align: left; margin-top: 20px;">만나서결제하기</div>
+                        <div style="width: 100%; text-align: left; margin-top: 20px;">만나서결제하기<span th:if="${orderForm.orderType==T(com.project.eat.order.OrderType).TAKEOUT}">(포장주문시 사용불가)</span></div>
 
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio4" autocomplete="off" th:value="cardPayment">
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio4" autocomplete="off" th:value="cardPayment"
+                               th:disabled="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT} ? 'disabled' : null">
                         <label class="btn btn-outline-primary btn-square" for="btnradio4" style="margin: 5px;">만나서 카드결제</label>
 
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio5" autocomplete="off" th:value="cashPayment">
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio5" autocomplete="off" th:value="cashPayment"
+                               th:disabled="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT} ? 'disabled' : null">
                         <label class="btn btn-outline-primary btn-square" for="btnradio5" style="margin: 5px;">만나서 현금결제</label>
+                        </div>
                     </div>
-                </div>
 
                 <div class="pay-container">
                     <div class="sub-title">
