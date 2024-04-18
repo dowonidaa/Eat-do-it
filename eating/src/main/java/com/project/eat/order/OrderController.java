@@ -108,6 +108,18 @@ public class OrderController {
         return "/order/orderList";
     }
 
+    @GetMapping("/orders/search")
+    public Order search(DateForm dateForm) {
+        if (dateForm.getSearchOption().equals("all")){
+//            orderService.find
+        }
+
+
+
+
+        return null;
+    }
+
     @GetMapping("/orders/{orderId}")
     public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model, @ModelAttribute("message") String message) {
         Order findOrder = orderService.findOne(orderId);
