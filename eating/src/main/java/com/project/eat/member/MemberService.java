@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
 
 	private final MemberDAO_JPA jpa;
@@ -109,6 +109,7 @@ public class MemberService {
 
 
 
+	@Transactional(readOnly = true)
 	public MemberVO_JPA findOne(String memberId) {
 		return memberRepository.findOne(memberId);
 	}

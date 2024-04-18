@@ -10,8 +10,12 @@ import com.project.eat.order.orderItem.OrderItemRepository;
 import com.project.eat.order.orderItemOption.OrderItemOption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,6 +25,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberRepositoryEM memberRepository;
+    private final OrderDAO_JPA orderDAOJpa;
 
     @Transactional
     public Order createOrder(String memberId, OrderForm form) {
@@ -79,5 +84,17 @@ public class OrderService {
         Order findOrder = orderRepository.findOne(order.getId());
         findOrder.setTid(order.getTid());
         findOrder.setOrderStatus(order.getOrderStatus());
+    }
+
+    public List<Order> findByOrderType(String memberId, OrderType orderType){
+        return orderDAOJpa.findByMemberIdByOrderType(memberId, orderType);
+    }
+
+    public List<Order> findByMemberIdByItemName(String memberId, String itemName) {
+        return orderDAOJpa.findByItemNameContainingIgnoreCase(memberId, itemName);
+    }
+
+    public List<Order> findByOrdersBetweenDates(String memberId, LocalDate startDate, LocalDate endDate) {
+        return orderDAOJpa.findByOrdersBetweenDates(memberId, startDate, endDate);
     }
 }

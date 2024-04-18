@@ -93,7 +93,8 @@ public class OrderController {
     @GetMapping("/orders")
     public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message) {
 
-        String memberId = (String) session.getAttribute("member_id");
+//        String memberId = (String) session.getAttribute("member_id");
+        String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
         Map<Long, String> itemNames = new HashMap<>();
         for (Order order : findMember.getOrders()) {

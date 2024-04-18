@@ -703,6 +703,19 @@ footer{
   margin: 20px auto; /* 중앙 정렬 */
 }
 
+.orders-container {
+  border-radius: 10px;
+  border: 1px solid #ececec; /* Light grey border for subtle definition */
+  display: flex;
+  flex-direction: row; /* To layout the child elements in a row */
+  align-items: center; /* Vertically align items in the center */
+  justify-content: space-between; /* Distribute space evenly between items */
+  padding: 20px; /* Uniform padding around the content */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for 3D effect */
+  width: 100%; /* Full width to stretch across the container */
+  margin: 20px auto; /* Margin for auto horizontal centering and space between sections */
+}
+
 h3, h5 { /* 제목 스타일 조정 */
   margin-bottom: 5px;
   color: #333; /* 글자 색상 조정 */

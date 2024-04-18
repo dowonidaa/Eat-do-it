@@ -35,49 +35,24 @@
                 <option name="shopName">음식점명</option>
                 <option name="menu">메뉴</option>
             </select>
-        <section class="order-container" th:each="order : ${orders}">
-            <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus}|"></div>
-            <img th:src="${order.shop.shopThum}" th:style="'width: 10%; height: auto;'">
-            <h4 th:text="${order.shop.shopName}"></h4>
-            <div th:text="${itemNames[order.id]}"></div>
-
-            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
-            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>
-            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '/cancel\''">주문취소</button>
-            <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/reivew/' + ${order.shop.id} + '\''">리뷰작성</button>
-
+        <section class="container row orders-container" th:each="order : ${orders}">
+                <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus}|"></div>
+                    <div class="col-md-3 ">
+                    <img th:src="${order.shop.shopThum}" th:style="'width: 100%; height: auto;'">
+                </div>
+                <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
+                    <h3 th:text="${order.shop.shopName}"></h3>
+                    <div th:text="${itemNames[order.id]}"></div>
+                </div>
+                <div class="col-md-6 d-flex flex-column align-items-end justify-content-center ">
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/cancel\''">주문취소</button>
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shop.id} + '\''">리뷰작성</button>
+                </div>
         </section>
         </form>>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>사진</th>
-                <th>음식점명</th>
-                <th>배달상태</th>
-                <th>주문날짜</th>
-                <th>주문음식</th>
 
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orders}">
-                <td th:text="${order.getShop().getShopThum()}"></td>
-                <td th:text="${order.shop.shopName}"></td>
-                <td th:text="${order.orderType}"></td>
-                <td th:text="${order.orderDate}"></td>
-                <div th:each="orderItem:${order.getOrderItems()}">
-                    <td th:text="${orderItem.getItem().itemName}"></td>
-                </div>
-                <td>
-                    <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
-                    <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>
-                    <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/orders/' + ${order.id} + '/cancel\''">주문취소</button>
-                    <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/reivew/' + ${order.shop.id} + '\''">리뷰작성</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 
 
