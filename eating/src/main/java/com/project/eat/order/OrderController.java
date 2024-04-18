@@ -56,12 +56,7 @@ public class OrderController {
         model.addAttribute("orderForm", orderForm);
         log.info("/order orderType={}", orderForm.getOrderType());
 
-//        if (orderForm.getOrderType() == OrderType.DELIVERY) {
-            return "pay/orderPage";
-
-//        } else {
-//            return "pay/takeoutPage";
-//        }
+        return "pay/orderPage";
     }
 
     @PostMapping("/order")
@@ -84,7 +79,7 @@ public class OrderController {
         if (form.getCouponId() != null) {
             couponService.deleteCoupon(form.getCouponId());
         }
-        return "redirect:/order/success?orderId="+order.getId();
+        return "redirect:/order/success?orderId=" + order.getId();
     }
 
     @GetMapping("/order/success")
@@ -115,7 +110,7 @@ public class OrderController {
     @GetMapping("/orders/{orderId}")
     public String orderDetail(@PathVariable("orderId") Long orderId, HttpSession session, Model model, @ModelAttribute("message") String message) {
         Order findOrder = orderService.findOne(orderId);
-        if (!findOrder.getMember().getId().equals((String) session.getAttribute("member_id"))) {
+        if (!findOrder.getMember().getId().equals(session.getAttribute("member_id"))) {
             return "redirect:/";
         }
         log.info("orderStatus = {}", findOrder.getOrderStatus());
@@ -124,7 +119,7 @@ public class OrderController {
         String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
         model.addAttribute("orderItems", itemName);
         log.info(message);
-        return "/order/orderDetail2";
+        return "order/orderDetail";
     }
 
     @GetMapping("/orders/{orderId}/reorder")
@@ -234,7 +229,7 @@ public class OrderController {
         Order order = orderService.findOne(orderId);
         OrderStatus orderStatus = order.getOrderStatus();
         if (orderStatus == OrderStatus.DELIVERY || orderStatus == OrderStatus.COMPLETE || orderStatus == OrderStatus.COOKING) {
-            attributes.addFlashAttribute("message", "(" + orderStatus.toString() + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
+            attributes.addFlashAttribute("message", "(" + orderStatus + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
             return "redirect:/orders/" + orderId;
         }
 
@@ -250,7 +245,7 @@ public class OrderController {
         Order order = orderService.findOne(orderId);
         OrderStatus orderStatus = order.getOrderStatus();
         if (orderStatus == OrderStatus.DELIVERY || orderStatus == OrderStatus.COMPLETE || orderStatus == OrderStatus.COOKING) {
-            attributes.addFlashAttribute("message", "(" + orderStatus.toString() + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
+            attributes.addFlashAttribute("message", "(" + orderStatus + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
             return "redirect:/orders/" + orderId;
         }
 
