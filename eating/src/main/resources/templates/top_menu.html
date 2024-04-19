@@ -15,17 +15,18 @@
 
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
-					<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+					<div class="collapse navbar-collapse " id="navbarNavAltMarkup">
 						<div class="navbar-nav "> <!-- ms-auto를 사용하여 오른쪽 정렬 -->
 							<a th:if="${session.member_id == null}" class="nav-link" th:href="@{/member/login}">로그인</a>
 							<a th:if="${session.member_id != null}" class="nav-link" th:href="@{/member/logout}">로그아웃</a>
 							<a class="nav-link" th:if="${session.member_id != null}" th:href="@{/member/mypage}">마이페이지</a>
-<!--							<button type="button" class="btn btn-primary btn-sm"-->
-<!--									th:if="${session.member_id != null}"-->
-<!--									th:onclick="'location.href=\'/shop/' + ${shopId} + '\''">-->
-<!--							장바구니-->
-<!--								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" th:text="${cartCount}">99+<span class="visually-hidden">unread messages</span></span>-->
-<!--							</button>-->
+							<button type="button" class="btn btn-primary btn-sm" th:if="${session.member_id != null}" th:onclick="'location.href=\'/orders\''" >주문내역</button>
+							<button type="button" class="btn btn-primary btn-sm"
+									th:if="${session.member_id != null}"
+									th:attr="onclick=${shopId != null} ? ('location.href=\'/shop/' + ${shopId} + '\'') : 'return false;'">
+							장바구니
+								<span class="position-absolute top-0 start-98 translate-middle badge rounded-pill bg-danger" th:text="${cartCount}">99+<span class="visually-hidden">unread messages</span></span>
+							</button>
 						</div>
 					</div>
 				</div>

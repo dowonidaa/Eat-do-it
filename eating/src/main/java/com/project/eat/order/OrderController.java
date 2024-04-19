@@ -92,14 +92,15 @@ public class OrderController {
 
 
     @GetMapping("/orders")
-    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, @RequestParam(defaultValue = "all")String type) {
+    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, @RequestParam(defaultValue = "all")String type,@RequestParam(defaultValue = "1") int page, SearchForm form) {
 
+        int pageBlock = 5;
 //        String memberId = (String) session.getAttribute("member_id");
         String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
         List<Order> orders = new ArrayList<>();
         if (type.equals("all")){
-            orders = findMember.getOrders();
+            orders = orderService.findAll(memberId, page, pageBlock);
         }
         else if (type.equals("delivery")) {
             orders = orderService.findByOrderType(memberId, OrderType.DELIVERY);
@@ -116,12 +117,12 @@ public class OrderController {
         model.addAttribute("itemNames", itemNames);
         model.addAttribute("orders", orders);
         model.addAttribute("selectedType", type);
+
         return "/order/orderList";
     }
 
     @GetMapping("/orders/search")
-    @ResponseBody
-    public List<Order> search(SearchForm form, HttpSession session) {
+    public List<OrderDTO> search(SearchForm form, HttpSession session) {
 
         String memberId = (String) session.getAttribute("member_id");
         log.info("searchForm = {}", form);

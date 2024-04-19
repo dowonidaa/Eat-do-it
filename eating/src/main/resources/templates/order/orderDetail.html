@@ -147,7 +147,8 @@
                 <h5 class="restaurant-request">요청사항</h5>
                 <div class="request" th:text="${order.memberNotes}"></div>
             </section>
-        </section>
+            </section>
+            <button class="btn btn-primary" th:onclick="|window.location.href='@{/orders}'|">주문내역</button>
         </section>
     </div>
 

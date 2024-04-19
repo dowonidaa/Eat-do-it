@@ -3,6 +3,7 @@ package com.project.eat.order;
 import com.project.eat.cart.Cart;
 import com.project.eat.cart.cartItem.CartItem;
 import com.project.eat.cart.cartOption.CartItemOption;
+import com.project.eat.item.Item;
 import com.project.eat.member.MemberRepositoryEM;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.orderItem.OrderItem;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +33,7 @@ public class OrderService {
         log.info("memberId = {}", findMember.getId());
         Cart cart = findMember.getCart();
         log.info("cartId = {}", cart.getId());
-        log.info("address={}",form.getOrderAddress());
+        log.info("address={}", form.getOrderAddress());
         log.info("orderType= {}", form.getOrderType());
 
 
@@ -84,7 +86,7 @@ public class OrderService {
         findOrder.setOrderStatus(order.getOrderStatus());
     }
 
-    public List<Order> findByOrderType(String memberId, OrderType orderType){
+    public List<Order> findByOrderType(String memberId, OrderType orderType) {
         return orderDAOJpa.findByMemberIdByOrderType(memberId, orderType);
     }
 
@@ -97,8 +99,30 @@ public class OrderService {
     }
 
 
+    @Transactional
+    public List<OrderDTO> findSearchForm(String memberId, SearchForm form) {
+        List<Order> findOrders = orderRepository.searchListBetweenDates(memberId, form);
+        log.info("findOrders.size()= {}", findOrders.size());
+        List<OrderDTO> orders = new ArrayList<>();
+        for (Order order : findOrders) {
+            List<OrderItem> orderItems = order.getOrderItems();
+            String matchedItemName = orderItems.stream()
+                    .map(OrderItem::getItem)
+                    .map(Item::getItemName)
+                    .filter(name -> name.toLowerCase().contains(form.getSearchText().toLowerCase()))
+                    .findFirst()
+                    .orElse(orderItems.isEmpty() ? "" : orderItems.get(0).getItem().getItemName());
+            String itemName = matchedItemName + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
 
-    public List<Order> findSearchForm(String memberId, SearchForm form) {
-        return orderRepository.searchListBetweenDates(memberId, form);
+            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
+            orders.add(orderDTO);
+        }
+
+        return orders;
+    }
+
+    public List<Order> findAll(String memberId, int page, int pageBlock) {
+        page = (page - 1) * pageBlock;
+        return orderRepository.findAll(memberId, page, pageBlock);
     }
 }

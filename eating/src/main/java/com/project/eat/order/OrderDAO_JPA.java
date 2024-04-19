@@ -11,7 +11,7 @@ public interface OrderDAO_JPA extends JpaRepository<Order, Object> {
 
 
 
-    @Query("select o from Order o where o.member.id = :memberId and o.orderType = :orderType")
+    @Query("select o from Order o where o.member.id = :memberId and o.orderType = :orderType order by o.orderDate desc ")
     List<Order> findByMemberIdByOrderType(@Param("memberId") String memberId, @Param("orderType") OrderType orderType);
 
     @Query("SELECT o FROM Order o JOIN o.orderItems oi WHERE o.member.id = :memberId and lower(oi.item.itemName) LIKE lower(concat('%', :itemName, '%'))")

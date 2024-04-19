@@ -220,7 +220,7 @@
     <div th:replace="header :: header"></div>
 
     <form id="addItemForm" th:action="@{/cart/{shopId}/add (shopId=${shop.id})}" th:object="${shop}" th:method="post">
-        <input th:type="text" name="itemId" th:value="${items.get(0).id}" readonly/>
+        <input th:type="text" name="itemId" th:value="${items.get(0).id}"/>
         <input th:type="hidden" th:id="shopId" th:value="${shop.id}">
         <div>
             <label for="quantity">Quantity:</label>

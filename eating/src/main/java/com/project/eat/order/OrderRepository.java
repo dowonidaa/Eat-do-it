@@ -37,6 +37,8 @@ public class OrderRepository {
             jpql += "  and cast(o.orderDate as date) between :startDate and :endDate";
         }
 
+        jpql += " order by o.orderDate desc";
+
         TypedQuery<Order> query = em.createQuery(jpql, Order.class)
                             .setParameter("memberId", memberId)
                             .setParameter("searchText", "%"+form.getSearchText()+"%");
@@ -55,6 +57,11 @@ public class OrderRepository {
     }
 
 
-
-
+    public List<Order> findAll(String memberId, int page, int pageBlock) {
+        return em.createQuery("select o from Order o where o.member.id = :memberId order by o.orderDate desc", Order.class)
+                .setParameter("memberId", memberId)
+                .setFirstResult(page)
+                .setMaxResults(pageBlock)
+                .getResultList();
+    }
 }
