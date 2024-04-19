@@ -26,7 +26,7 @@ class OrderServiceTest {
 
     @Test
     void findByOrderType() {
-        List<Order> findOrders = orderService.findByOrderType("dowon456",OrderType.TAKEOUT);
+        List<OrderDTO> findOrders = orderService.findByOrderType("dowon456",OrderType.TAKEOUT);
         MemberVO_JPA findMember = memberService.findOne("dowon456");
         List<Order> memberOrders = findMember.getOrders();
 

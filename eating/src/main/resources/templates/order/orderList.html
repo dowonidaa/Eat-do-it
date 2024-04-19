@@ -68,15 +68,15 @@
                 </div>
             </form>
         </div>
-        <section class="container row orders-container" th:each="order : ${orders}">
+        <section class="container row orders-container" th:each="order : ${ordersDto}">
             <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
                     <div class="col-3 ">
-                    <img th:src="${order.shop.shopThum}" th:style="'width: 100%; height: auto;'">
+                    <img th:src="${order.shopThum}" th:style="'width: 100%; height: auto;'">
                 </div>
                 <div class="col-3 d-flex flex-column align-items-left justify-content-center">
-                    <h3 th:text="${order.shop.shopName}"></h3>
-                    <div th:text="${itemNames[order.id]}"></div>
-                    <div th:text="|${#numbers.formatDecimal(order.totalPrice + order.orderPrice - order.discount, 0, 'COMMA', 0, 'POINT')}원|"></div>
+                    <h3 th:text="${order.shopName}"></h3>
+                    <div th:text="${order.itemsName}"></div>
+                    <div th:text="|${#numbers.formatDecimal(order.price, 0, 'COMMA', 0, 'POINT')}원|"></div>
                 </div>
                 <div class="col-6 d-flex flex-column align-items-end justify-content-center ">
                     <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
@@ -90,7 +90,7 @@
                         <button th:case="'cashPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                         <button th:case="'creditCard'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                     </div>
-                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shop.id} + '\''">리뷰작성</button>
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shopId} + '\''">리뷰작성</button>
                 </div>
         </section>
         <nav aria-label="Page navigation example" class="container row">

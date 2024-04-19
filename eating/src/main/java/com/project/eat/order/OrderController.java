@@ -95,33 +95,27 @@ public class OrderController {
     public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, @RequestParam(defaultValue = "all")String type,@RequestParam(defaultValue = "1") int page, SearchForm form) {
 
         int pageBlock = 5;
-//        String memberId = (String) session.getAttribute("member_id");
-        String memberId = "dowon456";
+        String memberId = (String) session.getAttribute("member_id");
+//        String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
-        List<Order> orders = new ArrayList<>();
+        List<OrderDTO> ordersDto = new ArrayList<>();
         if (type.equals("all")){
-            orders = orderService.findAll(memberId, page, pageBlock);
+            ordersDto = orderService.findAll(memberId, page, pageBlock);
         }
         else if (type.equals("delivery")) {
-            orders = orderService.findByOrderType(memberId, OrderType.DELIVERY);
+            ordersDto = orderService.findByOrderType(memberId, OrderType.DELIVERY);
         }
         else if (type.equals("takeout")) {
-            orders = orderService.findByOrderType(memberId, OrderType.TAKEOUT);
+            ordersDto = orderService.findByOrderType(memberId, OrderType.TAKEOUT);
         }
-        Map<Long, String> itemNames = new HashMap<>();
-        for (Order order : orders) {
-            List<OrderItem> orderItems = order.getOrderItems();
-            String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
-            itemNames.put(order.getId(), itemName);
-        }
-        model.addAttribute("itemNames", itemNames);
-        model.addAttribute("orders", orders);
+        model.addAttribute("ordersDto", ordersDto);
         model.addAttribute("selectedType", type);
 
         return "/order/orderList";
     }
 
     @GetMapping("/orders/search")
+    @ResponseBody
     public List<OrderDTO> search(SearchForm form, HttpSession session) {
 
         String memberId = (String) session.getAttribute("member_id");

@@ -86,8 +86,10 @@ public class OrderService {
         findOrder.setOrderStatus(order.getOrderStatus());
     }
 
-    public List<Order> findByOrderType(String memberId, OrderType orderType) {
-        return orderDAOJpa.findByMemberIdByOrderType(memberId, orderType);
+    public List<OrderDTO> findByOrderType(String memberId, OrderType orderType) {
+
+        List<Order> findOrder = orderDAOJpa.findByMemberIdByOrderType(memberId, orderType);
+        return getOrderDTOS(findOrder);
     }
 
     public List<Order> findByMemberIdByItemName(String memberId, String itemName) {
@@ -121,8 +123,25 @@ public class OrderService {
         return orders;
     }
 
-    public List<Order> findAll(String memberId, int page, int pageBlock) {
+    public List<OrderDTO> findAll(String memberId, int page, int pageBlock) {
         page = (page - 1) * pageBlock;
-        return orderRepository.findAll(memberId, page, pageBlock);
+        List<Order> findOrder = orderRepository.findAll(memberId, page, pageBlock);
+        return getOrderDTOS(findOrder);
+    }
+
+
+
+
+
+    private List<OrderDTO> getOrderDTOS(List<Order> findOrder) {
+        List<OrderDTO> orders = new ArrayList<>();
+        for (Order order : findOrder) {
+            List<OrderItem> orderItems = order.getOrderItems();
+            String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
+            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
+            orders.add(orderDTO);
+        }
+
+        return  orders;
     }
 }

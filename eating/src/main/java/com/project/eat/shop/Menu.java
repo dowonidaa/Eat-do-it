@@ -16,7 +16,7 @@ public class Menu {
 
     private String menuName;
     private String menuDesc;
-    private int menuPrice;
+    private String menuPrice;
     private String menuPic;
 
     @ManyToOne
