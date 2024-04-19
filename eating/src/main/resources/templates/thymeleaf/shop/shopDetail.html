@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>thymeleaf</title>
+</head>
+
+<body>
+
+<h1>dateail</h1>
+
+	<h3>가게 상세정보</h3>
+	<p th:text="${vo.shopId}"></p>
+	<p th:text="${vo.shopName}"></p>
+	<p th:text="${vo.starAvg}"></p>
+	<p th:text="${vo.reviewCount}"></p>
+	<p th:text="${vo.deliveryTime}"></p>
+	<p th:text="${vo.deliveryPrice}"></p>
+	<p th:text="${vo.minPriceInt}"></p>
+	<p th:text="${vo.runTime}"></p>
+	<p th:text="${vo.shopTel}"></p>
+	<p th:text="${vo.shopAddr}"></p>
+	<p th:text="${vo.minPrice}"></p>
+	<p th:text="${vo.minPriceInt}"></p>
+	<p><img th:src="${vo.shopThum}"  height="50" width="50"></span></p>
+
+
+	<h3>메뉴</h3>
+
+	<table>
+		<th:block th:each="dto : ${dtos}">
+			<tr>
+				<td><span th:text="${dto.menuName}"></span></td>
+				<td><span th:text="${dto.menuPrice}"></span></td>
+				<td><span th:text="${dto.menuDesc}"></span></td>
+
+
+				<td><span th:text="${dto.menuId}"></span></td>
+
+
+				<td>
+					<span th:if="${dto.menuPic != null}">
+						<img th:src="${dto.menuPic}" height="50" width="50">
+					</span>
+					<span th:if="${dto.menuPic == null}">
+						사진없음
+					</span>
+				</td>
+
+			</tr>
+		</th:block>
+	</table>
+
+
+	<hr>
+	<button>
+		<a href="/shop_main">메인</a>
+	</button>
+
+	
+</body>
+
+</html>

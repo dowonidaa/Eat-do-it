@@ -1,0 +1,107 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+
+<body>
+<h1>shop 메인페이지</h1>
+
+<hr />
+
+
+
+    <!-- 쿠키에 로그인한 유저 정보 없을 경우 -->
+    <div th:if="${#strings.isEmpty(userId)}">
+        <p>로그인 안함. 쿠키가 없습니다.</p>
+
+        <h3>전체 음식점 조회 (로그인안한경우또한 사용가능)</h3>
+        <button onclick='location.href="shop_selectPageBlockAll";'>전체조회</button>
+    </div>
+    <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+    <div th:unless="${#strings.isEmpty(userId)}">
+        <p>로그인 성공: <span th:text="${userId}"></span></p>
+
+        <h3>내주변 음식점 조회</h3>
+        <!-- userId를 포함한 URL을 생성하여 버튼에 설정 -->
+        <button th:attr="data-userid=${userId}" onclick="location.href='/shop_selectPageBlockAll?userId=' + this.getAttribute('data-userid');">내주변 음식점 전체조회</button>
+    </div>
+
+    <hr />
+
+    <h3>정렬기능</h3>
+    <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+    <div th:if="${userId != null}">
+        <h3>정렬(select-box): 디폴트-별점순</h3>
+        <span>전체조회: 정렬(select-box): 디폴트-별점순</span>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=1&amp;userId=' + this.getAttribute('data-userid');">별점순</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=2&amp;userId=' + this.getAttribute('data-userid');">최소금액순</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=3&amp;userId=' + this.getAttribute('data-userid');">리뷰수 순</button>
+    </div>
+    <!-- 쿠키에 로그인한 유저 정보 없을 경우 -->
+    <div th:if="${userId == null}">
+        <h3>정렬(select-box): 디폴트-별점순</h3>
+        <span>전체조회: 정렬(select-box): 디폴트-별점순</span>
+        <button onclick='location.href="sortList.do?sortNum=1";'>별점순</button>
+        <button onclick='location.href="sortList.do?sortNum=2";'>최소금액순</button>
+        <button onclick='location.href="sortList.do?sortNum=3";'>리뷰수 순</button>
+    </div>
+
+
+    <hr />
+
+
+    <h3>검색기능</h3>
+    <form class="validation-form" novalidate action="shop_searchWord"
+          method="post">
+        <input id="searchWord"  name="searchWord" type="text" placeholder="음식점명을 입력해주세요">
+
+        <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+        <div th:if="${userId}">
+            <input id="userId"  name="userId" type="hidden" th:value="${userId}">
+        </div>
+        <button type="submit">검색</button>
+    </form>
+
+    <hr />
+
+
+    <!-- 쿠키에 로그인한 유저 정보 없을 경우 -->
+    <div th:if="${#strings.isEmpty(userId)}">
+        <h3>카테고리별 음식점 조회</h3>
+        <button onclick='location.href="categoryList.do?cateId=1";'>1 치킨</button>
+        <button onclick='location.href="categoryList.do?cateId=2";'>2 피자 </button>
+        <button onclick='location.href="categoryList.do?cateId=3";'>3중국집</button>
+        <button onclick='location.href="categoryList.do?cateId=4";'>4한식 </button>
+        <button onclick='location.href="categoryList.do?cateId=5";'>5일식/돈까스</button>
+        <button onclick='location.href="categoryList.do?cateId=6";'>6족발/보쌈</button>
+        <button onclick='location.href="categoryList.do?cateId=7";'>7야식</button>
+        <button onclick='location.href="categoryList.do?cateId=8";'>8분식</button>
+        <button onclick='location.href="categoryList.do?cateId=9";'>9카페/디저트</button>
+    </div>
+    <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+    <div th:unless="${#strings.isEmpty(userId)}">
+        <h3>내주변 카테고리별 음식점 조회</h3>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=1&amp;userId=' + this.getAttribute('data-userid');">1 치킨</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=2&amp;userId=' + this.getAttribute('data-userid');">2 피자</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=3&amp;userId=' + this.getAttribute('data-userid');">3중국집</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=4&amp;userId=' + this.getAttribute('data-userid');">4한식</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=5&amp;userId=' + this.getAttribute('data-userid');">5일식/돈까스</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=6&amp;userId=' + this.getAttribute('data-userid');">6족발/보쌈</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=7&amp;userId=' + this.getAttribute('data-userid');">7야식</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=8&amp;userId=' + this.getAttribute('data-userid');">8분식</button>
+        <button th:attr="data-userid=${userId}" onclick="location.href='/categoryList.do?cateId=9&amp;userId=' + this.getAttribute('data-userid');">9카페/디저트</button>
+    </div>
+
+    <hr />
+
+
+<!--쿠키와 상관없음 -->
+<h3>카카오맵통한 내위치 주소 확인</h3>
+<button onclick='location.href="shopMainwithMyPosition";'>카카오맵으로 내 위치 확인으로 이동</button>
+
+
+</body>
+</html>
