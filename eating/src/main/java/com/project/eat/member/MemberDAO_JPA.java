@@ -64,6 +64,10 @@ public interface MemberDAO_JPA extends JpaRepository<MemberVO_JPA, Object>{
 	public MemberVO_JPA findById(String id);
 	public MemberVO_JPA findByEmail(String email);
 
+	public MemberVO_JPA findByTel(String tel);
+
+	public MemberVO_JPA findByNickname(String nickname);
+
 	//내장함수 커스텀 : 삭제시는 컨트롤러에 반드시 @Transactional
 	public int deleteByNum(int num);
 

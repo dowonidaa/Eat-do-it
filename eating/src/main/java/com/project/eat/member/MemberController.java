@@ -214,26 +214,29 @@ public class MemberController {
     public String updateOK(MemberVO_JPA memberVO, AddressVO_JPA addressVO, HttpServletRequest request) {
         log.info("/member/updateOK...");
 
-        // 비밀번호 변경
         String newPassword = request.getParameter("pw");
         String newAddress = request.getParameter("address");
         String newEmail = request.getParameter("email");
         String dbEmail = request.getParameter("dbEmail");
-        log.info("newEmail : {}끝", newEmail);
+        String newNickname = request.getParameter("nickname");
+        String newTel = request.getParameter("tel");
+
+        boolean isUpdate = false;
 
         // 비밀번호 변경
-        if (newPassword != null && !newPassword.isEmpty()) {
-            //Member 정보 수정
+        // 새로운 비밀번호가 입력되었을 때만 업데이트
+        if ((newPassword != null && !newPassword.isEmpty()) && (isUpdate == false)) {
+
             log.info("Original password: {}", memberVO.getPw()); // 원본 비밀번호 로깅
             log.info("memberVO:{}",memberVO);
 
-            // 새로운 비밀번호가 입력되었을 때만 업데이트
             String salt = User_pwSHA512.Salt();
             log.info("Salt : {}",salt);
             //k8C2IX+McOvgwDRYrnjeLw==
             String hex_password = User_pwSHA512.getSHA512(newPassword, salt); //암호화
             log.info("암호화 결과 : {}", hex_password);
             //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
+            //얘는 입력된 걸 다 받아서 비밀번호만 바꿈. 그래서 나머지도 다 바뀌는 거.
             memberVO.setPw(hex_password);//디비에 저장
             memberVO.setSalt(salt); //디비에 저장-복호화 할때 사용
 
@@ -245,17 +248,98 @@ public class MemberController {
             // Member 정보를 각각 업데이트
             MemberVO_JPA updatedMember = service.updateOK(memberVO);
             log.info("Updated member: {}", updatedMember);
+
+            isUpdate = true;
+        }
+
+        // 닉네임 변경
+        if (newNickname != null && !newNickname.isEmpty() && (isUpdate == false)){
+            //얘는 입력된 게 아니라, 원래 데이터를 가져옴.
+            //비밀번호는 왜 공백 입력이 안되느냐 : 저중에 공백인 애가 비밀번호 뿐이니까, 쟤는 자동으로 나머지 값이 다 입력되는 것
+            //그러면, 비밀번호 로직을 따서 memberVO에 pw만 따로 입력을 해주면 끝나는 문제 ! ! !
+            //그래서 단독 업데이트가 비밀번호 로직을 쓰면 안 됐던 것..ㅜㅜㅜ
+
+
+            //기존 닉네임과 비교하기 위해
+            String existingNickname = jpa.findById(memberVO.getId()).getNickname();
+            log.info("원래 닉네임 : {}", existingNickname);
+
+            if (!existingNickname.equals(newNickname)){
+                //비밀번호는 기본으로 입력되어 있지 않으니까, DB에서 id로 검색해서 따로 받아옴.
+                String existingPW = jpa.findById(memberVO.getId()).getPw();
+
+                memberVO.setNickname(newNickname);
+                memberVO.setPw(existingPW);
+
+                // Member 정보를 각각 업데이트
+                MemberVO_JPA updatedMember = service.updateOK(memberVO);
+
+                log.info("Updated nickname: {}", updatedMember);
+
+                isUpdate = true;
+
+            } else {
+                log.info("기존 닉네임과 같습니다");
+            }
+
+
+
+
+        }
+
+        // 전화번호 변경
+        if (newTel != null && !newTel.isEmpty() && (isUpdate == false)){
+
+            //기존 전화번호와 비교하기 위해
+            String existingTel = jpa.findById(memberVO.getId()).getTel();
+            log.info("원래 전화번호 : {}", existingTel);
+
+            //existingTel 있는 tel이랑 tel이 같으면 -> update 안 함.
+            if(!existingTel.equals(newTel)){
+                //비밀번호는 기본으로 입력되어 있지 않으니까, DB에서 id로 검색해서 따로 받아옴.
+                String existingPW = jpa.findById(memberVO.getId()).getPw();
+
+                memberVO.setTel(newTel);
+                memberVO.setPw(existingPW);
+
+                // Member 정보를 각각 업데이트
+                MemberVO_JPA updatedMember = service.updateOK(memberVO);
+
+                log.info("Updated tel: {}", updatedMember);
+
+                isUpdate = true;
+            } else {
+                log.info("기존 전화번호와 같습니다");
+            }
+
+
         }
 
         // 이메일 변경
-        // 비밀번호랑 이메일을 동시에 바꿀 경우, 이미 비밀번호에서 이메일을 바꾸기 때문에 또 돌릴 필요가 없음.
-        if (newEmail != null && !newEmail.isEmpty() || (newPassword == null && newPassword.isEmpty())){
-            MemberVO_JPA existingEmail = jpa.findByEmail(dbEmail);
-            existingEmail.setEmail(memberVO.getEmail());
+        // 조건문 추가 : newEmail 안 비어있고, update 안 된 상태인 거고, existing 관련 조건문까지(얘는 분기 안에) 추가.
+        if (newEmail != null && !newEmail.isEmpty() && (isUpdate == false)){
 
-            MemberVO_JPA updatedEmail = service.updateOK(existingEmail);
+            //기존 이메일과 비교하기 위해
+            String existingEmail = jpa.findById(memberVO.getId()).getEmail();
+            log.info("원래 이메일 : {}", existingEmail);
+            
+            if(!existingEmail.equals(newEmail)){
+                //비밀번호는 기본으로 입력되어 있지 않으니까, DB에서 id로 검색해서 따로 받아옴.
+                String existingPW = jpa.findById(memberVO.getId()).getPw();
 
-            log.info("Updated email : {}", updatedEmail);
+                memberVO.setEmail(newEmail);
+                memberVO.setPw(existingPW);
+
+                // Member 정보를 각각 업데이트
+                MemberVO_JPA updatedMember = service.updateOK(memberVO);
+
+                log.info("Updated email: {}", updatedMember);
+
+                isUpdate = true;
+            } else {
+                log.info("기존 이메일과 같습니다");
+            }
+
         }
 
 
@@ -313,20 +397,6 @@ public class MemberController {
     @GetMapping({"/member/mypage"})
     public String mypage(Model model, HttpSession session) {
         log.info("/member/mypage...");
-
-
-        //--------------나중에 지울 거------------------
-        //주소 제대로 표시되는지 테스트
-        List<AddressVO_JPA> vos = service_add.selectAll_add();
-
-        model.addAttribute("vos", vos);
-
-        log.info("Address 테이블에 있는 데이터 : {}", vos.toString());
-
-
-
-
-        //---------------여기부터가 진짜-------------------
         // 세션에서 로그인한 사용자의 아이디 가져오기 : member 테이블에 사용할 거
         String memberId = (String) session.getAttribute("member_id");
         log.info("Logged in member ID: {}", memberId);
@@ -350,7 +420,7 @@ public class MemberController {
 
         // 주소 정보 조회
         AddressVO_JPA addressInfo = service_add.selectOneById(addressVO);
-        log.info("Address info: {}", addressInfo);
+//        log.info("Address info: {}", addressInfo);
 
         if (memberInfo != null) {
             memberInfo.setPw(memberInfo.getPw().substring(0, 10));

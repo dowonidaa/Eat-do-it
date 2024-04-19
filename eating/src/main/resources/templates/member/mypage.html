@@ -109,6 +109,10 @@
 
                 <div class="form-group">
                         <h2>주소지</h2>
+                    <h3>현재 주소</h3>
+                    <input type="text" class="form-control" placeholder="현재주소" th:value="${addressInfo.address}" disabled="readonly">
+                    <hr>
+                    <h3>주소지 변경</h3>
                     <div class="form-grid form-address">
                         <input type="text" class="form-control address_input_1" id="sample6_postcode" placeholder="우편번호" disabled="readonly">
                         <button type="button" class="btn btn-dark address_button" onclick="execution_daum_address()">찾기</button>
@@ -313,12 +317,6 @@
 
 
 
-        </script>
-        <!-- 아이디 중복확인 -->
-        <script>
-            function checkId() {
-                document.getElementById("IdSuccess").style.display = "block";
-            }
         </script>
 
         <!-- 비밀번호 일치/불일치 여부 메시지 표시 -->
