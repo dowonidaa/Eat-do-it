@@ -12,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class HomeController {
 
-	@GetMapping({"/"})
-	public String hello(Model model) {
-		log.info("/hello...");
+	//  메인으로 가는 경로 수정
+	@GetMapping({"/", "/main"})
+	public String main() {
+		log.info("/main...");
 
-		return "thymeleaf/index";
+
+		return "main";
 	}
 
 	//로그인페이지 input 기재한 id / pw 조회로 post방식이 원칙이나 임의로 쿠키생성을 위한 테스트용
