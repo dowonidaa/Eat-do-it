@@ -38,6 +38,21 @@ public class MemberController {
     @Autowired
     private HttpSession session;
 
+
+    @GetMapping("/admin/admin")
+    public String admin(HttpSession session, Model model) {
+        log.info("/admin/admin...");
+        String memberId = (String) session.getAttribute("member_id");
+        log.info("Logged in member ID: {}", memberId);
+
+        if (memberId.equals("admin")) {
+            return "admin/admin";
+        } else {
+            // admin이 아닐 경우 home으로 넘기기.
+            return "redirect:/";
+        }
+    }
+
     @GetMapping("/member/insert")
     public String insert(Model model) {
         log.info("/member/insert...");
