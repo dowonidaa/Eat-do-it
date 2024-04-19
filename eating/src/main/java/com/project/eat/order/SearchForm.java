@@ -2,15 +2,16 @@ package com.project.eat.order;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Setter
 @Getter
-public class DateForm {
+@ToString
+public class SearchForm {
 
-    private OrderType orderType;
+    private String selectedType;
     private String searchOption;
     private String searchText;
     private LocalDate startDate;

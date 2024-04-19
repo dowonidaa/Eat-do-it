@@ -54,6 +54,8 @@
                 </div>
                 <div class="col">
                     <input type="text" name="searchText" id="searchText" class="form-control" placeholder="검색어 입력">
+                    <input type="hidden" th:name="selectedType" th:value="${selectedType}" >
+
                 </div>
                 <div class="col-auto date-fields" style="display: none;">
                     <input type="date" name="startDate" id="startDate" class="form-control">
@@ -78,8 +80,16 @@
                 </div>
                 <div class="col-6 d-flex flex-column align-items-end justify-content-center ">
                     <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
-                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>
-                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/cancel\''">주문취소</button>
+                    <button th:if="${order.orderType==T(com.project.eat.order.OrderType).DELIVERY and (order.orderStatus.toString()!='배달완료'and order.orderStatus.toString()!='주문취소 완료')}"
+                            type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>
+                    <div th:if="${order.orderStatus.toString() == '결제 준비' or order.orderStatus.toString() == '결제완료' or order.orderStatus.toString() == '주문확인중'}" th:switch="${order.paymentMethod}">
+                        <button th:case="'kakaoPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'tossPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/toss/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'naverPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/naver/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'cardPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'cashPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'creditCard'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                    </div>
                     <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shop.id} + '\''">리뷰작성</button>
                 </div>
         </section>
@@ -130,6 +140,8 @@
             var dateFields = document.querySelectorAll('.date-fields');
             dateFields.forEach(field => field.style.display = searchOption === 'dateRange' ? 'block' : 'none');
         }
+
+
 
 
     </script>

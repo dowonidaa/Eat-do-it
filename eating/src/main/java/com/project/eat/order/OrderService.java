@@ -6,11 +6,9 @@ import com.project.eat.cart.cartOption.CartItemOption;
 import com.project.eat.member.MemberRepositoryEM;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.orderItem.OrderItem;
-import com.project.eat.order.orderItem.OrderItemRepository;
 import com.project.eat.order.orderItemOption.OrderItemOption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,5 +94,11 @@ public class OrderService {
 
     public List<Order> findByOrdersBetweenDates(String memberId, LocalDate startDate, LocalDate endDate) {
         return orderDAOJpa.findByOrdersBetweenDates(memberId, startDate, endDate);
+    }
+
+
+
+    public List<Order> findSearchForm(String memberId, SearchForm form) {
+        return orderRepository.searchListBetweenDates(memberId, form);
     }
 }

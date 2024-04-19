@@ -120,12 +120,12 @@ public class OrderController {
     }
 
     @GetMapping("/orders/search")
-    public Order search(DateForm dateForm) {
-        if (dateForm.getSearchOption().equals("all")){
-//            orderService.find
-        }
+    @ResponseBody
+    public List<Order> search(SearchForm form, HttpSession session) {
 
-        return null;
+        String memberId = (String) session.getAttribute("member_id");
+        log.info("searchForm = {}", form);
+        return orderService.findSearchForm(memberId, form);
     }
 
 

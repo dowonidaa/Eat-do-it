@@ -6,6 +6,8 @@ public enum OrderStatus {
     PAYMENT("결제완료"),
     CHECKING("주문확인중"),
     COOKING("주문요리중"),
+    COOKED("조리완료"),
+    PICKUP("픽업완료"),
     DELIVERY("배달중"),
     COMPLETE("배달완료"),
     CANCEL("주문취소 완료");

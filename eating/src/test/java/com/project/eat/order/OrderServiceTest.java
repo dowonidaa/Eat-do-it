@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Transactional
 @SpringBootTest
 @Slf4j
@@ -64,6 +62,27 @@ class OrderServiceTest {
 
         log.info("findOrders= {}", dowon456.size());
 
+    }
+
+
+    @Test
+    void searchList(){
+        String memberId = "dowon456";
+        SearchForm form = new SearchForm();
+        form.setSearchText("송파");
+        form.setSelectedType("all");
+        form.setSearchOption("all");
+//        form.setSearchOption("dateRange");
+//        form.setStartDate(LocalDate.parse("2024-04-19"));
+//        form.setEndDate(LocalDate.parse("2024-04-19"));
+
+        List<Order> searchForm = orderService.findSearchForm(memberId, form);
+        log.info("searchForm.size() = {}",searchForm.size());
+
+        for (Order order : searchForm) {
+            log.info("orderId = {}",order.getId());
+            log.info("orderType = {}",order.getOrderType());
+        }
     }
 
 }
