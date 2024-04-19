@@ -9,8 +9,8 @@ import java.util.Date;
 @Entity
 @Table(name = "MEMBER", uniqueConstraints = { @UniqueConstraint(columnNames = { "member_id" }) })
 public class MemberVO_JPA {
-    @Id // pk설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)//auto increment
+
+
     @Column(name = "num") // 컬럼이름 설정
     private int num;
 
@@ -20,7 +20,7 @@ public class MemberVO_JPA {
     )
     private Date created_at;
 
-    //@Id // pk설정 //이거 하면 오류남
+    @Id // pk설정
     @Column(name = "member_id", nullable = false)
     private String id;
 

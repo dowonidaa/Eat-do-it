@@ -33,13 +33,15 @@
             </div>
 
             <form class="validation-form" novalidate action="updateOK"
-                  method="post">
+                  method="post" onsubmit="prepareAddress(); prepareEmail();">
                 <div class="form-group mb-3">
-                    <label for="id"><h3>반갑습니다, </h3></label> <h2><span th:text="${vo2.id}"></span> 님</h2> <input
+                    <label for="id"><h3>반갑습니다, </h3></label> <h2><span th:text="${memberInfo.id}"></span> 님</h2> <input
                         type="hidden" class="form-control" name="id" id="id"
-                        placeholder="" th:value="${vo2.id}" required>
+                        placeholder="" th:value="${memberInfo.id}" required>
                     <div class="invalid-feedback"></div>
                 </div>
+                <!-- 사용자의 식별자(ID)를 전달하는 숨겨진 필드 -->
+                <input type="hidden" name="mId" th:value="${memberInfo.id}">
                 <hr><br><br>
 
                 <div class="form-group mb-3">
@@ -63,7 +65,7 @@
                 <div class="form-group mb-3">
                     <label for="nickname"><h2>닉네임</h2></label> <input type="text"
                       class="form-control" name="nickname" id="nickname" placeholder="변경할 닉네임을 입력해 주세요"
-                      th:value="${vo2.nickname}" required>
+                      th:value="${memberInfo.nickname}" required>
                     <div class="invalid-feedback">NICKNAME 입력해주세요.</div>
                 </div>
 
@@ -72,44 +74,58 @@
                     <label for="tel">
                         <h2>전화번호</h2>
                     </label>
-                    <input type="tel" class="form-control" name="tel" id="tel" placeholder="휴대폰 번호 입력 ('-' 제외 11자리 입력)" th:value="${vo2.tel}" required>
+                    <input type="tel" class="form-control" name="tel" id="tel" placeholder="휴대폰 번호 입력 ('-' 제외 11자리 입력)" th:value="${memberInfo.tel}" required>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="InputEmail">
                         <h2>이메일</h2>
-                    </label>
                     <div class="form-grid">
-                        <input type="email" class="form-control" id="InputEmail" placeholder="이메일 아이디를 입력하세요">
+                        <input type="hidden" id="DBEmail" name="dbEmail" placeholder="db에서 가져온 주소" th:value="${memberInfo.email}">
+                        <input type="email" class="form-control" id="EmailId" placeholder="이메일 아이디를 입력하세요"
+                               oninput="prepareEmail()" >
                         <div>@</div>
-                        <input type="email" class="form-control" id="InputEmail" placeholder="이메일 주소를 입력하세요">
-                        <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 발송</button>
+                        <input type="email" class="form-control" id="EmailDomain" placeholder="이메일 주소를 입력하세요"
+                               oninput="prepareEmail()">
+                        <!-- 합친 주소를 전달할 hidden input -->
+                        <input type="hidden" name="email" id="combined_email" placeholder="합쳐진 주소" required>
+                        <button type="button" class="btn btn-dark" onclick="sendVerificationCode();">인증번호 발송</button>
                     </div>
 
-                    <small id="NumberMsg" style="display: none;">인증번호가 발송되었습니다.</small>
-                    <div class="form-grid form-number">
-                        <input type="number" class="form-control" id="inputNumber" placeholder="인증번호 입력">
-                        <button type="button" class="btn btn-dark" onclick="verifyCode()">확인</button>
-                        <small id="VerificationMsg" style="display: none;">인증이 완료되었습니다.</small>
+                    <div id="form-findID-small">
+                        <small id="NumberMsg" class="hidden">인증번호가 발송되었습니다.</small>
                     </div>
+                    <div class="form-grid form-number">
+                        <input type="number" class="form-control" id="InputVerificationCode" placeholder="인증번호 입력">
+                        <button type="button" class="btn btn-dark" onclick="checkVerification()">확인</button>
+                        <div id="form-findID-small">
+                            <small id="EmailVerificationSuccess" class="hidden">인증이 완료되었습니다.</small>
+                            <small id="EmailVerificationFailure" class="hidden">인증번호가 일치하지 않습니다.</small>
+                        </div>
+                    </div>
+
                 </div>
 
 
                 <div class="form-group">
-                    <label for="InputAddress">
                         <h2>주소지</h2>
-                    </label>
+                    <h3>현재 주소</h3>
+                    <input type="text" class="form-control" placeholder="현재주소" th:value="${addressInfo.address}" disabled="readonly">
+                    <hr>
+                    <h3>주소지 변경</h3>
                     <div class="form-grid form-address">
-                        <input type="text" class="form-control" id="InputAddress" placeholder="우편번호">
-                        <button type="inputNumber" class="btn btn-dark">찾기</button>
+                        <input type="text" class="form-control address_input_1" id="sample6_postcode" placeholder="우편번호" disabled="readonly">
+                        <button type="button" class="btn btn-dark address_button" onclick="execution_daum_address()">찾기</button>
                     </div>
-                    <input type="text" class="form-control InputAddress" id="InputAddress" placeholder="주소">
-                    <input type="text" class="form-control InputAddress" id="InputAddress" placeholder="상세주소">
+                    <input type="text" class="form-control InputAddress address_input_2"  id="sample6_address" placeholder="주소" disabled="readonly">
+                    <input type="text" class="form-control InputAddress address_input_3" id="sample6_detailAddress" placeholder="상세주소">
+
+                    <!-- 합친 주소를 전달할 hidden input -->
+                    <input type="hidden" name="address" id="combined_address" placeholder="합쳐진 주소" required>
                 </div>
 
                 <div class="centered-button-container">
-                    <button id="updateBtn" type="submit" class="btn btn-primary centered-button" disabled>회원정보 수정하기</button>
+                    <button id="updateBtn" type="submit" class="btn btn-primary centered-button">회원정보 수정하기</button>
                 </div>
             </form>
         </div>
@@ -119,71 +135,237 @@
 
         <!-- ----------------------------------------------------------------- -->
 
+        <!--  이메일  주소 합치기    -->
+        <script>
+            function prepareEmail() {
+                // 주소 필드들의 값을 가져옴
+                var dbEmail = document.getElementById('DBEmail').value;
+                var emailId = document.getElementById('EmailId').value;
+                var emailDomain = document.getElementById('EmailDomain').value;
 
-    <!-- 아이디 중복확인 -->
-    <script>
-        function checkId() {
-            document.getElementById("IdSuccess").style.display = "block";
-        }
-    </script>
+                 // 주소 필드들이 모두 공백인지 확인
+                if (emailId.trim().length === 0 && emailDomain.trim().length === 0) {
+                    // 모든 주소 필드가 공백이면 합친 주소를 null로 설정
+                    document.getElementById('combined_email').value = null;
+                } else {
+                    // 주소 필드들이 모두 공백이 아니면 주소를 합쳐서 설정
+                    var combinedEmail = emailId + '@' + emailDomain;
+                    document.getElementById('combined_email').value = combinedEmail;
+                    console.log(combinedEmail);
 
-    <!-- 비밀번호 일치/불일치 여부 메시지 표시 -->
-    <script>
-        function checkPasswordMatch() {
-            var password1 = document.getElementById("InputPassword1").value;
-            var password2 = document.getElementById("InputPassword2").value;
+                    if (dbEmail !== combinedEmail) {
+                        document.getElementById("updateBtn").disabled = true;
+                    } else {
+                        document.getElementById("updateBtn").disabled = false;
+                    }
+                }
 
-            var verificationSuccessMessage = document.getElementById("VerificationSuccess");
-            var verificationFailureMessage = document.getElementById("VerificationFailure");
 
-            if (password1 === '' || password2 === '') {
-                verificationSuccessMessage.classList.add("hidden");
-                verificationFailureMessage.classList.add("hidden");
-                document.getElementById("updateBtn").disabled = true;
-                return; // 하나 이상의 입력란이 비어 있으면 메시지를 표시하지 않고 함수 종료
+
+            }
+        </script>
+
+        <!--    db에 있는 이메일 주소 id, site 분리해서 가져오기    -->
+        <script>
+            window.onload = function() {
+                setEmailValue();
+            };
+
+            // 이메일 주소를 "@"를 기준으로 분리하여 placeholder에 넣는 함수
+            function setEmailValue() {
+                // 이메일 주소 가져오기
+                var email = document.getElementById('DBEmail').value;
+<!--                console.log("이메일:", email);-->
+
+                // "@"를 기준으로 주소와 도메인 분리
+                var parts = email.split('@');
+                var username = parts[0]; // 사용자 이름
+                var domain = parts[1]; // 도메인
+
+                // placeholder 업데이트
+                document.getElementById('EmailId').value = username;
+                document.getElementById('EmailDomain').value  = domain;
+            }
+        </script>
+
+        <!--  메일 전송한 후, "인증번호가 발송되었습니다" 띄우는 메소드  -->
+        <script>
+            function sendVerificationCode() {
+
+                var email = document.getElementById('combined_email').value;
+                console.log(email);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/api/find/sendVerificationCode", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        console.log("이메일이 전송되었습니다.");
+                        document.getElementById("NumberMsg").classList.remove("hidden");
+                    }
+                };
+                xhr.send("email=" + email);
+            }
+        </script>
+
+
+
+        <!--  인증번호가 일치하는지 확인 -->
+        <script>
+            function checkVerification() {
+                var email = document.getElementById("combined_email").value;
+                var verificationCode = document.getElementById("InputVerificationCode").value;
+
+                // 서버로 이메일과 인증번호 전송하여 확인
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/api/find/verifyCode2", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // 인증 성공 시
+                        document.getElementById("EmailVerificationSuccess").classList.remove("hidden");
+                        document.getElementById("EmailVerificationFailure").classList.add("hidden");
+                        // 아이디 확인 버튼 활성화
+                        document.getElementById("updateBtn").disabled = false;
+
+                    } else if (xhr.readyState === 4 && xhr.status !== 200) {
+                        // 인증 실패 시
+                        document.getElementById("EmailVerificationSuccess").classList.add("hidden");
+                        document.getElementById("EmailVerificationFailure").classList.remove("hidden");
+                        // 아이디 확인 버튼 비활성화
+                        document.getElementById("updateBtn").disabled = true;
+
+                    }
+                };
+                xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(verificationCode));
+            }
+        </script>
+
+        <!--    주소 합치기    -->
+        <script>
+            function prepareAddress() {
+                // 주소 필드들의 값을 가져옴
+                var postcode = document.getElementById('sample6_postcode').value;
+                var address = document.getElementById('sample6_address').value;
+                var detailAddress = document.getElementById('sample6_detailAddress').value;
+
+                 // 주소 필드들이 모두 공백인지 확인
+                if (postcode.trim().length === 0 && address.trim().length === 0 && detailAddress.trim().length === 0) {
+                    // 모든 주소 필드가 공백이면 합친 주소를 null로 설정
+                    document.getElementById('combined_address').value = null;
+                } else {
+                    // 주소 필드들이 모두 공백이 아니면 주소를 합쳐서 설정
+                    var combinedAddress = address + ' ' + detailAddress;
+                    document.getElementById('combined_address').value = combinedAddress;
+                }
+            }
+        </script>
+
+        <!--   주소 찾기 API 추가     -->
+        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+        <script>
+            /* 다음 주소 연동 */
+            function execution_daum_address(){
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+
+                         // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        var addr = ''; // 주소 변수
+                        var extraAddr = ''; // 참고항목 변수
+
+                        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            addr = data.roadAddress;
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            addr = data.jibunAddress;
+                        }
+
+                        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                        if(data.userSelectedType === 'R'){
+                            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                                extraAddr += data.bname;
+                            }
+                            // 건물명이 있고, 공동주택일 경우 추가한다.
+                            if(data.buildingName !== '' && data.apartment === 'Y'){
+                                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                            }
+                            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                            if(extraAddr !== ''){
+                                extraAddr = ' (' + extraAddr + ')';
+                            }
+                            // 주소변수 문자열과 참고항목 문자열 합치기
+                            addr += extraAddr;
+
+                        } else {
+                            addr += ' ';
+                        }
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                        document.getElementById('sample6_postcode').value = data.zonecode;
+                        document.getElementById("sample6_address").value = addr;
+                        // 상세주소 필드가 null이 아닌 경우
+                        // 커서를 상세주소 필드로 이동한다.
+                        document.getElementById("sample6_detailAddress").focus();
+                    }
+
+                }).open();
             }
 
-            if (password1 === password2) {
-                verificationSuccessMessage.classList.remove("hidden");
-                verificationFailureMessage.classList.add("hidden");
-                // 회원정보 수정 버튼 활성화
-                document.getElementById("updateBtn").disabled = false;
-            } else {
-                verificationSuccessMessage.classList.add("hidden");
-                verificationFailureMessage.classList.remove("hidden");
-                document.getElementById("updateBtn").disabled = true;
+
+
+        </script>
+
+        <!-- 비밀번호 일치/불일치 여부 메시지 표시 -->
+        <script>
+            function checkPasswordMatch() {
+                var password1 = document.getElementById("InputPassword1").value;
+                var password2 = document.getElementById("InputPassword2").value;
+
+                var verificationSuccessMessage = document.getElementById("VerificationSuccess");
+                var verificationFailureMessage = document.getElementById("VerificationFailure");
+
+                if (password1 === '' || password2 === '') {
+                    verificationSuccessMessage.classList.add("hidden");
+                    verificationFailureMessage.classList.add("hidden");
+                    document.getElementById("updateBtn").disabled = true;
+                    return; // 하나 이상의 입력란이 비어 있으면 메시지를 표시하지 않고 함수 종료
+                }
+
+                if (password1 === password2) {
+                    verificationSuccessMessage.classList.remove("hidden");
+                    verificationFailureMessage.classList.add("hidden");
+                    // 회원정보 수정 버튼 활성화
+                    document.getElementById("updateBtn").disabled = false;
+                } else {
+                    verificationSuccessMessage.classList.add("hidden");
+                    verificationFailureMessage.classList.remove("hidden");
+                    document.getElementById("updateBtn").disabled = true;
+                }
             }
-        }
-    </script>
+        </script>
 
-    <!-- 이메일 인증번호 발송 메세지 -->
-    <script>
-        function sendVerificationCode() {
-            document.getElementById("NumberMsg").style.display = "block";
-        }
 
-        function verifyCode() {
-            document.getElementById("VerificationMsg").style.display = "block";
-        }
-    </script>
+        <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                const navLinks = document.querySelectorAll('.nav-link, .btn');
 
-    <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            const navLinks = document.querySelectorAll('.nav-link, .btn');
+                // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+                navLinks.forEach(function (link) {
+                    // 글자 크기에 따라 가로폭 조정
+                    const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
+                    const textLength = link.textContent.length; // 텍스트 길이
 
-            // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
-            navLinks.forEach(function (link) {
-                // 글자 크기에 따라 가로폭 조정
-                const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
-                const textLength = link.textContent.length; // 텍스트 길이
-
-                // 가로폭 조정
-                const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
-                link.style.width = dynamicWidth + 'px';
+                    // 가로폭 조정
+                    const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+                    link.style.width = dynamicWidth + 'px';
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 
 

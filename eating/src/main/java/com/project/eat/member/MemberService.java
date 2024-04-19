@@ -11,6 +11,7 @@ public class MemberService {
 	@Autowired
 	private MemberDAO_JPA jpa;
 
+
 	public MemberVO_JPA insertOK(MemberVO_JPA vo) {
 		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음
 	}
@@ -44,6 +45,9 @@ public class MemberService {
 //		return jpa.findByOrderByNumAsc();//순정렬해주는 메소드를 jpa규칙에 따라 빌드 가능
 		return jpa.selectAll_JPQL();//JPQL
 	}
+
+
+
 	public List<MemberVO_JPA> selectAllPageBlock(int cpage, int pageBlock) {
 		int startRow = (cpage - 1) * pageBlock + 1;
 		

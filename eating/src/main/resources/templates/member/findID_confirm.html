@@ -32,12 +32,16 @@
             <!-- 아이디를 표시할 div -->
             <div class="id-confirm-out">
                 <div class="id-confirm">
-                    <p id="usernameDisplay" class="hidden"></p> <!-- 아이디가 여기에 표시될 것입니다. -->
+                    <div id="foundId" hidden>[[${foundId}]]</div>
+                    <p>아이디는 </p>
+                    <p id="usernameDisplay" class="hidden"></p>
+                    <p>입니다</p>
+
                 </div>
             </div>
             <div class="centered-button-container">
                 <button type="button" class="btn btn-primary centered-button"
-                        th:onclick="|location.href='@{main}'|">홈으로</button>
+                        th:onclick="|location.href='@{../main}'|">홈으로</button>
             </div>
         </div>
 
@@ -74,39 +78,23 @@
                 // URL에서 쿼리 매개변수 파싱
                 var params = new URLSearchParams(window.location.search);
                 // 이메일 값 가져오기
-                var email = params.get('email');
+                var email = document.getElementById('usernameDisplay');
                 // 가져온 이메일 값이 있다면 해당 이메일로 아이디 확인 수행
-                if (email) {
-                    getAndDisplayUsername(email);
-                } else {
+                if (!email) {
                     // 이메일 값이 없으면 예외 처리 또는 사용자에게 알림
                     alert("이메일 주소를 찾을 수 없습니다.");
                 }
             };
 
-            // 서버로부터 아이디를 가져와서 화면에 표시
-            function getAndDisplayUsername(email) {
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/api/find/sendUsernames", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4) {
-                        if (xhr.status == 200) {
-                            var usernames = JSON.parse(xhr.responseText);
-                            if (usernames && usernames.length > 0) {
-                                var usernameDisplay = document.getElementById('usernameDisplay');
-                                usernameDisplay.innerHTML = "아이디: " + usernames.join(", ");
-                                usernameDisplay.classList.remove("hidden");
-                            } else {
-                                alert("해당 이메일 주소로 등록된 아이디가 없습니다.");
-                            }
-                        } else {
-                            alert("서버 오류가 발생했습니다.");
-                        }
-                    }
-                };
-                xhr.send("email=" + email);
-            }
+
+            // foundId 값을 가져옴
+            var foundId = document.getElementById("foundId").innerHTML;
+
+            // usernameDisplay 요소에 foundId 값을 넣음
+            document.getElementById("usernameDisplay").innerHTML = foundId;
+            // usernameDisplay 요소를 보이도록 함
+            document.getElementById("usernameDisplay").classList.remove("hidden");
+
         </script>
 
 </body>

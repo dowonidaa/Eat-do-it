@@ -30,7 +30,7 @@
             </div>
 
 
-            <form  id="usernameDisplay" class="hidden validation-form" novalidate action="updateOK"
+            <form  id="usernameDisplay" class="hidden validation-form" novalidate action="changePWOK"
                    method="post">
 
                 <div class="form-group mb-3 hidden">
@@ -39,6 +39,8 @@
                         placeholder="" th:value="${vo2.id}" required>
                     <div class="invalid-feedback"></div>
                 </div>
+
+                <div id="vo2" hidden>[[${vo2.id}]]</div>
 
                 <div class="form-login">
                     <input type="password" class="form-control" name="pw" id="InputID" placeholder="새 비밀번호 입력"  required
@@ -102,42 +104,25 @@
 
     <!--   이메일로 등록된 아이디가 없는 경우 -->
     <script>
+
+
         // 페이지 로드 시 URL에서 이메일 값 추출하여 사용
         window.onload = function() {
             // URL에서 쿼리 매개변수 파싱
             var params = new URLSearchParams(window.location.search);
-            // 이메일 값 가져오기
-            var email = params.get('email');
+            // vo2 값 가져오기
+            var vo2 = document.getElementById("vo2");
             // 가져온 이메일 값이 있다면 해당 이메일로 아이디 확인 수행
-            if (email) {
-                getAndDisplayUsername(email);
-            } else {
+            if (!vo2) {
                 // 이메일 값이 없으면 예외 처리 또는 사용자에게 알림
                 alert("이메일 주소를 찾을 수 없습니다.");
+            } else {
+                usernameDisplay.classList.remove("hidden");
+                console.log("정상적으로 출력되었습니다.");
             }
         };
 
-        // 서버로부터 아이디를 가져와서 화면에 표시
-        function getAndDisplayUsername(email) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/find/sendUsernames", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        var usernames = JSON.parse(xhr.responseText);
-                        if (usernames && usernames.length > 0) {
-                            usernameDisplay.classList.remove("hidden");
-                        } else {
-                            alert("해당 이메일 주소로 등록된 아이디가 없습니다.");
-                        }
-                    } else {
-                        alert("서버 오류가 발생했습니다.");
-                    }
-                }
-            };
-            xhr.send("email=" + email);
-        }
+
     </script>
 
     <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
