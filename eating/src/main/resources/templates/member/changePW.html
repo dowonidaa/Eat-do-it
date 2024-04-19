@@ -1,0 +1,148 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>새 비밀번호 변경</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/eat2.css}">
+<!--    <link href="../../static/css/eat2.css" rel="stylesheet">-->
+</head>
+
+<body th:replace="~{layout2 :: layout2}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+
+
+    <div th:fragment="content" class="container py-3">
+        <!-- ----------------------------------------------------------------- -->
+        <!-- content 넣으실 부분 -->
+        <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
+        <div id='wrapper'>
+            <div class="title">
+                <h1>새로운 비밀번호 변경</h1>
+            </div>
+
+
+            <form  id="usernameDisplay" class="hidden validation-form" novalidate action="changePWOK"
+                   method="post">
+
+                <div class="form-group mb-3 hidden">
+                    <label for="id"></label> <span th:text="${vo2.id}"></span><input
+                        type="hidden" class="form-control" name="id" id="id"
+                        placeholder="" th:value="${vo2.id}" required>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div id="vo2" hidden>[[${vo2.id}]]</div>
+
+                <div class="form-login">
+                    <input type="password" class="form-control" name="pw" id="InputID" placeholder="새 비밀번호 입력"  required
+                        oninput="checkPasswordMatch()">
+                </div>
+
+
+                <div class="form-login">
+                    <input type="password" class="form-control" id="InputPassword1" placeholder="비밀번호 재입력" required
+                        oninput="checkPasswordMatch()">
+                </div>
+                <div id="form-changePW-small">
+                    <small id="VerificationSuccess" class="hidden">비밀번호가 일치합니다.</small>
+                    <small id="VerificationFailure" class="hidden">비밀번호가 일치하지 않습니다.</small>
+                </div>
+
+
+                <div class="centered-button-container">
+                    <button id="updateBtn" type="submit" class="btn btn-primary centered-button" disabled>비밀번호 변경하기</button>
+                </div>
+            </form>
+
+
+
+
+        </div>
+
+
+
+
+
+
+    <!-- 비밀번호 일치/불일치 여부 메시지 표시 -->
+    <script>
+        function checkPasswordMatch() {
+            var password1 = document.getElementById("InputID").value;
+            var password2 = document.getElementById("InputPassword1").value;
+
+            var verificationSuccessMessage = document.getElementById("VerificationSuccess");
+            var verificationFailureMessage = document.getElementById("VerificationFailure");
+
+            if (password1 === '' || password2 === '') {
+                verificationSuccessMessage.classList.add("hidden");
+                verificationFailureMessage.classList.add("hidden");
+                document.getElementById("updateBtn").disabled = true;
+                return; // 하나 이상의 입력란이 비어 있으면 메시지를 표시하지 않고 함수 종료
+            }
+
+            if (password1 === password2) {
+                verificationSuccessMessage.classList.remove("hidden");
+                verificationFailureMessage.classList.add("hidden");
+                // 회원정보 수정 버튼 활성화
+                document.getElementById("updateBtn").disabled = false;
+            } else {
+                verificationSuccessMessage.classList.add("hidden");
+                verificationFailureMessage.classList.remove("hidden");
+                document.getElementById("updateBtn").disabled = true;
+            }
+        }
+    </script>
+
+    <!--   이메일로 등록된 아이디가 없는 경우 -->
+    <script>
+
+
+        // 페이지 로드 시 URL에서 이메일 값 추출하여 사용
+        window.onload = function() {
+            // URL에서 쿼리 매개변수 파싱
+            var params = new URLSearchParams(window.location.search);
+            // vo2 값 가져오기
+            var vo2 = document.getElementById("vo2");
+            // 가져온 이메일 값이 있다면 해당 이메일로 아이디 확인 수행
+            if (!vo2) {
+                // 이메일 값이 없으면 예외 처리 또는 사용자에게 알림
+                alert("이메일 주소를 찾을 수 없습니다.");
+            } else {
+                usernameDisplay.classList.remove("hidden");
+                console.log("정상적으로 출력되었습니다.");
+            }
+        };
+
+
+    </script>
+
+    <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link, .btn');
+
+            // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+            navLinks.forEach(function (link) {
+                // 글자 크기에 따라 가로폭 조정
+                const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
+                const textLength = link.textContent.length; // 텍스트 길이
+
+                // 가로폭 조정
+                const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+                link.style.width = dynamicWidth + 'px';
+            });
+        });
+    </script>
+</body>
+
+
+</html>

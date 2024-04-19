@@ -1,0 +1,159 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>아이디 찾기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/eat2.css}">
+<!--    <link href="../../static/css/eat2.css" rel="stylesheet">-->
+</head>
+
+<body th:replace="~{layout2 :: layout2}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+
+
+    <div th:fragment="content" class="container py-3">
+        <!-- ----------------------------------------------------------------- -->
+        <!-- content 넣으실 부분 -->
+        <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
+        <div id='wrapper'>
+            <div class="title">
+                <h1>아이디 찾기</h1>
+            </div>
+
+
+            <form action="/member/findID_confirm" method="POST">
+                <div class="form-findID">
+                    <input type="text" class="form-control" id="InputEmail" name="email" placeholder="가입한 이메일 주소를 입력하세요">
+                    <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 전송</button>
+                </div>
+                <div id="form-findID-small">
+                    <small id="NumberMsg" class="hidden">인증번호가 발송되었습니다.</small>
+                </div>
+
+                <div class="form-findID">
+                    <input type="text" class="form-control" id="InputVerificationCode" name="verificationCode" placeholder="인증번호를 입력하세요">
+                    <button type="button" class="btn btn-dark" onclick="checkVerification()">인증번호 확인</button>
+                </div>
+                <div id="form-findID-small">
+                    <small id="VerificationSuccess" class="hidden">인증이 완료되었습니다.</small>
+                    <small id="VerificationFailure" class="hidden">인증번호가 일치하지 않거나 가입한 이메일이 아닙니다.</small>
+                </div>
+
+                <!-- 버튼 클릭 시 findID_confirm.html로 이동하도록 수정 -->
+                <div class="centered-button-container">
+                    <button id="changeIDBtn" type="submit" class="btn btn-primary centered-button" disabled>아이디 확인</button>
+                </div>
+            </form>
+
+        </div>
+
+
+
+
+
+        <!-- ----------------------------------------------------------------- -->
+
+    <!--  메일 전송한 후, "인증번호가 발송되었습니다" 띄우는 메소드  -->
+    <script>
+        function sendVerificationCode() {
+            var email = document.getElementById('InputEmail').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/sendVerificationCode", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById("NumberMsg").classList.remove("hidden");
+                }
+            };
+            xhr.send("email=" + email);
+        }
+    </script>
+
+
+    <!--  인증번호가 일치하는지 확인 -->
+    <script>
+        function checkVerification() {
+            var email = document.getElementById("InputEmail").value;
+            var verificationCode = document.getElementById("InputVerificationCode").value;
+
+            // 서버로 이메일과 인증번호 전송하여 확인
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/verifyCode", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // 인증 성공 시
+                    document.getElementById("VerificationSuccess").classList.remove("hidden");
+                    document.getElementById("VerificationFailure").classList.add("hidden");
+                    // 아이디 확인 버튼 활성화
+                    document.getElementById("changeIDBtn").disabled = false;
+                } else if (xhr.readyState === 4 && xhr.status !== 200) {
+                    // 인증 실패 시
+                    document.getElementById("VerificationSuccess").classList.add("hidden");
+                    document.getElementById("VerificationFailure").classList.remove("hidden");
+                    // 아이디 확인 버튼 비활성화
+                    document.getElementById("changeIDBtn").disabled = true;
+                }
+            };
+            xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(verificationCode));
+        }
+    </script>
+
+
+
+    <!-- 인증번호 일치 후, 아이디 확인 버튼 누르면 아이디를 보여주는 메소드-->
+    <script>
+        function getAndDisplayUsername() {
+            var email = document.getElementById('InputEmail').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/find/sendUsernames", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var usernames = JSON.parse(xhr.responseText);
+                    if (usernames && usernames.length > 0) {
+                        var usernameDisplay = document.getElementById('usernameDisplay');
+                        usernameDisplay.innerHTML = "아이디: " + usernames.join(", ");
+                        usernameDisplay.classList.remove("hidden");
+                    } else {
+                        alert("해당 이메일 주소로 등록된 아이디가 없습니다.");
+                    }
+                }
+            };
+            xhr.send("email=" + email);
+        }
+    </script>
+
+
+    <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link, .btn');
+
+            // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+            navLinks.forEach(function (link) {
+                // 글자 크기에 따라 가로폭 조정
+                const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
+                const textLength = link.textContent.length; // 텍스트 길이
+
+                // 가로폭 조정
+                const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+                link.style.width = dynamicWidth + 'px';
+            });
+        });
+    </script>
+
+
+</body>
+
+
+</html>
