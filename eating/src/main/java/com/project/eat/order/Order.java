@@ -1,5 +1,6 @@
 package com.project.eat.order;
 
+import com.project.eat.member.Coupon;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.orderItem.OrderItem;
 import com.project.eat.shop.ShopVO;
@@ -50,6 +51,9 @@ public class Order {
     private int discount;
     private String orderTel;
     private String tid;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.REMOVE)
+    private Coupon coupon;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> orderItems = new ArrayList<>();

@@ -1,5 +1,6 @@
 package com.project.eat.member;
 
+import com.project.eat.order.Order;
 import com.project.eat.shop.ShopVO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,10 +25,14 @@ public class Coupon {
     private String content;
     private int price;
 
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "shop_id")
     private ShopVO shop;
 
+    private boolean canUse;
 
-
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

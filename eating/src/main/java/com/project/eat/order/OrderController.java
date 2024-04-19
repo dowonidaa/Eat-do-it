@@ -49,7 +49,7 @@ public class OrderController {
         Cart cart = findMember.getCart();
 
         List<Coupon> coupons = findMember.getCoupons();
-        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.getShop() == null || c.getShop().getId().equals(cart.getShop().getId())).toList();
+        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.isCanUse() && (c.getShop() == null || c.getShop().getId().equals(cart.getShop().getId()))).toList();
 
         model.addAttribute("coupons", filteredCoupons);
         model.addAttribute("cart", cart);
@@ -78,7 +78,7 @@ public class OrderController {
         orderService.update(order);
         cartService.deleteCart(memberId);
         if (form.getCouponId() != null) {
-            couponService.deleteCoupon(form.getCouponId());
+            couponService.couponUsed(form.getCouponId(), order);
         }
         return "redirect:/order/success?orderId=" + order.getId();
     }
@@ -229,7 +229,7 @@ public class OrderController {
         ApproveResponseVO approveResponse = kakaopayService.payApprove(order.getId(), tid, pgToken, memberId);
         cartService.deleteCart(memberId);
         Long couponId = (Long) session.getAttribute("couponId");
-        couponService.deleteCoupon(couponId);
+        couponService.couponUsed(couponId, order);
         session.removeAttribute("couponId");
         session.removeAttribute("order");
         order.setOrderStatus(OrderStatus.PAYMENT);
@@ -253,6 +253,7 @@ public class OrderController {
         kakaopayService.payCancel(order);
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
+        couponService.couponRollback(order);
         attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
         return "redirect:/orders/" + orderId;
     }
@@ -268,6 +269,7 @@ public class OrderController {
 
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
+        couponService.couponRollback(order);
         attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
         return "redirect:/orders/" + orderId;
     }
