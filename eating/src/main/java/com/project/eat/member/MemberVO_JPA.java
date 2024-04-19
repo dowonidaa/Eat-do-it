@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,31 +21,48 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "member")
 public class MemberVO_JPA {
 
+    @Column(name = "num") // 컬럼이름 설정
     private int num;
 
-    @Id
-    @Column(name = "member_id")
-    @Comment("회원 id")
+    @Column(
+            columnDefinition = "DATETIME(0) default CURRENT_TIMESTAMP",
+            insertable = false
+    )
+    private Date created_at;
+
+    @Id // pk설정
+    @Column(name = "member_id", nullable = false)
     private String id;
 
+    //    @Column(name = "member_status", nullable = false)
+    @Column(name = "member_status")
+    private String status;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+//    @Column(name = "email", nullable = true)
+    @Column(name = "email")
+    private String email;
+
+
+//    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(name = "pw", nullable = false)
     private String pw;
 
-    @Comment("회원 이름")
-    private String name;
     private String tel;
-    private String nickname;
-    private String email;
 
     @Column(name = "user_salt")
     private String salt;
 
     private Date regdate;
 
-    @ColumnDefault("'회원'")
-    private String memberStatus;
 
-    @ColumnDefault("CURRENT_TIMESTAMP(6)")
-    private LocalDateTime createdAt;
+
+
 
     @OneToOne(mappedBy = "member", fetch = LAZY)
     private Cart cart;

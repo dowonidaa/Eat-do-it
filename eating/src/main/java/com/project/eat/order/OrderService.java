@@ -116,7 +116,7 @@ public class OrderService {
                     .orElse(orderItems.isEmpty() ? "" : orderItems.get(0).getItem().getItemName());
             String itemName = matchedItemName + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
 
-            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
+            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getShopId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
             orders.add(orderDTO);
         }
 
@@ -138,7 +138,7 @@ public class OrderService {
         for (Order order : findOrder) {
             List<OrderItem> orderItems = order.getOrderItems();
             String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
-            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
+            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getShopId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
             orders.add(orderDTO);
         }
 

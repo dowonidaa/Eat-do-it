@@ -16,12 +16,28 @@ public class MemberService {
 	private final MemberRepositoryEM memberRepository;
 
 
+
 	public MemberVO_JPA insertOK(MemberVO_JPA vo) {
 		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음
 	}
 
 	public MemberVO_JPA updateOK(MemberVO_JPA vo) {
-		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음
+
+		//MemberVO_JPA existingMember = jpa.findByNum(vo.getNum()); // 기존의 멤버 정보를 조회
+		MemberVO_JPA existingMember = jpa.findById(vo.getId()); // 기존의 멤버 정보를 조회
+
+		// 입력 받은 값과 기존 값 중에서 값이 존재하는 것을 우선적으로 선택
+		existingMember.setId(vo.getId() != null ? vo.getId() : existingMember.getId());
+		existingMember.setStatus(vo.getStatus() != null ? vo.getStatus() : existingMember.getStatus());
+		existingMember.setName(vo.getName() != null ? vo.getName() : existingMember.getName());
+		existingMember.setEmail(vo.getEmail() != null ? vo.getEmail() : existingMember.getEmail());
+		existingMember.setNickname(vo.getNickname() != null ? vo.getNickname() : existingMember.getNickname());
+		existingMember.setPw(vo.getPw() != null ? vo.getPw() : existingMember.getPw());
+		existingMember.setTel(vo.getTel() != null ? vo.getTel() : existingMember.getTel());
+		existingMember.setSalt(vo.getSalt() != null ? vo.getSalt() : existingMember.getSalt());
+
+		// 기존의 멤버 정보를 저장하여 업데이트
+		return jpa.save(existingMember);
 	}
 
 	public int deleteOK(MemberVO_JPA vo) {
@@ -34,6 +50,9 @@ public class MemberService {
 //		return jpa.findByOrderByNumAsc();//순정렬해주는 메소드를 jpa규칙에 따라 빌드 가능
 		return jpa.selectAll_JPQL();//JPQL
 	}
+
+
+
 	public List<MemberVO_JPA> selectAllPageBlock(int cpage, int pageBlock) {
 		int startRow = (cpage - 1) * pageBlock + 1;
 		
@@ -42,6 +61,12 @@ public class MemberService {
 
 	public MemberVO_JPA selectOne(MemberVO_JPA vo) {
 		return jpa.findByNum(vo.getNum());
+	}
+	public MemberVO_JPA selectOneById(MemberVO_JPA vo) {
+		return jpa.findById(vo.getId());
+	}
+	public MemberVO_JPA selectOneByEmail(MemberVO_JPA vo) {
+		return jpa.findByEmail(vo.getEmail());
 	}
 	
 	public List<MemberVO_JPA> searchList(String searchKey, String searchWord) {

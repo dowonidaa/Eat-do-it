@@ -37,6 +37,16 @@ public class MemberInterceptor implements HandlerInterceptor {
 				return false;
 			}
 		}
+//
+//		// 비밀번호 변경 접근 제한
+//		if(url.equals("/member/changePW")) {
+//			String emailParam = request.getParameter("email");
+//			if (emailParam == null || emailParam.isEmpty()) {
+//				log.info("접근제한");
+//				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+//				return false;
+//			}
+//		}
 		
 		return true;
 	}

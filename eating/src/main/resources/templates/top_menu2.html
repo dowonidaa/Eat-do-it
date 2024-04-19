@@ -13,6 +13,13 @@
 				<div class="container-fluid">
 					<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
+
+
+						<div class="navbar-nav">
+							<a th:if="${session.member_id == null}" class="nav-link" th:href="@{/member/login}">로그인</a>
+							<a th:if="${session.member_id != null}" class="nav-link" th:href="@{/member/logout}">로그아웃</a>
+						</div>
+
 					</div>
 				</div>
 			</nav>

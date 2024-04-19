@@ -1,5 +1,8 @@
 package com.project.eat.member;
 
+import com.project.eat.address.AddService;
+import com.project.eat.address.AddressDAO_JPA;
+import com.project.eat.address.AddressVO_JPA;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -9,14 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.reflect.Member;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -25,7 +27,31 @@ public class MemberController {
     private MemberService service;
 
     @Autowired
+    private AddService service_add;
+
+    @Autowired
+    private MemberDAO_JPA jpa;
+
+    @Autowired
+    private AddressDAO_JPA jpa_add;
+
+    @Autowired
     private HttpSession session;
+
+
+    @GetMapping("/admin/admin")
+    public String admin(HttpSession session, Model model) {
+        log.info("/admin/admin...");
+        String memberId = (String) session.getAttribute("member_id");
+        log.info("Logged in member ID: {}", memberId);
+
+        if (memberId.equals("admin")) {
+            return "admin/admin";
+        } else {
+            // admin이 아닐 경우 home으로 넘기기.
+            return "redirect:/";
+        }
+    }
 
     @GetMapping("/member/insert")
     public String insert(Model model) {
@@ -191,34 +217,160 @@ public class MemberController {
         MemberVO_JPA vo2 = service.selectOne(vo);
         vo2.setPw(vo2.getPw().substring(0,10));
         model.addAttribute("vo2", vo2);
+        log.info("vo2:{}",vo2);
 
         return "member/selectOne";
     }
 
+
+
+
+    //member 테이블 정보, address 테이블 정보
     @PostMapping("/member/updateOK")
-    public String updateOK(MemberVO_JPA vo) {
+    public String updateOK(MemberVO_JPA memberVO, AddressVO_JPA addressVO, HttpServletRequest request) {
         log.info("/member/updateOK...");
-        log.info("vo:{}",vo);
 
-        String salt = User_pwSHA512.Salt();
-        log.info("Salt : {}",salt);
-        //k8C2IX+McOvgwDRYrnjeLw==
-        vo.setSalt(salt);//디비에 저장-복호화 할때 사용
+        String newPassword = request.getParameter("pw");
+        String newAddress = request.getParameter("address");
+        String newEmail = request.getParameter("email");
+        String dbEmail = request.getParameter("dbEmail");
+        String newNickname = request.getParameter("nickname");
+        String newTel = request.getParameter("tel");
 
-        String hex_password = User_pwSHA512.getSHA512(vo.getPw(),salt);//암호화
-        log.info("암호화 결과 : {}", hex_password);
-        //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
-        vo.setPw(hex_password);//디비에 저장
+        boolean isUpdate = false;
 
-        //수정일자 반영안하면 null값이 들어가는 것을 방지하기위해...
-        if(vo.getRegdate()==null) {
-            vo.setRegdate(new Date());
+        // 비밀번호 변경
+        // 새로운 비밀번호가 입력되었을 때만 업데이트
+        if ((newPassword != null && !newPassword.isEmpty()) && (isUpdate == false)) {
+
+            log.info("Original password: {}", memberVO.getPw()); // 원본 비밀번호 로깅
+            log.info("memberVO:{}",memberVO);
+
+            String salt = User_pwSHA512.Salt();
+            log.info("Salt : {}",salt);
+            //k8C2IX+McOvgwDRYrnjeLw==
+            String hex_password = User_pwSHA512.getSHA512(newPassword, salt); //암호화
+            log.info("암호화 결과 : {}", hex_password);
+            //c2ba573ac2595ebfac7f94c806b9e6279141057841f03b9b6f82e1cd114505eedabaf0cef9326cf470ff18941b4e780a4a5bf430e9a29bf1e538d37eece99289
+            //얘는 입력된 걸 다 받아서 비밀번호만 바꿈. 그래서 나머지도 다 바뀌는 거.
+            memberVO.setPw(hex_password);//디비에 저장
+            memberVO.setSalt(salt); //디비에 저장-복호화 할때 사용
+
+            //수정일자 반영안하면 null값이 들어가는 것을 방지하기위해
+            if(memberVO.getRegdate()==null) {
+                memberVO.setRegdate(new Date());
+            }
+            
+            // Member 정보를 각각 업데이트
+            MemberVO_JPA updatedMember = service.updateOK(memberVO);
+            log.info("Updated member: {}", updatedMember);
+
+            isUpdate = true;
         }
 
-        MemberVO_JPA result = service.updateOK(vo);
-        log.info("result:{}", result);
+        // 닉네임 변경
+        if (newNickname != null && !newNickname.isEmpty() && (isUpdate == false)){
+            //얘는 입력된 게 아니라, 원래 데이터를 가져옴.
+            //비밀번호는 왜 공백 입력이 안되느냐 : 저중에 공백인 애가 비밀번호 뿐이니까, 쟤는 자동으로 나머지 값이 다 입력되는 것
+            //그러면, 비밀번호 로직을 따서 memberVO에 pw만 따로 입력을 해주면 끝나는 문제 ! ! !
+            //그래서 단독 업데이트가 비밀번호 로직을 쓰면 안 됐던 것..ㅜㅜㅜ
 
-        return "redirect:selectAll";
+
+            //기존 닉네임과 비교하기 위해
+            String existingNickname = jpa.findById(memberVO.getId()).getNickname();
+            log.info("원래 닉네임 : {}", existingNickname);
+
+            if (!existingNickname.equals(newNickname)){
+                //비밀번호는 기본으로 입력되어 있지 않으니까, DB에서 id로 검색해서 따로 받아옴.
+                String existingPW = jpa.findById(memberVO.getId()).getPw();
+
+                memberVO.setNickname(newNickname);
+                memberVO.setPw(existingPW);
+
+                // Member 정보를 각각 업데이트
+                MemberVO_JPA updatedMember = service.updateOK(memberVO);
+
+                log.info("Updated nickname: {}", updatedMember);
+
+                isUpdate = true;
+
+            } else {
+                log.info("기존 닉네임과 같습니다");
+            }
+
+
+
+
+        }
+
+        // 전화번호 변경
+        if (newTel != null && !newTel.isEmpty() && (isUpdate == false)){
+
+            //기존 전화번호와 비교하기 위해
+            String existingTel = jpa.findById(memberVO.getId()).getTel();
+            log.info("원래 전화번호 : {}", existingTel);
+
+            //existingTel 있는 tel이랑 tel이 같으면 -> update 안 함.
+            if(!existingTel.equals(newTel)){
+                //비밀번호는 기본으로 입력되어 있지 않으니까, DB에서 id로 검색해서 따로 받아옴.
+                String existingPW = jpa.findById(memberVO.getId()).getPw();
+
+                memberVO.setTel(newTel);
+                memberVO.setPw(existingPW);
+
+                // Member 정보를 각각 업데이트
+                MemberVO_JPA updatedMember = service.updateOK(memberVO);
+
+                log.info("Updated tel: {}", updatedMember);
+
+                isUpdate = true;
+            } else {
+                log.info("기존 전화번호와 같습니다");
+            }
+
+
+        }
+
+        // 이메일 변경
+        // 조건문 추가 : newEmail 안 비어있고, update 안 된 상태인 거고, existing 관련 조건문까지(얘는 분기 안에) 추가.
+        if (newEmail != null && !newEmail.isEmpty() && (isUpdate == false)){
+
+            //기존 이메일과 비교하기 위해
+            String existingEmail = jpa.findById(memberVO.getId()).getEmail();
+            log.info("원래 이메일 : {}", existingEmail);
+            
+            if(!existingEmail.equals(newEmail)){
+                //비밀번호는 기본으로 입력되어 있지 않으니까, DB에서 id로 검색해서 따로 받아옴.
+                String existingPW = jpa.findById(memberVO.getId()).getPw();
+
+                memberVO.setEmail(newEmail);
+                memberVO.setPw(existingPW);
+
+                // Member 정보를 각각 업데이트
+                MemberVO_JPA updatedMember = service.updateOK(memberVO);
+
+                log.info("Updated email: {}", updatedMember);
+
+                isUpdate = true;
+            } else {
+                log.info("기존 이메일과 같습니다");
+            }
+
+        }
+
+
+        // 주소 변경
+        if (newAddress != null && !newAddress.isEmpty()){
+            AddressVO_JPA existingAddress = jpa_add.findBymId(addressVO.getMId()); // 기존의 주소 정보를 조회
+            existingAddress.setAddress(addressVO.getAddress());
+
+            AddressVO_JPA updatedAddress = service_add.updateOK(existingAddress);
+
+            log.info("Updated address: {}", updatedAddress);
+        }
+
+
+        return "redirect:/";
 
     }
 
@@ -242,22 +394,6 @@ public class MemberController {
         return "redirect:selectAll";
     }
 
-
-    @GetMapping({"/member/changePW"})
-    public String changePW() {
-        log.info("/member/changePW...");
-
-
-        return "member/changePW";
-    }
-
-    @GetMapping({"/member/findPW"})
-    public String findPW() {
-        log.info("/member/findPW...");
-
-        return "member/findPW";
-    }
-
     @GetMapping({"/member/join"})
     public String join() {
         log.info("/member/join...");
@@ -275,9 +411,47 @@ public class MemberController {
     }
 
     @GetMapping({"/member/mypage"})
-    public String mypage() {
+    public String mypage(Model model, HttpSession session) {
         log.info("/member/mypage...");
+        // 세션에서 로그인한 사용자의 아이디 가져오기 : member 테이블에 사용할 거
+        String memberId = (String) session.getAttribute("member_id");
+        log.info("Logged in member ID: {}", memberId);
 
+        // 로그인한 사용자의 아이디를 이용하여 해당 회원 정보 조회
+        MemberVO_JPA memberVO = new MemberVO_JPA();
+        memberVO.setId(memberId);
+
+        // 회원 정보 조회
+        MemberVO_JPA memberInfo = service.selectOneById(memberVO);
+        log.info("Member info: {}", memberInfo);
+
+
+        // 멤버 아이디를 사용하여 해당 멤버 정보를 데이터베이스에서 조회 : address 테이블에 사용할 거
+        MemberVO_JPA memberId_add = jpa.findById(memberVO.getId());
+
+        // 주소 정보 조회
+        AddressVO_JPA addressVO = new AddressVO_JPA();
+        //memberId를 MemberVO_JPA로 바꿔야함.
+        addressVO.setMId(memberId_add);
+
+        // 주소 정보 조회
+        AddressVO_JPA addressInfo = service_add.selectOneById(addressVO);
+//        log.info("Address info: {}", addressInfo);
+
+        if (memberInfo != null) {
+            memberInfo.setPw(memberInfo.getPw().substring(0, 10));
+            model.addAttribute("memberInfo", memberInfo);
+        } else {
+            // 회원 정보가 없는 경우에 대한 처리
+            log.error("Member not found for ID: {}", memberId);
+            return "redirect:/"; // 예시로 에러 페이지로 리다이렉트
+        }
+
+        if (addressInfo != null) {
+            model.addAttribute("addressInfo", addressInfo);
+        } else {
+            log.warn("Address not found for member ID: {}", memberId);
+        }
 
         return "member/mypage";
     }

@@ -43,7 +43,7 @@
                     <div class="order-number" th:text="|주문번호 : ${order.id}|">주문번호 : 0000</div>
                 </div>
                 <div class="button-container">
-                <button class="btn btn-primary" th:onclick="'window.location.href=\'/shop/' + ${order.shop.id} + '\''">음식점 보기</button>
+                <button class="btn btn-primary" th:onclick="'window.location.href=\'/shop/' + ${order.shop.shopId} + '\''">음식점 보기</button>
                 <button class="btn btn-primary" th:onclick="|window.location.href='@{/orders/{id}/reorder(id=${order.id})}'|">재주문</button>
                 <div th:if="${order.orderStatus.toString() == '결제 준비' or order.orderStatus.toString() == '결제완료' or order.orderStatus.toString() == '주문확인중'}" th:switch="${order.paymentMethod}">
                     <button th:case="'kakaoPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>

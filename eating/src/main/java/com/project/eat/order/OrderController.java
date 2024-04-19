@@ -44,12 +44,12 @@ public class OrderController {
         String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         if (findMember.getCart().getTotalPrice() < findMember.getCart().getShop().getMinPriceInt()) {
-            return "redirect:/shop/" + findMember.getCart().getShop().getId();
+            return "redirect:/shop/" + findMember.getCart().getShop().getShopId();
         }
         Cart cart = findMember.getCart();
 
         List<Coupon> coupons = findMember.getCoupons();
-        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.isCanUse() && (c.getShop() == null || c.getShop().getId().equals(cart.getShop().getId()))).toList();
+        List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.isCanUse() && (c.getShop() == null || c.getShop().getShopId().equals(cart.getShop().getShopId()))).toList();
 
         model.addAttribute("coupons", filteredCoupons);
         model.addAttribute("cart", cart);
@@ -145,10 +145,10 @@ public class OrderController {
         MemberVO_JPA member = findOrder.getMember();
         if (member.getCart() == null) {
             cartService.createCart(member.getId());
-            cartService.setShopCart(member.getId(), findOrder.getShop().getId());
+            cartService.setShopCart(member.getId(), findOrder.getShop().getShopId());
 
         } else {
-            cartService.deleteAndCreateCart(member.getId(), findOrder.getShop().getId());
+            cartService.deleteAndCreateCart(member.getId(), findOrder.getShop().getShopId());
         }
         for (OrderItem orderItem : findOrder.getOrderItems()) {
             for (OrderItemOption orderItemOption : orderItem.getOrderItemOptions()) {

@@ -82,7 +82,7 @@ public class CartService {
     public Long findShopId(String memberId) {
         MemberVO_JPA findMember = memberRepository.findOne(memberId);
         if(findMember.getCart().getShop() !=null){
-            return (long) findMember.getCart().getShop().getId();
+            return (long) findMember.getCart().getShop().getShopId();
         }
         return  null;
     }

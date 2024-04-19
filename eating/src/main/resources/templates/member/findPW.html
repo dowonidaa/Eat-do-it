@@ -30,26 +30,30 @@
             </div>
 
 
-            <form>
+            <form action="/member/changePW" method="POST">
                 <div class="form-findID">
-                    <input type="text" class="form-control" id="InputID" placeholder="가입한 이메일 주소를 입력하세요">
-                    <button type="button" class="btn btn-dark" onclick="showMessage('NumberMsg')">인증번호 전송</button>
+                    <input type="text" class="form-control" id="InputEmail" name="email" placeholder="가입한 이메일 주소를 입력하세요">
+                    <button type="button" class="btn btn-dark" onclick="sendVerificationCode()">인증번호 전송</button>
                 </div>
                 <div id="form-findID-small">
                     <small id="NumberMsg" class="hidden">인증번호가 발송되었습니다.</small>
                 </div>
 
                 <div class="form-findID">
-                    <input type="password" class="form-control" id="InputPassword1" placeholder="인증번호를 입력하세요">
-                    <button type="button" class="btn btn-dark" onclick="verify()">인증번호 확인</button>
+                    <input type="text" class="form-control" id="InputVerificationCode" name="verificationCode" placeholder="인증번호를 입력하세요">
+                    <button type="button" class="btn btn-dark" onclick="checkVerification()">인증번호 확인</button>
                 </div>
                 <div id="form-findID-small">
                     <small id="VerificationSuccess" class="hidden">인증이 완료되었습니다.</small>
                     <small id="VerificationFailure" class="hidden">인증번호가 일치하지 않습니다.</small>
                 </div>
 
+
+                <!--  아이디 찾기에서 여기만 바꾸면 됨    -->
+                <!-- 버튼 클릭 시 changePW.html로 이동하도록 수정 -->
+                <!--  인증번호 확인되지 않을 시, 눌러도 안 넘어가야함-->
                 <div class="centered-button-container">
-                    <button type="submit" class="btn btn-primary centered-button">비밀번호 찾기</button>
+                    <button id="changePasswordBtn" type="submit" class="btn btn-primary centered-button" disabled>비밀번호 변경하기</button>
                 </div>
             </form>
         </div>
@@ -59,43 +63,54 @@
 
         <!-- ----------------------------------------------------------------- -->
 
-    <!-- 버튼 누르면 메세지 띄우기 -->
-    <script>
-        function showMessage(id) {
-            var message = document.getElementById(id);
-            message.classList.remove("hidden");
-        }
-    </script>
-
-    <!-- 인증번호 일치/불일치 여부에 따라 메세지 다르게 띄우기 : 1111-->
-    <script>
-        var verificationCode = "1111"; // 예시로 정해진 인증번호
-
-        function sendVerificationCode() {
-            // 인증번호 전송하는 로직 구현해야함.
-            document.getElementById("NumberMsg").classList.remove("hidden");
-        }
-
-        function verify() {
-            var inputCode = document.getElementById("InputPassword1").value;
-            if (inputCode === verificationCode) {
-                document.getElementById("VerificationSuccess").classList.remove("hidden");
-                document.getElementById("VerificationFailure").classList.add("hidden");
-            } else {
-                document.getElementById("VerificationSuccess").classList.add("hidden");
-                document.getElementById("VerificationFailure").classList.remove("hidden");
+        <!--  메일 전송한 후, "인증번호가 발송되었습니다" 띄우는 메소드  -->
+        <script>
+            function sendVerificationCode() {
+                var email = document.getElementById('InputEmail').value;
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/api/find/sendVerificationCode", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        document.getElementById("NumberMsg").classList.remove("hidden");
+                    }
+                };
+                xhr.send("email=" + email);
             }
-        }
-    </script>
+        </script>
 
 
+        <!--  인증번호가 일치하는지 확인 && 버튼 활성화 -->
+        <script>
+            function checkVerification() {
+                var email = document.getElementById("InputEmail").value;
+                var verificationCode = document.getElementById("InputVerificationCode").value;
 
-    <script>
-        function showMessage(id) {
-            var message = document.getElementById(id);
-            message.classList.remove("hidden");
-        }
-    </script>
+                // 서버로 이메일과 인증번호 전송하여 확인
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/api/find/verifyCode", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            // 인증 성공 시
+                            document.getElementById("VerificationSuccess").classList.remove("hidden");
+                            document.getElementById("VerificationFailure").classList.add("hidden");
+                            // 비밀번호 변경하기 버튼 활성화
+                            document.getElementById("changePasswordBtn").disabled = false;
+                        } else {
+                            // 인증 실패 시
+                            document.getElementById("VerificationSuccess").classList.add("hidden");
+                            document.getElementById("VerificationFailure").classList.remove("hidden");
+                            // 비밀번호 변경하기 버튼 비활성화
+                            document.getElementById("changePasswordBtn").disabled = true;
+                        }
+                    }
+                };
+                xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(verificationCode));
+            }
+        </script>
+
 
 
     <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->

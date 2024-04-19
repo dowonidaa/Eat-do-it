@@ -47,7 +47,7 @@ public class CartController {
             memberCart = findMember.getCart();
         }
         if (memberCart.getShop() != null) {
-            if (memberCart.getShop().getId() != shopId) {
+            if (memberCart.getShop().getShopId() != shopId) {
                 cartService.deleteAndCreateCart(memberId, shopId);
                 memberCart = findMember.getCart();
             }

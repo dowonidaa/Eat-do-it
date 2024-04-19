@@ -30,15 +30,26 @@
             </div>
 
 
-            <form>
+            <form  id="usernameDisplay" class="hidden validation-form" novalidate action="changePWOK"
+                   method="post">
+
+                <div class="form-group mb-3 hidden">
+                    <label for="id"></label> <span th:text="${vo2.id}"></span><input
+                        type="hidden" class="form-control" name="id" id="id"
+                        placeholder="" th:value="${vo2.id}" required>
+                    <div class="invalid-feedback"></div>
+                </div>
+
+                <div id="vo2" hidden>[[${vo2.id}]]</div>
+
                 <div class="form-login">
-                    <input type="password" class="form-control" id="InputID" placeholder="새 비밀번호 입력"
+                    <input type="password" class="form-control" name="pw" id="InputID" placeholder="새 비밀번호 입력"  required
                         oninput="checkPasswordMatch()">
                 </div>
 
 
                 <div class="form-login">
-                    <input type="password" class="form-control" id="InputPassword1" placeholder="비밀번호 재입력"
+                    <input type="password" class="form-control" id="InputPassword1" placeholder="비밀번호 재입력" required
                         oninput="checkPasswordMatch()">
                 </div>
                 <div id="form-changePW-small">
@@ -48,7 +59,7 @@
 
 
                 <div class="centered-button-container">
-                    <button type="submit" class="btn btn-primary centered-button">비밀번호 변경하기</button>
+                    <button id="updateBtn" type="submit" class="btn btn-primary centered-button" disabled>비밀번호 변경하기</button>
                 </div>
             </form>
 
@@ -56,7 +67,7 @@
 
 
         </div>
-    </div>
+
 
 
 
@@ -74,17 +85,44 @@
             if (password1 === '' || password2 === '') {
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.add("hidden");
+                document.getElementById("updateBtn").disabled = true;
                 return; // 하나 이상의 입력란이 비어 있으면 메시지를 표시하지 않고 함수 종료
             }
 
             if (password1 === password2) {
                 verificationSuccessMessage.classList.remove("hidden");
                 verificationFailureMessage.classList.add("hidden");
+                // 회원정보 수정 버튼 활성화
+                document.getElementById("updateBtn").disabled = false;
             } else {
                 verificationSuccessMessage.classList.add("hidden");
                 verificationFailureMessage.classList.remove("hidden");
+                document.getElementById("updateBtn").disabled = true;
             }
         }
+    </script>
+
+    <!--   이메일로 등록된 아이디가 없는 경우 -->
+    <script>
+
+
+        // 페이지 로드 시 URL에서 이메일 값 추출하여 사용
+        window.onload = function() {
+            // URL에서 쿼리 매개변수 파싱
+            var params = new URLSearchParams(window.location.search);
+            // vo2 값 가져오기
+            var vo2 = document.getElementById("vo2");
+            // 가져온 이메일 값이 있다면 해당 이메일로 아이디 확인 수행
+            if (!vo2) {
+                // 이메일 값이 없으면 예외 처리 또는 사용자에게 알림
+                alert("이메일 주소를 찾을 수 없습니다.");
+            } else {
+                usernameDisplay.classList.remove("hidden");
+                console.log("정상적으로 출력되었습니다.");
+            }
+        };
+
+
     </script>
 
     <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->

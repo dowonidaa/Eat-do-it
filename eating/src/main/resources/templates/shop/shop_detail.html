@@ -383,7 +383,7 @@
                             <div class="empty-cart-message">
                                 <span th:if="${cartItems==null or cartItems.isEmpty()}" >장바구니가 비어있습니다.</span>
                             </div>
-                            <input th:type="hidden" th:id="cartShopId" th:value="${cartShop.id}">
+                            <input th:type="hidden" th:id="cartShopId" th:value="${cartShop.shopId}">
                             <div class="cart-card" th:each="cartItem : ${cartItems}">
                                 <img th:src="@{/img/whole.jpg}" alt="세트A" class="shop">
                                 <div class="card-body">
@@ -415,7 +415,7 @@
                             </div>
 
                             <div class="cancel-btn">
-                                <button type="button" class="btn btn-secondary" th:id="cancelButton" th:data-shopid="${shop.id}">취소하기</button>
+                                <button type="button" class="btn btn-secondary" th:id="cancelButton" th:data-shopid="${shop.shopId}">취소하기</button>
                             </div>
 
 
