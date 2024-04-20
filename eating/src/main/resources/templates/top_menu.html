@@ -26,7 +26,7 @@
 									th:if="${session.member_id != null}"
 									th:attr="onclick=${shopId != null} ? ('location.href=\'/shop/' + ${shopId} + '\'') : 'return false;'">
 							장바구니
-								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" th:text="${cartCount}">99+<span class="visually-hidden">unread messages</span></span>
+								<span  th:text="${cartCount}">99+</span>
 							</button>
 						</div>
 					</div>

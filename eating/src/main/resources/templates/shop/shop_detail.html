@@ -124,28 +124,49 @@
                 }
             });
 
-                $('#cancelButton').click(function() {
-                    var shopId = $(this).data('shopid');
-                    $.ajax({
-                        url: '/cart/remove', // Change to your actual URL
-                        type: 'POST', // or 'GET', depending on your server setup
-                        data: { shopId: shopId },
-                        success: function(response) {
-                            // Handle success
-                            alert('장바구니를 비웠습니다.');
-                            $('.cart-card').remove();
+                // $('#cancelButton').click(function() {
+                //     var shopId = $(this).data('shopid');
+                //     $.ajax({
+                //         url: '/cart/remove', // Change to your actual URL
+                //         type: 'POST', // or 'GET', depending on your server setup
+                //         data: { shopId: shopId },
+                //         success: function(response) {
+                //             // Handle success
+                //             alert('장바구니를 비웠습니다.');
+                //             $('.cart-card').remove();
+                //
+                //                 $('.empty-cart-message').text('장바구니가 비어있습니다.').show();
+                //
+                //             updateTotalPrice();
+                //
+                //         },
+                //         error: function(xhr, status, error) {
+                //             // Handle error
+                //             alert('Failed to cancel order');
+                //         }
+                //     });
+                // });
 
-                                $('.empty-cart-message').text('장바구니가 비어있습니다.').show();
+            $('#cancelButton').click(function() {
+                var shopId = $(this).data('shopid');
 
-                            updateTotalPrice();
-
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error
-                            alert('Failed to cancel order');
-                        }
-                    });
+                // Create a form dynamically
+                var form = $('<form>', {
+                    'action': '/cart/remove', // Set the action to the endpoint
+                    'method': 'POST' // Set method to POST
                 });
+
+                // Create an input element for the shopId
+                form.append($('<input>', {
+                    'type': 'hidden', // Make it a hidden input
+                    'name': 'shopId', // Set the name to 'shopId'
+                    'value': shopId // Set the value to the shopId retrieved from the button
+                }));
+
+                // Append the form to the body and submit it
+                $('body').append(form);
+                form.submit();
+            });
 
 
 
@@ -415,7 +436,7 @@
                             </div>
 
                             <div class="cancel-btn">
-                                <button type="button" class="btn btn-secondary" th:id="cancelButton" th:data-shopid="${shop.shopId}">취소하기</button>
+                                <button type="button" class="btn btn-secondary" th:onclick="locat" th:id="cancelButton" th:data-shopid="${shop.shopId}">취소하기</button>
                             </div>
 
 

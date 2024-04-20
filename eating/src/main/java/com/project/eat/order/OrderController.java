@@ -94,7 +94,7 @@ public class OrderController {
     @GetMapping("/orders")
     public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, @RequestParam(defaultValue = "all")String type,@RequestParam(defaultValue = "1") int page, SearchForm form) {
 
-        int pageBlock = 5;
+        int pageBlock = 40;
         String memberId = (String) session.getAttribute("member_id");
 //        String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
@@ -114,13 +114,14 @@ public class OrderController {
         return "/order/orderList";
     }
 
-    @GetMapping("/orders/search")
-    @ResponseBody
-    public List<OrderDTO> search(SearchForm form, HttpSession session) {
+    @PostMapping("/orders/search")
+    public String search(SearchForm form, HttpSession session, Model model) {
 
         String memberId = (String) session.getAttribute("member_id");
         log.info("searchForm = {}", form);
-        return orderService.findSearchForm(memberId, form);
+        List<OrderDTO> findOrders = orderService.findSearchForm(memberId, form);
+        model.addAttribute("orderDto", findOrders);
+        return "order/ordersearchForm";
     }
 
 
@@ -266,10 +267,11 @@ public class OrderController {
             attributes.addFlashAttribute("message", "(" + orderStatus + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
             return "redirect:/orders/" + orderId;
         }
-
+        if(order.getCoupon() !=null) {
+            couponService.couponRollback(order);
+        }
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
-        couponService.couponRollback(order);
         attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
         return "redirect:/orders/" + orderId;
     }
@@ -297,10 +299,11 @@ public class OrderController {
                 if (coupon.getId().equals(form.getCouponId())) {
                     log.info("{}", coupon.getPrice());
                     response.put("discount", coupon.getPrice());
-                    return ResponseEntity.ok().body(response); // Explicitly mentioning .body() for clarity
+                    return ResponseEntity.ok().body(response);
                 }
             }
         }
+
         return ResponseEntity.notFound().build();
     }
 

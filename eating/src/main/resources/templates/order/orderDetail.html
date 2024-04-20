@@ -65,7 +65,7 @@
                     <h5 class="order-items-title" th:text="|${orderItem.item.itemName} ${orderItem.quantity}개|">주문 메뉴 및
                         수량(상세)</h5>
                     <div class="base-price"
-                         th:text="|기본 : ${#numbers.formatDecimal(orderItem.price, 0, 'COMMA', 0, 'POINT')}원|">기본 :
+                         th:text="|기본 : ${#numbers.formatDecimal(orderItem.item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">기본 :
                         10,000원
                     </div>
                     <div class="option-price" th:if="${orderItem.orderItemOptions!=null}"
@@ -73,7 +73,7 @@
                         기본 : 10,000원
                     </div>
                     <div class="total-price"
-                         th:text="|합계 : ${#numbers.formatDecimal(orderItem.price+orderItem.orderItemOptions.get(0).itemOption.price, 0, 'COMMA', 0, 'POINT')}원|">
+                         th:text="|합계 : ${#numbers.formatDecimal(orderItem.price , 0, 'COMMA', 0, 'POINT')}원|">
                         총 합계: 20,000원
                     </div>
                 </div>

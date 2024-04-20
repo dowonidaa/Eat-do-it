@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 @Slf4j
@@ -109,12 +109,14 @@ public class CartController {
     }
 
     @PostMapping("/remove")
-    public ResponseEntity<Map<String, Object>> cartRemove(HttpSession session, Long shopId) {
+//    public ResponseEntity<Map<String, Object>> cartRemove(HttpSession session, Long shopId) {
+    public String cartRemove(HttpSession session, Long shopId) {
         log.info("{}", shopId);
         String memberId = session.getAttribute("member_id").toString();
-        cartService.deleteAndCreateCart(memberId, shopId);
+//        cartService.deleteAndCreateCart(memberId, shopId);
+        cartService.deleteCart(memberId);
         log.info("remove");
-        return ResponseEntity.ok().build();
+        return "redirect:/shop/" + shopId;
     }
 
 

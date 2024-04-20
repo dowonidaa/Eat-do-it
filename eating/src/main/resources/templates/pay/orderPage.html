@@ -20,6 +20,10 @@
     $(document).ready(function () {
         $('#couponSelect').change(function () {
             var selectedCouponId = $(this).val(); // Get the selected coupon's value
+            var totalPrice = $('#totalPrice').val();
+            var deliveryPrice = $('#deliveryPrice').val();
+            console.log(totalPrice)
+            console.log(deliveryPrice)
             if (selectedCouponId) {
                 $.ajax({
                     url: '/order/coupon', // Endpoint to send the request
@@ -30,7 +34,9 @@
                     success: function (response) {
                         var formattedPrice = new Intl.NumberFormat('ko-KR').format(response.discount);
                         $('#couponDiscount').text("-" + formattedPrice + '원');
-                        $('#hiddenDiscount').val(response.discount);
+                        if(response.discount !== null) {
+                            $('#hiddenDiscount').val(response.discount);
+                        }
                         updateTotal(response)
                     },
                     error: function (xhr, status, error) {
@@ -39,14 +45,15 @@
                     }
                 });
             } else {
-                $('#couponDiscount').text('0원'); // Reset to 0 if no coupon is selected
+                $('#couponDiscount').text('0원');
+                updateTotal({totalPrice: totalPrice, deliveryPrice :deliveryPrice, discount : 0 })
             }
         });
 
-        function updateTotal(response) {
-            var totalPrice = response.totalPrice;
-            var deliveryPrice = response.deliveryPrice;
-            var newTotal = totalPrice + deliveryPrice - response.discount;
+        function updateTotal(data) {
+            var totalPrice = data.totalPrice;
+            var deliveryPrice = data.deliveryPrice;
+            var newTotal = totalPrice + deliveryPrice - data.discount;
             $('#totalPaymentAmount').text(new Intl.NumberFormat('ko-KR').format(newTotal) + '원');
         }
     });
@@ -213,14 +220,14 @@
                             <h4>주문금액</h4>
                             <div th:text="|${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
                                 60,000원
-                                <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice">
+                                <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice" th:id="totalPrice">
                             </div>
                         </div>
                         <div class="sub-title">
                             <h4>배달금액</h4>
                             <div  th:text="|${#numbers.formatDecimal(cart.shop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
                                 60,000원
-                                <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice">
+                                <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice" th:id="deliveryPrice">
                             </div>
                         </div>
                         <div class="sub-title">

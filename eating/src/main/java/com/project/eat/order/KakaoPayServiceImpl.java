@@ -94,7 +94,7 @@ public class KakaoPayServiceImpl {
         //String order_id = "100";
         Long orderId = order.getId();
         String tid = order.getTid();
-        String cancel_amount = String.valueOf(order.getOrderPrice() + order.getTotalPrice());
+        String cancel_amount = String.valueOf(order.getOrderPrice() + order.getTotalPrice()- order.getDiscount());
         String cancel_tax_free_amount = "0";
         Map<String, String> parameters = new LinkedHashMap<>();
         parameters.put("cid", "TC0ONETIME");  // 가맹점 코드, 10자. 제휴를 맺게되면, 회사담당자에게 문의를 하여 가맹점코드를 변경한다.

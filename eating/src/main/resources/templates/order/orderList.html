@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="container mt-4">
-            <form th:action="@{/orders/search}" th:method="GET" class="row align-items-end">
+            <form id="searchForm" th:action="@{/orders/search}" th:method="POST" class="row align-items-end">
                 <div class="col-auto">
                     <select name="searchOption" id="searchOption" class="form-select" onchange="toggleDateFields()">
                         <option value="all">전체 검색</option>
@@ -64,10 +64,11 @@
                     <input type="date" name="endDate" id="endDate" class="form-control">
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">검색</button>
+                    <button type="button" class="btn btn-primary" onclick="getOrderList()">검색</button>
                 </div>
             </form>
         </div>
+        <div  id="orderListContent">
         <section class="container row orders-container" th:each="order : ${ordersDto}">
             <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
                     <div class="col-3 ">
@@ -93,6 +94,7 @@
                     <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shopId} + '\''">리뷰작성</button>
                 </div>
         </section>
+        </div>
         <nav aria-label="Page navigation example" class="container row">
             <ul class="pagination al align-items-center">
                 <li class="page-item">
@@ -157,6 +159,29 @@
             var dateFields = document.querySelectorAll('.date-fields');
             dateFields.forEach(field => field.style.display = searchOption === 'dateRange' ? 'block' : 'none');
         }
+
+        function getOrderList() {
+            var formData = $('#searchForm').serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/orders/search",
+                data: formData, // api 호출을 위한 요청 변수가 필요하다면 사용해주세요.
+
+            })
+                    .done(function (response) {
+                        console.log(response);
+                        $("#orderListContent").replaceWith(response);
+                    })
+                    .fail(function(jqXHR) {
+                        console.log(jqXHR);
+                    })
+                    .always(function() {
+                        console.log("요청, 응답 결과에 상관없이, 이건 항상 실행됩니다.");
+                    })
+
+        }
+
 
 
 
