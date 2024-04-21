@@ -67,13 +67,21 @@
             });
 
             function updateTotalPrice() {
+                let shopId = $('#cartShopId').val();
+
                 $.ajax({
                     url: '/cart/total-price',
                     type: 'GET',
+                    data: { shopId: shopId },
                     success: function (response) {
                         // 서버 응답에서 totalPrice를 올바르게 받아오고 있는지 확인
 
-
+                        var minPrice = response.minPrice;
+                        if(minPrice > response.totalPrice){
+                            $('#minPrice').text(formatter.format(minPrice) + '원 이상' ).parent().show();
+                        }else {
+                            $('#minPrice').parent().hide();
+                        }
                         $('.total-price').text(formatter.format(response.totalPrice) + '원');
                     },
                     error: function () {
@@ -174,10 +182,14 @@
         $(document).ready(function() {
             // 이벤트 위임을 사용하여 동적으로 생성된 요소에도 이벤트 리스너를 적용
             $('body').on('click', '#orderBtn', function() {
-                var cartItems = $('.cart-card');
-                var orderType = $('input[name="orderType"]:checked').val();
+                let orderType = $('input[name="orderType"]:checked').val();
+                let totalPrice = parseInt($('#totalPrice').text().replace(/원|,/g, ''));
+                let minPrice = parseInt($('#minPrice').text().replace(/원 이상|,/g, ''));
+                if (isNaN(minPrice)) {
+                    minPrice = 0;
+                }
 
-                if (cartItems.length > 0) {
+                if (totalPrice >= minPrice) {
                     window.location.href = '/order?orderType=' + orderType.toUpperCase();
                 } else {
                     console.log("No items in the cart.");
@@ -423,12 +435,15 @@
 
 
                     <!-- 합계 -->
-                    <div class="cart-total">
+                    <div class="cart-total" id="cartTotal">
                         <div class="deliver" aria-labelledby="delivery" >
                             <span class="deliver-left">배달요금</span><span class="deliver-right" th:text="|${#numbers.formatDecimal(cartShop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원 별도|">3,500원</span>
                         </div>
+                        <div th:style="${totalPrice >= cartShop.minPriceInt} ? 'display: none;' : 'display: block;'">
+                            <span class="deliver-left">최소주문금액</span><span class="deliver-right" id="minPrice"  th:text="|${#numbers.formatDecimal(cartShop.minPriceInt, 0, 'COMMA', 0, 'POINT')}원 이상|">3,500원</span>
+                        </div>
                         <div class="total">
-                            <span class="total-left">합계</span><span class="total-right total-price" th:text="|${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')}원|">3500원</span>
+                            <span class="total-left">합계</span><span class="total-right total-price" id="totalPrice" th:text="|${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')}원|">3500원</span>
                         </div>
                         <div class="total-button">
                             <div class="order-btn">
@@ -436,11 +451,8 @@
                             </div>
 
                             <div class="cancel-btn">
-                                <button type="button" class="btn btn-secondary" th:onclick="locat" th:id="cancelButton" th:data-shopid="${shop.shopId}">취소하기</button>
+                                <button type="button" class="btn btn-secondary" th:onclick="locat" th:id="cancelButton" th:data-shopid="${shop.shopId}">비우기</button>
                             </div>
-
-
-
                         </div>
 
 

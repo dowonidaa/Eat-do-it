@@ -51,17 +51,21 @@ public class OrderRepository {
                     .setParameter("endDate", form.getEndDate());
         }
 
-        query.setFirstResult(0);
-        query.setMaxResults(10);
+        query.setFirstResult(form.getPage());
+        query.setMaxResults(form.getPageBlock());
         return query.getResultList();
     }
 
 
-    public List<Order> findAll(String memberId, int page, int pageBlock) {
+    public List<Order> findAll(String memberId, int pageBlock) {
         return em.createQuery("select o from Order o where o.member.id = :memberId order by o.orderDate desc", Order.class)
                 .setParameter("memberId", memberId)
-                .setFirstResult(page)
                 .setMaxResults(pageBlock)
                 .getResultList();
+    }
+
+
+    public Long pageCount(String memberId) {
+        return em.createQuery("select count(o) from Order o where o.member.id = :memberId", Long.class).setParameter("memberId", memberId).getSingleResult();
     }
 }

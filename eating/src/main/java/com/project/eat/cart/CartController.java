@@ -8,11 +8,16 @@ import com.project.eat.item.ItemService;
 import com.project.eat.item.itemOption.ItemOptionService;
 import com.project.eat.member.MemberService;
 import com.project.eat.member.MemberVO_JPA;
+import com.project.eat.shop.ShopRepositoryEM;
+import com.project.eat.shop.ShopService;
+import com.project.eat.shop.ShopVO;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,6 +34,7 @@ public class CartController {
     private final ItemService itemService;
     private final CartItemService cartItemService;
     private final ItemOptionService itemOptionService;
+    private final ShopService shopService;
 
 
     @PostMapping("/{shopId}/add")
@@ -100,11 +106,21 @@ public class CartController {
     }
 
     @GetMapping("/total-price")
-    public ResponseEntity<Map<String, Integer>> totalPrice(HttpSession session) {
-        String memberId = session.getAttribute("member_id").toString();
+    public ResponseEntity<Map<String, Integer>> totalPrice(HttpSession session, Long shopId) {
+        String memberId =(String) session.getAttribute("member_id");
+        log.info("shopId = {}", shopId);
+        ShopVO shop = memberService.findOne(memberId).getCart().getShop();
+        int minPriceInt = 0;
+        if(shop != null) {
+            minPriceInt = shop.getMinPriceInt();
+        }else{
+            minPriceInt = shopService.findShop(shopId).getMinPriceInt();
+
+        }
         int totalPrice = cartService.getTotalPrice(memberId);
         Map<String, Integer> response = new HashMap<>();
         response.put("totalPrice", totalPrice);
+        response.put("minPrice", minPriceInt);
         return ResponseEntity.ok(response);
     }
 
@@ -112,12 +128,15 @@ public class CartController {
 //    public ResponseEntity<Map<String, Object>> cartRemove(HttpSession session, Long shopId) {
     public String cartRemove(HttpSession session, Long shopId) {
         log.info("{}", shopId);
-        String memberId = session.getAttribute("member_id").toString();
+        String memberId =(String) session.getAttribute("member_id");
 //        cartService.deleteAndCreateCart(memberId, shopId);
         cartService.deleteCart(memberId);
         log.info("remove");
         return "redirect:/shop/" + shopId;
     }
+
+
+
 
 
 }

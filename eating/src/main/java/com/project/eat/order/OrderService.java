@@ -103,6 +103,9 @@ public class OrderService {
 
     @Transactional
     public List<OrderDTO> findSearchForm(String memberId, SearchForm form) {
+        int page = (form.getPage() - 1) * form.getPageBlock();
+        form.setPage(page);
+
         List<Order> findOrders = orderRepository.searchListBetweenDates(memberId, form);
         log.info("findOrders.size()= {}", findOrders.size());
         List<OrderDTO> orders = new ArrayList<>();
@@ -123,13 +126,19 @@ public class OrderService {
         return orders;
     }
 
-    public List<OrderDTO> findAll(String memberId, int page, int pageBlock) {
-        page = (page - 1) * pageBlock;
-        List<Order> findOrder = orderRepository.findAll(memberId, page, pageBlock);
+    public List<OrderDTO> findAll(String memberId, SearchForm form) {
+
+        List<Order> findOrder = orderRepository.findAll(memberId,form.getPageBlock());
         return getOrderDTOS(findOrder);
     }
 
+    public Long pageCount(String memberId,SearchForm form) {
 
+        int pageBLock = form.getPageBlock();
+        Long totalCount = orderRepository.pageCount(memberId);
+
+        return (totalCount - 1) / pageBLock + 1;
+    }
 
 
 
@@ -144,4 +153,6 @@ public class OrderService {
 
         return  orders;
     }
+
+
 }

@@ -31,21 +31,25 @@
     <!-- content 넣으실 부분 -->
 
     <div id="wrapper">
+        <form id="searchForm" th:action="@{/}" th:method="POST" >
         <div class="container row">
         <h3 class="col-auto">주문내역</h3>
             <div class="btn-group col-auto" role="group" aria-label="Basic radio toggle button group" id="orderType">
-                <input type="radio" class="btn-check" name="type" id="all" value="all" autocomplete="off" th:checked="${selectedType == 'all'}" onclick="location.href='/orders?type=' + this.value;">
+<!--                <input type="radio" class="btn-check" name="selectedType" id="all" value="all" autocomplete="off" th:checked="${selectedType == 'all'}" onclick="location.href='/orders?type=' + this.value;">-->
+                <input type="radio" class="btn-check" name="selectedType" id="all" value="all" autocomplete="off" checked>
                 <label class="btn btn-outline-primary" for="all">전체</label>
 
-                <input type="radio" class="btn-check" name="type" id="delivery" value="delivery" autocomplete="off" th:checked="${selectedType == 'delivery'}" onclick="location.href='/orders?type=' + this.value;">
+<!--                <input type="radio" class="btn-check" name="selectedType" id="delivery" value="delivery" autocomplete="off" th:checked="${selectedType == 'delivery'}" onclick="location.href='/orders?type=' + this.value;">-->
+                <input type="radio" class="btn-check" name="selectedType" id="delivery" value="delivery" autocomplete="off" >
                 <label class="btn btn-outline-primary" for="delivery">배달</label>
 
-                <input type="radio" class="btn-check" name="type" id="takeout" value="takeout" autocomplete="off" th:checked="${selectedType == 'takeout'}" onclick="location.href='/orders?type=' + this.value;">
+<!--                <input type="radio" class="btn-check" name="selectedType" id="takeout" value="takeout" autocomplete="off" th:checked="${selectedType == 'takeout'}" onclick="location.href='/orders?type=' + this.value;">-->
+                <input type="radio" class="btn-check" name="selectedType" id="takeout" value="takeout" autocomplete="off">
                 <label class="btn btn-outline-primary" for="takeout">포장</label>
             </div>
         </div>
-        <div class="container mt-4">
-            <form id="searchForm" th:action="@{/orders/search}" th:method="POST" class="row align-items-end">
+        <div class="container mt-4 row align-items-end">
+
                 <div class="col-auto">
                     <select name="searchOption" id="searchOption" class="form-select" onchange="toggleDateFields()">
                         <option value="all">전체 검색</option>
@@ -54,7 +58,7 @@
                 </div>
                 <div class="col">
                     <input type="text" name="searchText" id="searchText" class="form-control" placeholder="검색어 입력">
-                    <input type="hidden" th:name="selectedType" th:value="${selectedType}" >
+<!--                    <input type="hidden" th:name="selectedType" th:value="${selectedType}" >-->
 
                 </div>
                 <div class="col-auto date-fields" style="display: none;">
@@ -64,10 +68,10 @@
                     <input type="date" name="endDate" id="endDate" class="form-control">
                 </div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-primary" onclick="getOrderList()">검색</button>
+                    <button type="button" class="btn btn-primary" id="searchButton">검색</button>
                 </div>
-            </form>
         </div>
+        </form>
         <div  id="orderListContent">
         <section class="container row orders-container" th:each="order : ${ordersDto}">
             <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
@@ -94,7 +98,7 @@
                     <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shopId} + '\''">리뷰작성</button>
                 </div>
         </section>
-        </div>
+
         <nav aria-label="Page navigation example" class="container row">
             <ul class="pagination al align-items-center">
                 <li class="page-item">
@@ -112,6 +116,7 @@
                 </li>
             </ul>
         </nav>
+        </div>
 
 
     </div>
@@ -160,27 +165,40 @@
             dateFields.forEach(field => field.style.display = searchOption === 'dateRange' ? 'block' : 'none');
         }
 
-        function getOrderList() {
-            var formData = $('#searchForm').serialize();
 
-            $.ajax({
-                type: "POST",
-                url: "/orders/search",
-                data: formData, // api 호출을 위한 요청 변수가 필요하다면 사용해주세요.
+        $(document).ready(function () {
+            // Set up the button click and form submit event to prevent default submission and call getOrderList
+            $('#searchForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting traditionally
+                getOrderList(); // Call the AJAX function
+            });
 
-            })
+            $('#searchButton').click(function(event) {
+                event.preventDefault(); // Prevent the default button behavior
+                getOrderList(); // Call the AJAX function
+            });
+
+            $('input[type="radio"][name="selectedType"]').change(function() {
+                getOrderList(); // Trigger the AJAX call whenever a radio button changes
+            });
+
+            function getOrderList() {
+                var formData = $('#searchForm').serialize(); // Serialize the form data
+
+                $.ajax({
+                    type: "POST",
+                    url: "/orders/search",
+                    data: formData, // Send the serialized data
+                })
                     .done(function (response) {
                         console.log(response);
-                        $("#orderListContent").replaceWith(response);
+                        $("#orderListContent").replaceWith(response); // Update the content dynamically
                     })
                     .fail(function(jqXHR) {
-                        console.log(jqXHR);
-                    })
-                    .always(function() {
-                        console.log("요청, 응답 결과에 상관없이, 이건 항상 실행됩니다.");
-                    })
-
-        }
+                        console.error("Error: ", jqXHR.statusText); // Log the error
+                    });
+            }
+        });
 
 
 

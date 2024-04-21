@@ -92,24 +92,18 @@ public class OrderController {
 
 
     @GetMapping("/orders")
-    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, @RequestParam(defaultValue = "all")String type,@RequestParam(defaultValue = "1") int page, SearchForm form) {
+    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message,SearchForm form) {
 
-        int pageBlock = 40;
+        int pageBlock = 5;
         String memberId = (String) session.getAttribute("member_id");
 //        String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
         List<OrderDTO> ordersDto = new ArrayList<>();
-        if (type.equals("all")){
-            ordersDto = orderService.findAll(memberId, page, pageBlock);
-        }
-        else if (type.equals("delivery")) {
-            ordersDto = orderService.findByOrderType(memberId, OrderType.DELIVERY);
-        }
-        else if (type.equals("takeout")) {
-            ordersDto = orderService.findByOrderType(memberId, OrderType.TAKEOUT);
-        }
+        ordersDto = orderService.findAll(memberId, form);
+        Long pageCount = orderService.pageCount(memberId, form);
+
         model.addAttribute("ordersDto", ordersDto);
-        model.addAttribute("selectedType", type);
+        model.addAttribute("pageCount", pageCount);
 
         return "/order/orderList";
     }
@@ -120,7 +114,10 @@ public class OrderController {
         String memberId = (String) session.getAttribute("member_id");
         log.info("searchForm = {}", form);
         List<OrderDTO> findOrders = orderService.findSearchForm(memberId, form);
-        model.addAttribute("orderDto", findOrders);
+//        List<OrderDTO> page = orderService.pageCount(memberId, form);
+
+        model.addAttribute("ordersDto", findOrders);
+//        model.addAttribute("page", page);
         return "order/ordersearchForm";
     }
 

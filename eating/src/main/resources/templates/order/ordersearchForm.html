@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div  id="orderListContent" >
-<section class="container row orders-container" th:each="order : ${orderDto}">
+<section class="container row orders-container" th:each="order : ${ordersDto}">
     <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
     <div class="col-3 ">
         <img th:src="${order.shopThum}" th:style="'width: 100%; height: auto;'">
@@ -26,6 +26,23 @@
         <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shopId} + '\''">리뷰작성</button>
     </div>
 </section>
+    <nav aria-label="Page navigation example" class="container row">
+        <ul class="pagination al align-items-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 </html>

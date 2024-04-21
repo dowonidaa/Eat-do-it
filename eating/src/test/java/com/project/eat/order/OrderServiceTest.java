@@ -69,9 +69,10 @@ class OrderServiceTest {
     void searchList(){
         String memberId = "dowon456";
         SearchForm form = new SearchForm();
-        form.setSearchText("대");
+        form.setSearchText("");
         form.setSelectedType("all");
         form.setSearchOption("all");
+        form.setPage(2);
 //        form.setSearchOption("dateRange");
 //        form.setStartDate(LocalDate.parse("2024-04-19"));
 //        form.setEndDate(LocalDate.parse("2024-04-19"));
@@ -85,5 +86,32 @@ class OrderServiceTest {
             log.info("itemName = {}",order.getItemsName());
         }
     }
+
+    @Test
+    void totalCount(){
+        String memberId = "dowon456";
+        SearchForm form = new SearchForm();
+        Long totalCount = orderService.pageCount(memberId, form);
+        MemberVO_JPA findMember = memberService.findOne(memberId);
+        int size = findMember.getOrders().size();
+
+        Assertions.assertThat(totalCount).isEqualTo(size);
+
+
+    }
+
+    @Test
+    void findAll(){
+        String memberId = "dowon456";
+        SearchForm form = new SearchForm();
+        List<OrderDTO> findOrders = orderService.findAll(memberId, form);
+
+        Assertions.assertThat(findOrders.size()).isEqualTo(5);
+        Assertions.assertThat(findOrders.get(0).getId()).isEqualTo(161L);
+
+
+    }
+
+
 
 }
