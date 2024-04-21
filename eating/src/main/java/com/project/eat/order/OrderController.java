@@ -95,9 +95,7 @@ public class OrderController {
     public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, SearchForm form) {
 
         String memberId = (String) session.getAttribute("member_id");
-        MemberVO_JPA findMember = memberService.findOne(memberId);
-        List<OrderDTO> ordersDto = new ArrayList<>();
-        ordersDto = orderService.findAllPage(memberId, form);
+        List<OrderDTO> ordersDto =  orderService.findAllPage(memberId, form);
         Long pageCount = orderService.pageCount(memberId, form);
 
         model.addAttribute("ordersDto", ordersDto);
