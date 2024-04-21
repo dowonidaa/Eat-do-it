@@ -72,13 +72,15 @@ class OrderServiceTest {
         form.setSearchText("");
         form.setSelectedType("all");
         form.setSearchOption("all");
-        form.setPage(2);
+//        form.setPage(1);
 //        form.setSearchOption("dateRange");
 //        form.setStartDate(LocalDate.parse("2024-04-19"));
 //        form.setEndDate(LocalDate.parse("2024-04-19"));
 
         List<OrderDTO> searchForm = orderService.findSearchForm(memberId, form);
+        Long searchPageCount = orderService.searchPageCount(memberId, form);
         log.info("searchForm.size() = {}",searchForm.size());
+        log.info("searchPageCount = {}",searchPageCount);
 
         for (OrderDTO order : searchForm) {
             log.info("orderId = {}",order.getId());
@@ -104,7 +106,7 @@ class OrderServiceTest {
     void findAll(){
         String memberId = "dowon456";
         SearchForm form = new SearchForm();
-        List<OrderDTO> findOrders = orderService.findAll(memberId, form);
+        List<OrderDTO> findOrders = orderService.findAllPage(memberId, form);
 
         Assertions.assertThat(findOrders.size()).isEqualTo(5);
         Assertions.assertThat(findOrders.get(0).getId()).isEqualTo(161L);

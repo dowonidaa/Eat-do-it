@@ -92,18 +92,24 @@ public class OrderController {
 
 
     @GetMapping("/orders")
-    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message,SearchForm form) {
+    public String orderList(HttpSession session, Model model, @ModelAttribute("message") String message, SearchForm form) {
 
-        int pageBlock = 5;
         String memberId = (String) session.getAttribute("member_id");
-//        String memberId = "dowon456";
         MemberVO_JPA findMember = memberService.findOne(memberId);
         List<OrderDTO> ordersDto = new ArrayList<>();
-        ordersDto = orderService.findAll(memberId, form);
+        ordersDto = orderService.findAllPage(memberId, form);
         Long pageCount = orderService.pageCount(memberId, form);
 
         model.addAttribute("ordersDto", ordersDto);
         model.addAttribute("pageCount", pageCount);
+        Long endPage = ((long) ((form.getPage() - 1) / 5 + 1) * 5);
+        Long startPage = ((long) ((form.getPage() - 1) / 5) * 5 +1 );
+        if(pageCount < endPage){
+            endPage = pageCount;
+        }
+        Page page = new Page(startPage, endPage, pageCount);
+
+        model.addAttribute("page", page);
 
         return "/order/orderList";
     }
@@ -114,10 +120,20 @@ public class OrderController {
         String memberId = (String) session.getAttribute("member_id");
         log.info("searchForm = {}", form);
         List<OrderDTO> findOrders = orderService.findSearchForm(memberId, form);
-//        List<OrderDTO> page = orderService.pageCount(memberId, form);
+        Long searchPageCount = orderService.searchPageCount(memberId, form);
 
         model.addAttribute("ordersDto", findOrders);
-//        model.addAttribute("page", page);
+        model.addAttribute("pageCount", searchPageCount);
+        Long endPage = ((long) ((form.getPage() - 1) / 5 + 1) * 5);
+        Long startPage = ((long) ((form.getPage() - 1) / 5) * 5 +1 );
+        if(searchPageCount < endPage){
+            endPage = searchPageCount;
+        }
+        Page page = new Page(startPage, endPage, searchPageCount);
+
+        model.addAttribute("page", page);
+
+
         return "order/ordersearchForm";
     }
 

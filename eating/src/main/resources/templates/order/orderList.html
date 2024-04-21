@@ -70,10 +70,26 @@
                 <div class="col-auto">
                     <button type="button" class="btn btn-primary" id="searchButton">검색</button>
                 </div>
+
         </div>
-        </form>
+
+
+
         <div  id="orderListContent">
-        <section class="container row orders-container" th:each="order : ${ordersDto}">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" th:object="${page}">
+                    <li class="page-item" th:if="*{prev}"><a class="page-link" href="#" aria-label="Previous"  th:data-page="*{startPage - 1}"><span aria-hidden="true">&laquo;</span></a></li>
+                    <div th:each="i : ${#numbers.sequence(page.startPage , page.endPage)}">
+                    <li class="page-item" th:classappend="${i} == 1 ? 'active' : ''"><a class="page-link" href="#" th:data-page="${i}" th:text="${i}" >1</a></li>
+                    </div>
+                    <li class="page-item" th:if="*{next}"><a class="page-link" href="#" aria-label="Next"  th:data-page="*{endPage + 1}"><span aria-hidden="true">&raquo;</span></a></li>
+                </ul>
+            </nav>
+<!--            <div th:each="i : ${#numbers.sequence(1 , pageCount)}">-->
+<!--                <a class="page-item page-link" href="#" th:data-page="${i}" th:text="${i}"  ></a>-->
+<!--            </div>-->
+
+            <section class="container row orders-container" th:each="order : ${ordersDto}">
             <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
                     <div class="col-3 ">
                     <img th:src="${order.shopThum}" th:style="'width: 100%; height: auto;'">
@@ -99,24 +115,9 @@
                 </div>
         </section>
 
-        <nav aria-label="Page navigation example" class="container row">
-            <ul class="pagination al align-items-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
         </div>
+        </form>
 
 
     </div>
@@ -168,35 +169,56 @@
 
         $(document).ready(function () {
             // Set up the button click and form submit event to prevent default submission and call getOrderList
-            $('#searchForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent the form from submitting traditionally
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent the form from submitting traditionally
                 getOrderList(); // Call the AJAX function
             });
 
-            $('#searchButton').click(function(event) {
-                event.preventDefault(); // Prevent the default button behavior
+            $('#searchText').keypress(function(e) {
+                if (e.which == 13) { // Enter key pressed
+                    e.preventDefault(); // Prevent the form from submitting
+                    getOrderList(); // Call the AJAX function
+                }
+            });
+
+            $('#searchButton').click(function(e) {
+                e.preventDefault(); // Prevent the default button behavior
                 getOrderList(); // Call the AJAX function
             });
 
             $('input[type="radio"][name="selectedType"]').change(function() {
                 getOrderList(); // Trigger the AJAX call whenever a radio button changes
             });
+            $('#orderListContent').on('click', '.page-link', function(e) {
+                e.preventDefault();
+                let page = $(this).attr('data-page');
+                getOrderList(page);
+                $('.pagination .page-item').removeClass('active'); // 모든 페이지 아이템에서 'active' 클래스 제거
+                $(this).closest('.page-item').addClass('active'); // 클릭된 링크의 상위 아이템에 'active' 클래스 추가
+            });
 
-            function getOrderList() {
+
+            function getOrderList(page=1) {
                 var formData = $('#searchForm').serialize(); // Serialize the form data
-
+                formData += '&page=' + page;
+                console.log(formData)
+                formData.page =
                 $.ajax({
                     type: "POST",
                     url: "/orders/search",
                     data: formData, // Send the serialized data
                 })
                     .done(function (response) {
-                        console.log(response);
-                        $("#orderListContent").replaceWith(response); // Update the content dynamically
+                        $("#orderListContent").html(response); // Update the content dynamically
+                        updateActivePage(page);
                     })
                     .fail(function(jqXHR) {
                         console.error("Error: ", jqXHR.statusText); // Log the error
                     });
+            }
+            function updateActivePage(currentPage) {
+                $('.pagination .page-item').removeClass('active'); // 모든 페이지 아이템에서 'active' 클래스 제거
+                $('.pagination .page-link[data-page="' + currentPage + '"]').parent().addClass('active'); // 현재 페이지에만 'active' 클래스 추가
             }
         });
 
