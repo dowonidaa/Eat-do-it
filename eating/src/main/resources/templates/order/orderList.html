@@ -166,6 +166,24 @@
             dateFields.forEach(field => field.style.display = searchOption === 'dateRange' ? 'block' : 'none');
         }
 
+        // function reinitializeComponents() {
+        //     // Reinitialize Bootstrap tooltips
+        //     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        //     tooltipTriggerList.map(function (tooltipTriggerEl) {
+        //         return new bootstrap.Tooltip(tooltipTriggerEl);
+        //     });
+        //
+        //     // Bootstrap does not require re-initialization of buttons in Bootstrap 5 as it did in previous versions.
+        //     // However, if you have custom scripts or need to reattach event listeners to buttons, do it here.
+        //     // Example: reattach event listeners if needed
+        //     $('.btn').each(function () {
+        //         // Assuming you might have unbinded before to prevent multiple bindings
+        //         $(this).off('click').on('click', function() {
+        //             console.log('Button clicked!');
+        //         });
+        //     });
+        // }
+
 
         $(document).ready(function () {
             // Set up the button click and form submit event to prevent default submission and call getOrderList
@@ -211,6 +229,7 @@
                     .done(function (response) {
                         $("#orderListContent").html(response); // Update the content dynamically
                         updateActivePage(page);
+                        // reinitializeComponents();
                     })
                     .fail(function(jqXHR) {
                         console.error("Error: ", jqXHR.statusText); // Log the error

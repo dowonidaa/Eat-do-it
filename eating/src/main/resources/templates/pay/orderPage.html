@@ -15,8 +15,6 @@
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-
-
     $(document).ready(function () {
         $('#couponSelect').change(function () {
             var selectedCouponId = $(this).val(); // Get the selected coupon's value
@@ -34,9 +32,7 @@
                     success: function (response) {
                         var formattedPrice = new Intl.NumberFormat('ko-KR').format(response.discount);
                         $('#couponDiscount').text("-" + formattedPrice + '원');
-                        if(response.discount !== null) {
-                            $('#hiddenDiscount').val(response.discount);
-                        }
+                        $('#hiddenDiscount').val(response.discount);
                         updateTotal(response)
                     },
                     error: function (xhr, status, error) {
@@ -46,7 +42,7 @@
                 });
             } else {
                 $('#couponDiscount').text('0원');
-                updateTotal({totalPrice: totalPrice, deliveryPrice :deliveryPrice, discount : 0 })
+                updateTotal({totalPrice: parseInt(totalPrice), deliveryPrice :parseInt(deliveryPrice), discount : 0 })
             }
         });
 
@@ -220,15 +216,15 @@
                             <h4>주문금액</h4>
                             <div th:text="|${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
                                 60,000원
-                                <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice" th:id="totalPrice">
                             </div>
+                                <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice" id="totalPrice">
                         </div>
                         <div class="sub-title">
                             <h4>배달금액</h4>
                             <div  th:text="|${#numbers.formatDecimal(cart.shop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
                                 60,000원
-                                <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice" th:id="deliveryPrice">
                             </div>
+                                <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice" id="deliveryPrice">
                         </div>
                         <div class="sub-title">
                             <h4>쿠폰할인</h4>
@@ -292,6 +288,10 @@
             link.style.width = dynamicWidth + 'px';
         });
     });
+
+
+
+
 </script>
 </body>
 
