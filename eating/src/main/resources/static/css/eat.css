@@ -198,10 +198,12 @@ footer{
   display: grid;
   cursor: pointer; /* 마우스 커서를 손 모양으로 설정 */
   grid-template-columns: 100px auto; /* input과 button을 동일한 너비로 설정 */
-  grid-column-gap: 10px; /* input과 button 사이의 간격 조정 */
+  grid-column-gap: 25px; /* input과 button 사이의 간격 조정 */
   align-items: center; /* 요소들을 수직 중앙 정렬 */
+  margin-bottom: 10px;
   text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+
 }
 
 .card {
@@ -211,15 +213,49 @@ footer{
   font-weight: bold;
 }
 
-.shop {
-  margin:8px;
-  width:100%;
+.card-title a {
+    color: black; /* 텍스트 색상을 검은색으로 설정합니다. */
+    text-decoration: none; /* 텍스트 밑줄을 없앱니다. */
+}
+
+.card-img {
+    box-sizing: border-box;
+    margin:8px;
+
 }
 
 .shop-info {
   display: grid;
-  grid-template-columns: 25px 100px 25px 100px; /* input과 button을 동일한 너비로 설정 */
-  grid-column-gap: 10px; /* input과 button 사이의 간격 조정 */
+  grid-template-columns: 120px 170px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details1 {
+  display: grid;
+  grid-template-columns: 25px 50px 30px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 5px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details2 {
+  display: grid;
+  grid-template-columns: 25px 80px 80px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details3 {
+  display: grid;
+  grid-template-columns: 60px 50px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details4 {
+  display: grid;
+  grid-template-columns: 120px 120px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
   align-items: center; /* 요소들을 수직 중앙 정렬 */
 }
 
@@ -229,6 +265,9 @@ footer{
 }
 
 .row {
+  margin-bottom: 10px;
+}
+.col {
   margin-bottom: 10px;
 }
 
