@@ -251,6 +251,11 @@ public class ShopController {
                                @RequestParam("cateId") int cateId,
                                @RequestParam(name = "userId", defaultValue = "") String userId,
                                Model model){
+
+        model.addAttribute("currentCategoryId", cateId);
+        log.info("currentCategoryId : {}", cateId);
+
+
         log.info("shop list vos in controller cateId :  "+cateId);
 
         log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
