@@ -224,6 +224,16 @@ footer{
 
 }
 
+.card-img-top-container{
+    display: flex;
+    align-items: center;0
+}
+
+.card-img-top {
+    width: 100%;
+    height: fit-content;
+}
+
 .shop-info {
   display: grid;
   grid-template-columns: 120px 170px; /* input과 button을 동일한 너비로 설정 */
@@ -343,6 +353,14 @@ footer{
   width:100%;
 }
 
+.shop-info-container {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  grid-column-gap: 5px; /* input과 button 사이의 간격 조정 */
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+  margin-bottom: 10px;
+}
+
 .red-text {
   text-align: left;
   color:red;
@@ -355,6 +373,12 @@ footer{
   color:grey;
   margin: 0;
   font-weight: bold;
+}
+
+.black-text-small {
+  text-align: left;
+  color:black;
+  margin: 0;
 }
 
 .shop-menu-container {
@@ -402,6 +426,12 @@ footer{
 .cart-price {
   font-size: 15px;
   font-weight: bold;
+}
+
+.cart {
+  margin:8px;
+  width:100%;
+  margin-right: 5px;
 }
 
 .quantity {
@@ -699,6 +729,14 @@ footer{
 
 .search-box {
   margin-right: 30px;
+}
+
+.validation-form {
+    width: 900px;
+}
+
+.input-map {
+    margin-top: 20px;
 }
 
 /* --------------- 검색 ---------------- */
