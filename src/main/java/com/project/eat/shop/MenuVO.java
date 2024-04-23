@@ -32,7 +32,7 @@ public class MenuVO {
     private String menuPic;
 
     @Column(name="shop_id")
-    private int shopId;
+    private Long shopId;
 
     public MenuVO(String menuName, String menuPrice, String menuDesc, String menuPic, int menuId) {
         this.menuName = menuName;

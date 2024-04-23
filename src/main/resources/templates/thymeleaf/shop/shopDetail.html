@@ -11,7 +11,11 @@
 
 <body>
 
+
 <h1>dateail</h1>
+	<h3>
+		<a th:href="@{review_formdata_get(shopId=${vo.shopId})}">가게리뷰목록</a>
+	</h3>
 
 	<h3>가게 상세정보</h3>
 	<p th:text="${vo.shopId}"></p>
@@ -47,7 +51,7 @@
 						<img th:src="${dto.menuPic}" height="50" width="50">
 					</span>
 					<span th:if="${dto.menuPic == null}">
-						사진없음
+
 					</span>
 				</td>
 
@@ -61,7 +65,9 @@
 		<a href="/shop_main">메인</a>
 	</button>
 
-	
+
+
+
 </body>
 
 </html>

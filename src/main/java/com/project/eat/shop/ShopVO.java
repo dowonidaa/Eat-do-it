@@ -17,7 +17,7 @@ public class ShopVO {
     @Id  //pk설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increament
     @Column(name="shop_id")//컬럼이름 설정
-    private int shopId;
+    private Long shopId;
 
     @Column(name="shop_name",nullable = false)
     private String shopName;

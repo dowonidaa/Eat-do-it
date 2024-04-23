@@ -1,5 +1,6 @@
 package com.project.eat.shop;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -95,8 +96,13 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
 
     @Query(nativeQuery=true,
             value="SELECT m.menu_name, m.menu_price, m.menu_desc, m.menu_pic, m.menu_id FROM Shop s JOIN Menu m ON s.shop_name = m.shop_name WHERE s.shop_id = :shopId")
-        List<Object[]> findShopWithMenu(@Param("shopId") int shopId);
+        List<Object[]> findShopWithMenu(@Param("shopId") Long shopId);
 
-    public ShopVO findByShopId(int shopId);
+    public ShopVO findByShopId(Long shopId);
+
+    @Query(nativeQuery=true,
+            value="select shop_name from shop where shop_id = ?1 ")
+    String findShopNameByShopId(Long shopId);
+
 
 }
