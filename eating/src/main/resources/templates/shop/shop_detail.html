@@ -18,34 +18,11 @@
     <script>
         const formatter = new Intl.NumberFormat('ko-KR', {
             style: 'decimal', // This is default and can be omitted
-            minimumFractionDigits: 0, // Optional: set to control the number of decimal places
-            maximumFractionDigits: 0  // Optional: set to control the number of decimal places
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
         });
 
         $(document).ready(function () {
-            // $('.delete-cart-item').on('click', function () {
-            //     var cartItemId = $(this).data('cartitemid');
-            //     var $this = $(this); // 클릭된 버튼을 가리키는 jQuery 객체를 변수에 저장
-            //
-            //     $.ajax({
-            //         url: '/cart/' + cartItemId + '/delete',
-            //         type: 'DELETE',
-            //         success: function (result) {
-            //             // 성공 시 UI에서 해당 아이템 삭제
-            //             $this.closest('.cart-card').remove(); // 클릭된 버튼의 가장 가까운 <tr> 요소를 삭제
-            //              // 클릭된 버튼의 가장 가까운 <tr> 요소를 삭제
-            //             if ($('.cart-card').length === 0) {
-            //                 var emptyMessage = $('<span>', {
-            //
-            //                     text: '장바구니가 비어있습니다.'
-            //                 });
-            //                 // 적절한 컨테이너나 위치에 emptyMessage를 추가
-            //                 $('.empty-cart-message').prepend(emptyMessage); // 'cart-container'는 해당 메시지를 넣을 부모 요소의 클래스 이름
-            //             }
-            //             updateTotalPrice()
-            //         }
-            //     });
-            // });
 
             $('.increment-quantity, .decrement-quantity').click(function (event) {
                 event.preventDefault();
@@ -92,6 +69,26 @@
                     }
                 });
             }
+            $('#orderDirect').click(function() {
+                var formData = $('#addItemForm').serialize();  // 폼 데이터를 직렬화합니다.
+
+                // AJAX 요청을 수행합니다.
+                $.ajax({
+                    url: $('#addItemForm').attr('action'), // 폼의 action 속성 값으로 요청 URL을 설정합니다.
+                    type: 'POST', // HTTP 메소드를 지정합니다.
+                    data: formData, // 직렬화된 폼 데이터를 요청 본문에 포함합니다.
+                    success: function(response) {
+                        // 요청 성공 시 실행될 콜백 함수입니다.
+                        alert('장바구니에 추가되었습니다. 주문 페이지로 이동합니다.');
+                        window.location.href = '/order'; // 주문 페이지로 리디렉션
+                    },
+                    error: function() {
+                        // 요청 실패 시 실행될 콜백 함수입니다.
+                        alert('주문 처리에 실패했습니다.');
+                    }
+                });
+            });
+
             $('#addItemForm').submit(function (e) {
                 e.preventDefault(); // 폼 기본 제출 이벤트를 막습니다.
 
@@ -135,48 +132,8 @@
                 }
             });
 
-                // $('#cancelButton').click(function() {
-                //     var shopId = $(this).data('shopid');
-                //     $.ajax({
-                //         url: '/cart/remove', // Change to your actual URL
-                //         type: 'POST', // or 'GET', depending on your server setup
-                //         data: { shopId: shopId },
-                //         success: function(response) {
-                //             // Handle success
-                //             alert('장바구니를 비웠습니다.');
-                //             $('.cart-card').remove();
-                //
-                //                 $('.empty-cart-message').text('장바구니가 비어있습니다.').show();
-                //
-                //             updateTotalPrice();
-                //
-                //         },
-                //         error: function(xhr, status, error) {
-                //             // Handle error
-                //             alert('Failed to cancel order');
-                //         }
-                //     });
-                // });
-            // $('.deleteButton').on('click', '.deleteButton', function() {
-            //     var cartItemId = $(this).data('cartItemId');
-            //
-            //     // Create a form dynamically
-            //     var form = $('<form>', {
-            //         'action': '/cart/delete', // Set the action to the endpoint
-            //         'method': 'POST' // Set method to POST
-            //     });
-            //
-            //     // Create an input element for the shopId
-            //     form.append($('<input>', {
-            //         'type': 'hidden', // Make it a hidden input
-            //         'name': 'cartItemId', // Set the name to 'shopId'
-            //         'value': cartItemId // Set the value to the shopId retrieved from the button
-            //     }));
-            //
-            //     // Append the form to the body and submit it
-            //     $('body').append(form);
-            //     form.submit();
-            // });
+
+
 
             $('#cancelButton').click(function() {
                 var shopId = $(this).data('shopid');
@@ -217,6 +174,57 @@
                 } else {
                     console.log("No items in the cart.");
                 }
+            });
+
+
+            $('.card').on('click', function() {
+                var itemId = $(this).data('itemId');
+                console.log(itemId)
+                $.ajax({
+                    type: "POST",
+                    url: "/cart/" + itemId,
+                    data: itemId
+                })
+                    .done(function (response) {
+                        $("#addItemForm").html(response); // Update the content dynamically
+                        // reinitializeComponents();
+                    })
+                    .fail(function(jqXHR) {
+                        console.error("Error: ", jqXHR.statusText); // Log the error
+                    });
+
+                // $.ajax({
+                //     url: '/api/items/' + itemId,
+                //     type: 'GET',
+                //     success: function(data) {
+                //         // 모달 내용 업데이트
+                //         $('#addItemForm .modal-body img').attr('src', data.i);
+                //         $('#addItemForm .modal-body .item-name').text(data.name);
+                //         $('#addItemForm .modal-body .item-description').text(data.description);
+                //         $('#addItemForm .modal-body .item-price').text(data.price + '원');
+                //
+                //         // 폼의 action URL 업데이트
+                //         var shopId = $('#shopId').val();
+                //         $('#addItemForm').attr('action', '/cart/' + shopId + '/add');
+                //         $('#addItemForm input[name="itemId"]').val(data.itemId);
+                //
+                //         // 필수 옵션 추가 로직 (예시)
+                //         // 임시로 옵션을 간단하게 처리
+                //         $('#addItemForm .form-check').empty(); // 옵션 클리어
+                //         data.itemOptions.forEach(function(option, index) {
+                //             var checked = index === 0 ? " checked" : "";
+                //             var optionHtml = '<input class="form-check-input" type="radio" name="itemOptionId" id="flexRadioDefault' + index + '" value="' + option.id + '"' + checked + '>\
+                //                       <label class="form-check-label" for="flexRadioDefault' + index + '">' + option.content + '</label>';
+                //             $('#addItemForm .form-check').append(optionHtml);
+                //         });
+                //
+                //         // 모달 표시
+                //         $('#addItemForm').modal('show');
+                //     },
+                //     error: function() {
+                //         alert('아이템 정보를 불러오는데 실패했습니다.');
+                //     }
+                // });
             });
         });
 
@@ -285,16 +293,17 @@
                     <div class="shop-detail-row">
                         <div class="row">
                             <div class="col" th:each="item : ${items}">
-                                <div class="card" data-bs-target="#modal1" data-bs-toggle="modal">
+                                <div class="card" data-bs-target="#addItemForm" data-bs-toggle="modal"
+                                     th:data-item-name="${item.itemName}" th:data-item-description="${item.itemDescription}"
+                                     th:data-item-price="${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}"
+                                     th:data-item-url="${item.itemUrl}" th:data-item-id="${item.id}">
                                     <img th:src="${item.itemUrl}" class="card-img-top" alt="...">
-
                                     <div class="card-body">
                                         <h5 class="menu-title" th:text="${item.itemName}">세트 A</h5>
                                         <p class="menu-price" th:text="|${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">15,000원</p>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -302,9 +311,11 @@
                     <div class="shop-detail-row">
                         <div class="row">
                             <div class="col" th:each="item : ${items}">
-                                <div class="card" onclick="goSomewhere()">
+                                <div class="card" data-bs-target="#addItemForm" data-bs-toggle="modal"
+                                     th:data-item-name="${item.itemName}" th:data-item-description="${item.itemDescription}"
+                                     th:data-item-price="${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}"
+                                     th:data-item-url="${item.itemUrl}" th:data-item-id="${item.id}">
                                     <img th:src="${item.itemUrl}" class="card-img-top" alt="...">
-
                                     <div class="card-body">
                                         <h5 class="menu-title" th:text="${item.itemName}">세트 A</h5>
                                         <p class="menu-price" th:text="|${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">15,000원</p>
@@ -318,16 +329,17 @@
                     <div class="shop-detail-row">
                         <div class="row">
                             <div class="col" th:each="item : ${items}">
-                                <div class="card" onclick="goSomewhere()">
+                                <div class="card" data-bs-target="#addItemForm" data-bs-toggle="modal"
+                                     th:data-item-name="${item.itemName}" th:data-item-description="${item.itemDescription}"
+                                     th:data-item-price="${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}"
+                                     th:data-item-url="${item.itemUrl}" th:data-item-id="${item.id}">
                                     <img th:src="${item.itemUrl}" class="card-img-top" alt="...">
-
                                     <div class="card-body">
                                         <h5 class="menu-title" th:text="${item.itemName}">세트 A</h5>
                                         <p class="menu-price" th:text="|${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">15,000원</p>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -397,44 +409,46 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" data-bs-target="#addItemForm" data-bs-toggle="modal">모달</button>
 
 
 
-
-                <form id="addItemForm" class="modal" th:action="@{/cart/{shopId}/add (shopId=${shop.shopId})}" th:object="${shop}" th:method="post">
+                <form id="addItemForm" class="modal" th:action="@{/cart/{shopId}/add (shopId=${shop.shopId})}"
+                      th:object="${shop}" th:method="post">
                     <input th:type="hidden" name="itemId" th:value="${items.get(0).id}"/>
                     <input th:type="hidden" th:id="shopId" th:value="${shop.shopId}">
-                   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-                       <div class="modal-content">
-                           <div class="modal-header">메뉴상세
-                               <button class="btn-close" data-bs-dismiss="modal"></button>
-                           </div>
-                           <div class="modal-body">
-                               <img th:src="${items.get(0).itemUrl}"></img>
-                               <div th:text="${items.get(0).itemName}">메뉴이름</div>
-                               <div th:text="${items.get(0).itemDescription}">메뉴설명</div>
-                               <div th:text="|${items.get(0).itemPrice}원|">가격</div>
+                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">메뉴상세
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img th:src="${items.get(0).itemUrl}"></img>
+                                <div th:text="${items.get(0).itemName}">메뉴이름</div>
+                                <div th:text="${items.get(0).itemDescription}">메뉴설명</div>
+                                <div th:text="|${items.get(0).itemPrice}원|">가격</div>
 
-                               <div>필수 옵션</div>
-                               <div class="form-check" th:each="itemOption : ${itemOptions}">
-                                   <input class="form-check-input" type="radio" name="itemOptionId" id="flexRadioDefault1" th:value="${itemOption.id}" checked>
-                                   <label class="form-check-label" for="flexRadioDefault1" th:text="${itemOption.content}">
-                                       Default radio
-                                   </label>
-                               </div>
-                               <div>
-                                   <label for="quantity">Quantity:</label>
-                                   <input type="number" value="1" id="quantity" name="quantity" min="1"/>
-                               </div>
-                           </div>
-                           <div class="modal-footer">
-                               <button  type="submit" class="btn btn-primary">장바구니추가</button>
-                               <button class="btn btn-secondary">주문하기</button>
-                           </div>
-                       </div>
-                   </div>
-               </form>
+                                <div>필수 옵션</div>
+                                <div class="form-check" th:each="itemOption, iterStat : ${itemOptions}">
+                                    <input class="form-check-input" type="radio" name="itemOptionId"
+                                           id="flexRadioDefault1" th:value="${itemOption.id}"
+                                           th:attr="checked=${iterStat.index == 0 ? 'checked' : null}">
+                                    <label class="form-check-label" for="flexRadioDefault1"
+                                           th:text="${itemOption.content}">
+                                        Default radio
+                                    </label>
+                                </div>
+                                <div>
+                                    <label for="quantity">Quantity:</label>
+                                    <input type="number" value="1" id="quantity" name="quantity" min="1"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">장바구니추가</button>
+                                <button type="button" class="btn btn-secondary" id="orderDirect">주문하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
 
 
@@ -480,6 +494,8 @@
                 link.style.width = dynamicWidth + 'px';
             });
         });
+
+
 
 
     </script>

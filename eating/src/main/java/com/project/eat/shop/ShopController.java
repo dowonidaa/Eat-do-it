@@ -555,6 +555,7 @@ public class ShopController {
 
             }
 
+
             List<CartItem> cartItems = findMember.getCart().getCartItems();
             model.addAttribute("cartItems", cartItems);
             int totalPrice = findMember.getCart().getTotalPrice();

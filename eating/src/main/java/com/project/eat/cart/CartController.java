@@ -20,7 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -38,6 +40,7 @@ public class CartController {
 
 
     @PostMapping("/{shopId}/add")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> addCart(@PathVariable("shopId") Long shopId, Long itemId, Long itemOptionId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
         String memberId = (String)session.getAttribute("member_id");
         Map<String, Object> response = new HashMap<>();
@@ -89,6 +92,7 @@ public class CartController {
     }
 
     @PostMapping("/{cartItemId}/increment")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> increment(@PathVariable("cartItemId") Long cartItemId) {
         CartItem cartItem = cartItemService.increaseQuantity(cartItemId);
         int newPrice = cartItem.getPrice();
@@ -99,6 +103,7 @@ public class CartController {
     }
 
     @PostMapping("/{cartItemId}/decrement")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> decrement(@PathVariable("cartItemId") Long cartItemId) {
         CartItem cartItem = cartItemService.decreaseQuantity(cartItemId);
         int newPrice = cartItem.getPrice();
@@ -109,6 +114,7 @@ public class CartController {
     }
 
     @GetMapping("/total-price")
+    @ResponseBody
     public ResponseEntity<Map<String, Integer>> totalPrice(HttpSession session, Long shopId) {
         String memberId =(String) session.getAttribute("member_id");
         log.info("shopId = {}", shopId);
@@ -128,14 +134,23 @@ public class CartController {
     }
 
     @PostMapping("/remove")
-//    public ResponseEntity<Map<String, Object>> cartRemove(HttpSession session, Long shopId) {
     public String cartRemove(HttpSession session, Long shopId) {
         log.info("{}", shopId);
         String memberId =(String) session.getAttribute("member_id");
-//        cartService.deleteAndCreateCart(memberId, shopId);
         cartService.deleteCart(memberId);
         log.info("remove");
         return "redirect:/shop/" + shopId;
+    }
+
+    @PostMapping("/{itemId}")
+    public String getItemDetails(@PathVariable("itemId") Long itemId, Model model) {
+        Item findItem = itemService.findOne(itemId);
+        ShopVO itemShop = findItem.getShop();
+        List<ItemOption> itemOptions = findItem.getItemOptions().stream().sorted(Comparator.comparing(ItemOption::getPrice)).toList();
+        model.addAttribute("item", findItem);
+        model.addAttribute("itemOptions", itemOptions);
+        model.addAttribute("shop", itemShop);
+        return "shop/itemAddForm";
     }
 
 
