@@ -701,6 +701,14 @@ footer{
   margin-right: 30px;
 }
 
+.validation-form {
+    width: 900px;
+}
+
+.input-map {
+    margin-top: 20px;
+}
+
 /* --------------- 검색 ---------------- */
 
 .shop-search {
