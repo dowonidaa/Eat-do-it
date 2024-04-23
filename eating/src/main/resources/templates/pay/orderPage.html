@@ -88,7 +88,8 @@
             <div class="container text-center">
                 <div class="pay-container">
                     <div class="sub-title">
-                        <h3>배달 주문</h3>
+                        <h3 th:if="${orderForm.orderType == T(com.project.eat.order.OrderType).DELIVERY}">배달 주문</h3>
+                        <h3 th:if="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT}">포장 주문</h3>
                     </div>
                     <div>
                         <input th:name="orderStatus" type="hidden" th:value="${orderForm.orderStatus}" >

@@ -70,19 +70,22 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{cartItemId}/delete")
-    public ResponseEntity<CartItem> deleteCartItem(@PathVariable("cartItemId") Long cartItemId, HttpSession session) {
+    @PostMapping("/delete")
+    public String deleteCartItem(Long cartItemId, HttpSession session) {
         String memberId = (String)session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
+        Long shopId = findMember.getCart().getShop().getShopId();
+        log.info("cartItemId={}", cartItemId);
 
         if (findMember.getCart().getCartItems().size() <= 1) {
             cartService.delete(findMember.getCart());
             cartService.createCart(memberId);
+
         }else {
             cartItemService.findAndDelete(cartItemId);
         }
 
-        return ResponseEntity.ok().build();
+        return "redirect:/shop/" + shopId;
     }
 
     @PostMapping("/{cartItemId}/increment")

@@ -36,8 +36,8 @@
     </div>
     <div class="col-6 d-flex flex-column align-items-end justify-content-center ">
         <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''" style="width: 104px;">주문상세</button>
-        <button th:if="${order.orderType==T(com.project.eat.order.OrderType).DELIVERY and (order.orderStatus.toString()!='배달완료'and order.orderStatus.toString()!='주문취소 완료')}"
-                type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''"  style="width: 104px;">배송조회</button>
+<!--        <button th:if="${order.orderType==T(com.project.eat.order.OrderType).DELIVERY and (order.orderStatus.toString()!='배달완료'and order.orderStatus.toString()!='주문취소 완료')}"-->
+<!--                type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''"  style="width: 104px;">배송조회</button>-->
         <div th:if="${order.orderStatus.toString() == '결제 준비' or order.orderStatus.toString() == '결제완료' or order.orderStatus.toString() == '주문확인중'}" th:switch="${order.paymentMethod}">
             <button th:case="'kakaoPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|"  style="width: 104px;">주문취소</button>
             <button th:case="'tossPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/toss/cancel(orderId=${order.id})}'|" style="width: 104px;">주문취소</button>
