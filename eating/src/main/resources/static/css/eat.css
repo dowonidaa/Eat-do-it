@@ -172,7 +172,7 @@ footer{
 .nav{
   font-size: 14px;
   background-color: rgba(239, 239, 239, 0.968);
-  margin-top:50px;
+  margin-top:20px;
   margin-bottom: 50px;
   text-align: center;
   align-items: center;
@@ -699,4 +699,35 @@ footer{
 
 .search-box {
   margin-right: 30px;
+}
+
+/* --------------- 검색 ---------------- */
+
+.shop-search {
+    display: flex;
+    margin-top : 20px;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.shop-search input{
+    margin-right: 5px;
+
+}
+
+.input-group {
+    width: 300px;
+}
+
+.sorry-img {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    display:flex;
+    justify-content: center;
+}
+
+.sorry-img img{
+    display:flex;
+    justify-content: center;
+    width: 500px;
 }
