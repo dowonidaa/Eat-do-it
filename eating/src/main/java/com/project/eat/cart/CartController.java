@@ -3,12 +3,11 @@ package com.project.eat.cart;
 import com.project.eat.cart.cartItem.CartItem;
 import com.project.eat.cart.cartItem.CartItemService;
 import com.project.eat.item.Item;
-import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.item.ItemService;
+import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.item.itemOption.ItemOptionService;
 import com.project.eat.member.MemberService;
 import com.project.eat.member.MemberVO_JPA;
-import com.project.eat.shop.ShopRepositoryEM;
 import com.project.eat.shop.ShopService;
 import com.project.eat.shop.ShopVO;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -41,10 +39,11 @@ public class CartController {
 
     @PostMapping("/{shopId}/add")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> addCart(@PathVariable("shopId") Long shopId, Long itemId, Long itemOptionId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
-        String memberId = (String)session.getAttribute("member_id");
+    public ResponseEntity<Map<String, Object>> addCart(@PathVariable("shopId") Long shopId, Long itemId, Long itemOptionId, @RequestParam(defaultValue = "1") int quantity, @RequestParam(value = "extraItemId", required = false) List<Long> extraItemId, HttpSession session) {
+        String memberId = (String) session.getAttribute("member_id");
         Map<String, Object> response = new HashMap<>();
         response.put("shopId", shopId);
+        log.info("extraItemId = {}",extraItemId);
         if (itemOptionId == null) {
             return ResponseEntity.ok(response);
         }
@@ -69,13 +68,24 @@ public class CartController {
         int cartPrice = item.getItemPrice() + itemOption.getPrice();
 
         cartItemService.saveCartItem(memberId, itemId, itemOptionId, quantity, cartPrice, memberCart);
+        if (!extraItemId.isEmpty()) {
+            for (Long extraIt : extraItemId) {
+                if(extraIt==null){
+                    continue;
+                }
 
+            Item extraItem = itemService.findOne(extraIt);
+            ItemOption extraItemOption = extraItem.getItemOptions().get(3);
+            int extraPrice = extraItem.getItemPrice() + extraItemOption.getPrice();
+            cartItemService.saveCartItem(memberId, extraIt, extraItemOption.getId(), quantity, extraPrice, memberCart);
+            }
+        }
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/delete")
     public String deleteCartItem(Long cartItemId, HttpSession session) {
-        String memberId = (String)session.getAttribute("member_id");
+        String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         Long shopId = findMember.getCart().getShop().getShopId();
         log.info("cartItemId={}", cartItemId);
@@ -84,7 +94,7 @@ public class CartController {
             cartService.delete(findMember.getCart());
             cartService.createCart(memberId);
 
-        }else {
+        } else {
             cartItemService.findAndDelete(cartItemId);
         }
 
@@ -116,13 +126,13 @@ public class CartController {
     @GetMapping("/total-price")
     @ResponseBody
     public ResponseEntity<Map<String, Integer>> totalPrice(HttpSession session, Long shopId) {
-        String memberId =(String) session.getAttribute("member_id");
+        String memberId = (String) session.getAttribute("member_id");
         log.info("shopId = {}", shopId);
         ShopVO shop = memberService.findOne(memberId).getCart().getShop();
         int minPriceInt = 0;
-        if(shop != null) {
+        if (shop != null) {
             minPriceInt = shop.getMinPriceInt();
-        }else{
+        } else {
             minPriceInt = shopService.findShop(shopId).getMinPriceInt();
 
         }
@@ -136,7 +146,7 @@ public class CartController {
     @PostMapping("/remove")
     public String cartRemove(HttpSession session, Long shopId) {
         log.info("{}", shopId);
-        String memberId =(String) session.getAttribute("member_id");
+        String memberId = (String) session.getAttribute("member_id");
         cartService.deleteCart(memberId);
         log.info("remove");
         return "redirect:/shop/" + shopId;
@@ -146,15 +156,14 @@ public class CartController {
     public String getItemDetails(@PathVariable("itemId") Long itemId, Model model) {
         Item findItem = itemService.findOne(itemId);
         ShopVO itemShop = findItem.getShop();
+        List<Item> items = itemShop.getItems().stream().filter(item -> !item.getId().equals(itemId)).toList();
         List<ItemOption> itemOptions = findItem.getItemOptions().stream().sorted(Comparator.comparing(ItemOption::getPrice)).toList();
         model.addAttribute("item", findItem);
+        model.addAttribute("items", items);
         model.addAttribute("itemOptions", itemOptions);
         model.addAttribute("shop", itemShop);
         return "shop/itemAddForm";
     }
-
-
-
 
 
 }
