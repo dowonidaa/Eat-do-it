@@ -505,38 +505,38 @@ public class ShopController {
     }
 
     //shopDatil/num=${vo.shopId})
+//    @GetMapping("/shopDetail")
+//    public String shopDetail(@RequestParam("num") Long shopId, Model model){
+//        log.info("shopDetail called@#$@#$%#$@#!@#~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        log.info("shopId: {}", shopId);
+//        model.addAttribute("shopId", shopId);
+//
+//        ShopVO vo = shopService.findByShopId(shopId);
+//        model.addAttribute("vo", vo);
+//
+//        List<Object[]> shopAndMenus = shopService.findShopWithMenu(shopId);
+//        List<MenuVO> dtos = new ArrayList<>();
+//        for (Object[] result : shopAndMenus) {
+//            // 배열의 요소에 접근하여 데이터 추출
+//            String menuName = (String) result[0];
+//            String menuPrice = (String) result[1];
+//            String menuDesc = (String) result[2];
+//            String menuPic = (String) result[3];
+//            int menuId =(int) result[4];
+//
+//            // DTO에 데이터 저장
+//            MenuVO dto = new MenuVO(menuName, menuPrice, menuDesc, menuPic, menuId);
+//            dtos.add(dto);
+//        }
+//        model.addAttribute("dtos", dtos);
+//
+//        return "thymeleaf/shop/shopDetail";
+//
+
+
+//    }
     @GetMapping("/shopDetail")
-    public String shopDetail(@RequestParam("num") Long shopId, Model model){
-        log.info("shopDetail called@#$@#$%#$@#!@#~~~~~~~~~~~~~~~~~~~~~~~~~");
-        log.info("shopId: {}", shopId);
-        model.addAttribute("shopId", shopId);
-
-        ShopVO vo = shopService.findByShopId(shopId);
-        model.addAttribute("vo", vo);
-
-        List<Object[]> shopAndMenus = shopService.findShopWithMenu(shopId);
-        List<MenuVO> dtos = new ArrayList<>();
-        for (Object[] result : shopAndMenus) {
-            // 배열의 요소에 접근하여 데이터 추출
-            String menuName = (String) result[0];
-            String menuPrice = (String) result[1];
-            String menuDesc = (String) result[2];
-            String menuPic = (String) result[3];
-            int menuId =(int) result[4];
-
-            // DTO에 데이터 저장
-            MenuVO dto = new MenuVO(menuName, menuPrice, menuDesc, menuPic, menuId);
-            dtos.add(dto);
-        }
-        model.addAttribute("dtos", dtos);
-
-        return "thymeleaf/shop/shopDetail";
-
-
-
-    }
-    @GetMapping("/shop/{shopId}")
-    public String shop(@PathVariable("shopId") Long shopId, Model model, HttpSession session) {
+    public String shop(@RequestParam("num") Long shopId, Model model, HttpSession session) {
         ShopVO findShop = shopService.findShop(shopId);
         List<Item> items = findShop.getItems();
         List<ItemOption> itemOptions = items.get(0).getItemOptions();

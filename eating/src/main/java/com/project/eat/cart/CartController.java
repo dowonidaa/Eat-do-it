@@ -103,7 +103,7 @@ public class CartController {
 
         }
 
-        return "redirect:/shop/" + shopId;
+        return "redirect:/shopDetail?num=" + shopId;
     }
 
     @PostMapping("/{cartItemId}/increment")
