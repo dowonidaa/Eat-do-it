@@ -80,9 +80,10 @@ public class MemberController {
 
 
     @PostMapping("/member/loginOK")
-    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException {
+    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "/")String redirectURL) throws NoSuchAlgorithmException {
         log.info("/member/loginOK...");
         log.info("{}", vo);
+        log.info("redirectURL = {}",redirectURL );
 
         String salt = service.getSalt(vo);
         log.info("Salt : {}", salt);
@@ -97,7 +98,7 @@ public class MemberController {
         if (vo2 != null) {
             session.setAttribute("member_id", vo2.getId());
 //            session.setAttribute("member", vo2.getNum());
-            return "redirect:/";
+            return "redirect:" + redirectURL;
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");
             return "redirect:/member/login";

@@ -32,8 +32,8 @@ public class MemberInterceptor implements HandlerInterceptor {
 		if(member_id == null) {
 			
 			if(url.equals("/member/selectAll") || url.equals("/member/selectOne")
-					|| url.equals("/member/searchList")) {
-				response.sendRedirect("login");
+					|| url.equals("/member/searchList") || url.equals("/shopDetail") || url.equals("/orders")) {
+				response.sendRedirect("/member/login?redirectURL=" + url);
 				return false;
 			}
 		}
