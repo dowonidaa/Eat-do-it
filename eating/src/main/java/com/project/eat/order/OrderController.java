@@ -194,9 +194,11 @@ public class OrderController {
     public String payReady(Model model, HttpSession session) {
         OrderForm form = (OrderForm) model.getAttribute("form");
         String memberId = session.getAttribute("member_id").toString();
-        Coupon findCoupon = couponService.findOne(form.getCouponId());
-        form.setDiscount(findCoupon.getPrice());
-
+//        log.info("coupon = {}", form.getCouponId());
+        if(form.getCouponId()!=null) {
+            Coupon findCoupon = couponService.findOne(form.getCouponId());
+            form.setDiscount(findCoupon.getPrice());
+        }
         Order order = orderService.createOrder(memberId, form);
         List<OrderItem> orderItems = order.getOrderItems();
         String[] cartNames = new String[orderItems.size()];
@@ -206,7 +208,7 @@ public class OrderController {
             }
 
         }
-        String itemName = cartNames[0] + (orderItems.size() - 1 != 0 ? "그외 " + (orderItems.size() - 1) : "");
+        String itemName = cartNames[0] + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) : "");
 
         log.info(itemName);
         int quantity = 0;
@@ -222,7 +224,9 @@ public class OrderController {
         log.info("결재고유 번호: " + readyResponse.getTid());
 
         session.setAttribute("order", order);
-        session.setAttribute("couponId", form.getCouponId());
+        if (form.getCouponId()!=null) {
+            session.setAttribute("couponId", form.getCouponId());
+        }
         log.info("{}", readyResponse.getNext_redirect_pc_url());
         return "redirect:" + readyResponse.getNext_redirect_pc_url(); // 클라이언트에 보냄.(tid,next_redirect_pc_url이 담겨있음.)
     }
@@ -240,9 +244,12 @@ public class OrderController {
         // 카카오 결재 요청하기
         ApproveResponseVO approveResponse = kakaopayService.payApprove(order.getId(), tid, pgToken, memberId);
         cartService.deleteCart(memberId);
+
         Long couponId = (Long) session.getAttribute("couponId");
-        couponService.couponUsed(couponId, order);
-        session.removeAttribute("couponId");
+        if(couponId!=null) {
+            couponService.couponUsed(couponId, order);
+            session.removeAttribute("couponId");
+        }
         session.removeAttribute("order");
         order.setOrderStatus(OrderStatus.PAYMENT);
         log.info("{}", order.getOrderStatus());
@@ -265,7 +272,9 @@ public class OrderController {
         kakaopayService.payCancel(order);
         order.setOrderStatus(OrderStatus.CANCEL);
         orderService.update(order);
-        couponService.couponRollback(order);
+        if(order.getCoupon()!=null) {
+            couponService.couponRollback(order);
+        }
         attributes.addFlashAttribute("message", "주문이 취소 되었습니다.");
         return "redirect:/orders/" + orderId;
     }
