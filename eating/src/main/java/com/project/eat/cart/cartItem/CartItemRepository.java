@@ -22,4 +22,7 @@ public class CartItemRepository {
         em.remove(cartItem);
     }
 
+    public void flush() {
+        em.flush();
+    }
 }

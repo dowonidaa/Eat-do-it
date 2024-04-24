@@ -95,7 +95,12 @@ public class CartController {
             cartService.createCart(memberId);
 
         } else {
-            cartItemService.findAndDelete(cartItemId);
+            cartItemService.findAndDelete(cartItemId, memberId);
+
+            findMember.getCart().findAndDeleteCartItem(cartItemId);
+            cartService.getTotalPrice(memberId);
+
+
         }
 
         return "redirect:/shop/" + shopId;

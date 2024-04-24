@@ -82,9 +82,10 @@ public class CartItemService {
     }
 
     @Transactional
-    public void findAndDelete(Long cartItemId) {
-        CartItem one = cartItemRepository.findOne(cartItemId);
-        cartItemRepository.delete(one);
+    public void findAndDelete(Long cartItemId,String memberId) {
+        CartItem findCartItem = cartItemRepository.findOne(cartItemId);
+        cartItemRepository.delete(findCartItem);
+
     }
 
 

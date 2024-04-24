@@ -1,5 +1,6 @@
 package com.project.eat.cart;
 
+import com.project.eat.cart.cartItem.CartItem;
 import com.project.eat.member.MemberRepositoryEM;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.shop.ShopRepositoryEM;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -43,6 +46,8 @@ public class CartService {
     public int getTotalPrice(String memberId) {
         MemberVO_JPA findMember = memberRepository.findOne(memberId);
         findMember.getCart().totalPrice();
+
+
         return findMember.getCart().getTotalPrice();
     }
 
@@ -87,10 +92,6 @@ public class CartService {
         return  null;
     }
 
-    public void remove(String memberId) {
-        MemberVO_JPA findMember = memberRepository.findOne(memberId);
-        findMember.getCart();
-    }
 
     @Transactional
     public void setShopCart(String memberId, Long shopId) {
@@ -106,4 +107,6 @@ public class CartService {
     public void delete(Cart cart) {
         cartRepository.delete(cart);
     }
+
+
 }

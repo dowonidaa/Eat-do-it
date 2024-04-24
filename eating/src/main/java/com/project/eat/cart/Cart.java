@@ -53,4 +53,14 @@ public class Cart {
         this.setTotalPrice(price);
     }
 
+    public void findAndDeleteCartItem(Long cartItemId){
+        List<CartItem> cartItems = this.cartItems;
+        for (int i = 0; i < cartItems.size(); i++) {
+            if(cartItems.get(i).getId().equals(cartItemId)){
+                cartItems.remove(i);
+            }
+
+        }
+    }
+
 }
