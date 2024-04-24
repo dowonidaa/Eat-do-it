@@ -234,6 +234,17 @@ footer{
     height: fit-content;
 }
 
+.card-body a{
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 기본 색상 */
+}
+
+.sort-button {
+    display: flex;
+    justify-content: end;
+    margin-botton:10px;
+}
+
 .shop-info {
   display: grid;
   grid-template-columns: 120px 170px; /* input과 button을 동일한 너비로 설정 */
@@ -279,11 +290,6 @@ footer{
 }
 .col {
   margin-bottom: 10px;
-}
-
-.paging {
-    display: flex;
-    justify-content: center;
 }
 
 .paging {
