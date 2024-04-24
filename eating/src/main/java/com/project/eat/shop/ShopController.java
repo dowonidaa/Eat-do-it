@@ -538,6 +538,9 @@ public class ShopController {
     @GetMapping("/shopDetail")
     public String shop(@RequestParam("num") Long shopId, Model model, HttpSession session) {
         ShopVO findShop = shopService.findShop(shopId);
+        if(findShop.getItems().isEmpty()){
+            return "redirect:/shop_main";
+        }
         List<Item> items = findShop.getItems();
         List<ItemOption> itemOptions = items.get(0).getItemOptions();
 
