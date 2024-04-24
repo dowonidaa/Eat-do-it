@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -35,6 +35,12 @@ public class ReviewController {
 
     @Autowired
     private UploadService uploadService;
+
+    @Autowired
+    private BadWordService badWordService;
+
+    @Resource(name="WordAnalysisService")
+    private IWordAnalysisService wordAnalysisService;
 
     @Autowired
     private ImageCall imageCall; // imageCall 주입
@@ -56,7 +62,7 @@ public class ReviewController {
                                     @RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                     @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
                                     @RequestParam(name = "userId", defaultValue = "") int userId,
-                                    Model model) throws IOException {
+                                    Model model) throws Exception {
         log.info("/review_formdata...");
         log.info("reviewStar:{}", reviewStar);
         log.info("reviewComent:{}", reviewComent);
@@ -85,7 +91,7 @@ public class ReviewController {
         log.info("확인 !!! reviewPic:{}", reviewPic);
 
         ReviewVO vo = new ReviewVO();
-        vo.setReviewComent(reviewComent);
+
         vo.setReviewStar(reviewStar);
 //        vo.setShopId(shopId);
         // ShopVO를 설정
@@ -94,6 +100,23 @@ public class ReviewController {
 
         vo.setUserId(userId);
         vo.setReviewPic(reviewPic);
+
+        //리뷰필터
+//        Map<String, Integer> rMap = wordAnalysisService.doWordAnalysis(reviewComent);
+//        log.info(" 컨트롤러에서... map 결과값...rMap:{}",rMap);
+
+        List<String> rMap2 = wordAnalysisService.doWordNouns(reviewComent);
+        log.info(" 컨트롤러에서... List 결과값...rMap2:{}",rMap2);
+
+        int pass1 = wordAnalysisService.checkdoBadWord(reviewComent);
+        log.info("1이면 정상. 0이면 비정상... pass1:{}",pass1);
+        if(pass1==0){
+            reviewComent = "해당 리뷰는 관리자에 의해 보이지 않습니다";
+            vo.setReviewComent(reviewComent);
+        } else {
+            vo.setReviewComent(reviewComent);
+        }
+
         reviewService.insertReview(vo);
 
 

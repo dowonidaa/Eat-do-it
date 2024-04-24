@@ -50,7 +50,7 @@ public class ShopVO {
     private String tag;
 
     @Column(name="cate_id",nullable = false)
-    private int cateId;
+    private long cateId;
 
     @Column(name="shop_thum")
     private String shopThum;
