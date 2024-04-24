@@ -42,7 +42,7 @@ h1 {
 
 h2 {
   font-family: 'Inter', sans-serif; /* Inter 폰트 사용 */
-  font-weight: normal;
+  font-weight: medium;
 }
 
 h3 {
@@ -174,7 +174,6 @@ footer{
   background-color: rgba(239, 239, 239, 0.968);
   margin-top:50px;
   margin-bottom: 50px;
-  margin-left: 50px;
   text-align: center;
   align-items: center;
   align-content: center;
@@ -204,8 +203,6 @@ footer{
   text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
-
-
 
 .card {
   cursor: pointer;
@@ -279,6 +276,14 @@ footer{
   width:100%;
 }
 
+.shop-info-container {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  grid-column-gap: 5px; /* input과 button 사이의 간격 조정 */
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+  margin-bottom: 10px;
+}
+
 .red-text {
   text-align: left;
   color:red;
@@ -291,6 +296,12 @@ footer{
   color:grey;
   margin: 0;
   font-weight: bold;
+}
+
+.black-text-small {
+  text-align: left;
+  color:black;
+  margin: 0;
 }
 
 .shop-menu-container {
@@ -812,3 +823,43 @@ h3, h5 { /* 제목 스타일 조정 */
 
 
 
+
+
+.validation-form {
+    width: 900px;
+}
+
+.input-map {
+    margin-top: 20px;
+}
+
+/* --------------- 검색 ---------------- */
+
+.shop-search {
+    display: flex;
+    margin-top : 20px;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.shop-search input{
+    margin-right: 5px;
+
+}
+
+.input-group {
+    width: 300px;
+}
+
+.sorry-img {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    display:flex;
+    justify-content: center;
+}
+
+.sorry-img img{
+    display:flex;
+    justify-content: center;
+    width: 500px;
+}
