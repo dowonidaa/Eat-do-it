@@ -42,7 +42,7 @@ h1 {
 
 h2 {
   font-family: 'Inter', sans-serif; /* Inter 폰트 사용 */
-  font-weight: medium;
+  font-weight: bold;
 }
 
 h3 {
@@ -226,7 +226,7 @@ footer{
 
 .card-img-top-container{
     display: flex;
-    align-items: center;0
+    align-items: center;
 }
 
 .card-img-top {
