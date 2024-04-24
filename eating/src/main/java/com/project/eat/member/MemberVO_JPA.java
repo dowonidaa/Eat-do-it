@@ -1,6 +1,7 @@
 package com.project.eat.member;
 
 import com.project.eat.address.Address;
+import com.project.eat.address.AddressVO_JPA;
 import com.project.eat.cart.Cart;
 import com.project.eat.order.Order;
 import jakarta.persistence.*;
@@ -71,7 +72,8 @@ public class MemberVO_JPA {
     private List<Order> orders = new ArrayList<>();
 
     @OneToOne(mappedBy = "member")
-    private Address address;
+    private AddressVO_JPA address;
+//    private Address address;
 
     @OneToMany(mappedBy = "member")
     private List<Coupon> coupons = new ArrayList<>();

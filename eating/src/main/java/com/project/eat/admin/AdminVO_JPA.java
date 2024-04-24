@@ -14,8 +14,8 @@ public class AdminVO_JPA {
     private int adminId;
 
 
-    @Column(name="shop_id",nullable = false)//컬럼이름 설정
-    private int shopId;
+    @Column(name="shop_id")//컬럼이름 설정
+    private Long shopId;
 
     @Column(name="shop_name",nullable = false)
     private String shopName;
@@ -30,7 +30,7 @@ public class AdminVO_JPA {
     private String deliveryTime;
 
     @Column(name="delivery_price")
-    private String deliveryPrice;
+    private int deliveryPrice;
 
     @Column(name="run_time")
     private String runTime;

@@ -66,12 +66,10 @@ public class MemberController {
         return "redirect:/";
     }
 
-
     @PostMapping("/member/loginOK")
-    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "/")String redirectURL) throws NoSuchAlgorithmException {
+    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException {
         log.info("/member/loginOK...");
         log.info("{}", vo);
-        log.info("redirectURL = {}",redirectURL );
 
         String salt = service.getSalt(vo);
         log.info("Salt : {}", salt);
@@ -85,13 +83,38 @@ public class MemberController {
 
         if (vo2 != null) {
             session.setAttribute("member_id", vo2.getId());
-//            session.setAttribute("member", vo2.getNum());
-            return "redirect:" + redirectURL;
+            return "redirect:/";
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");
             return "redirect:/member/login";
         }
     }
+    //도원님 코드
+//    @PostMapping("/member/loginOK")
+//    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "/")String redirectURL) throws NoSuchAlgorithmException {
+//        log.info("/member/loginOK...");
+//        log.info("{}", vo);
+//        log.info("redirectURL = {}",redirectURL );
+//
+//        String salt = service.getSalt(vo);
+//        log.info("Salt : {}", salt);
+//
+//        String hex_password = User_pwSHA512.getSHA512(vo.getPw(), salt);
+//        log.info("암호화 결과 : {}", hex_password);
+//        vo.setPw(hex_password);
+//
+//        MemberVO_JPA vo2 = service.loginOK(vo);
+//        log.info("{}", vo2);
+//
+//        if (vo2 != null) {
+//            session.setAttribute("member_id", vo2.getId());
+////            session.setAttribute("member", vo2.getNum());
+//            return "redirect:" + redirectURL;
+//        } else {
+//            redirectAttributes.addFlashAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");
+//            return "redirect:/member/login";
+//        }
+//    }
 
 //    // 아이디 찾기 페이지
 //    @GetMapping({"/member/findID"})

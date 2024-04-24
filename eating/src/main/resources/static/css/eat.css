@@ -918,7 +918,9 @@ h3, h5 { /* 제목 스타일 조정 */
 }
 
 .input-map {
+    width: 400px;
     margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 /* --------------- 검색 ---------------- */
@@ -935,7 +937,7 @@ h3, h5 { /* 제목 스타일 조정 */
 
 }
 
-.input-group {
+.input-address {
     width: 300px;
 }
 

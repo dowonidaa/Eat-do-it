@@ -539,7 +539,7 @@ public class ShopController {
     public String shop(@RequestParam("num") Long shopId, Model model, HttpSession session) {
         ShopVO findShop = shopService.findShop(shopId);
         if(findShop.getItems().isEmpty()){
-            return "redirect:/shop_main";
+            return "redirect:/";
         }
         List<Item> items = findShop.getItems();
         List<ItemOption> itemOptions = items.get(0).getItemOptions();

@@ -223,7 +223,7 @@
 
         <!-- 위치를 검색할 수 있는 폼 -->
         <form id="searchForm" onsubmit="searchLocation(); return false;">
-            <div class="input-group mb-3">
+            <div class="input-group input-address mb-3">
                 <input type="text" class="form-control" id="locationInput" placeholder="위치 검색..." />
                 <button type="submit" class="btn btn-dark">검색</button>
             </div>
@@ -240,9 +240,9 @@
 
         <form class="validation-form" novalidate action="shop_mypositioncheckok"
               method="post">
-            <div class="input-group mb-3 input-map">
+            <div class="input-group input-map">
                 <span class="input-group-text" id="basic-addon3">검색할 주소</span>
-                <input type="text" id="mypositionaddr1" class="form-control" value=" " disabled="readonly">
+                <input type="text" id="mypositionaddr1" width="300px" class="form-control" value=" " disabled="readonly">
                 <input type="hidden" id="mypositionaddr" name="mypositionaddr" value=" ">
 
             </div>
