@@ -172,7 +172,7 @@ footer{
 .nav{
   font-size: 14px;
   background-color: rgba(239, 239, 239, 0.968);
-  margin-top:50px;
+  margin-top:20px;
   margin-bottom: 50px;
   text-align: center;
   align-items: center;
@@ -198,10 +198,12 @@ footer{
   display: grid;
   cursor: pointer; /* 마우스 커서를 손 모양으로 설정 */
   grid-template-columns: 100px auto; /* input과 button을 동일한 너비로 설정 */
-  grid-column-gap: 10px; /* input과 button 사이의 간격 조정 */
+  grid-column-gap: 25px; /* input과 button 사이의 간격 조정 */
   align-items: center; /* 요소들을 수직 중앙 정렬 */
+  margin-bottom: 10px;
   text-align: left;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+
 }
 
 .card {
@@ -211,15 +213,59 @@ footer{
   font-weight: bold;
 }
 
-.shop {
-  margin:8px;
-  width:100%;
+.card-title a {
+    color: black; /* 텍스트 색상을 검은색으로 설정합니다. */
+    text-decoration: none; /* 텍스트 밑줄을 없앱니다. */
+}
+
+.card-img {
+    box-sizing: border-box;
+    margin:8px;
+
+}
+
+.card-img-top-container{
+    display: flex;
+    align-items: center;0
+}
+
+.card-img-top {
+    width: 100%;
+    height: fit-content;
 }
 
 .shop-info {
   display: grid;
-  grid-template-columns: 25px 100px 25px 100px; /* input과 button을 동일한 너비로 설정 */
-  grid-column-gap: 10px; /* input과 button 사이의 간격 조정 */
+  grid-template-columns: 120px 170px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details1 {
+  display: grid;
+  grid-template-columns: 25px 50px 30px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 5px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details2 {
+  display: grid;
+  grid-template-columns: 25px 80px 80px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details3 {
+  display: grid;
+  grid-template-columns: 60px 50px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.shop-info-details4 {
+  display: grid;
+  grid-template-columns: 120px 120px; /* input과 button을 동일한 너비로 설정 */
+  grid-column-gap: 10px;
   align-items: center; /* 요소들을 수직 중앙 정렬 */
 }
 
@@ -230,6 +276,37 @@ footer{
 
 .row {
   margin-bottom: 10px;
+}
+.col {
+  margin-bottom: 10px;
+}
+
+.paging {
+    display: flex;
+    justify-content: center;
+}
+
+.paging {
+    display: flex;
+    justify-content: center;
+}
+
+.centralized-link {
+    display: inline-block; /* inline-block으로 중앙 정렬 가능 */
+    text-align: center; /* 텍스트를 중앙에 정렬 */
+    padding: 10px 0px 10px 10px;
+    font-weight: bold;
+    color:#0d6efd;
+    border-radius:5px;
+    text-decoration: none;
+    background-color:rgba(239, 239, 239, 0.968);
+
+}
+
+.centralized-link:hover {
+    background-color: #0d6efd;
+    color:white
+
 }
 
 /* ----------------- 음식점 상세 페이지 -----------------  */
@@ -276,6 +353,14 @@ footer{
   width:100%;
 }
 
+.shop-info-container {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  grid-column-gap: 5px; /* input과 button 사이의 간격 조정 */
+  align-items: center; /* 요소들을 수직 중앙 정렬 */
+  margin-bottom: 10px;
+}
+
 .red-text {
   text-align: left;
   color:red;
@@ -288,6 +373,12 @@ footer{
   color:grey;
   margin: 0;
   font-weight: bold;
+}
+
+.black-text-small {
+  text-align: left;
+  color:black;
+  margin: 0;
 }
 
 .shop-menu-container {
@@ -335,6 +426,12 @@ footer{
 .cart-price {
   font-size: 15px;
   font-weight: bold;
+}
+
+.cart {
+  margin:8px;
+  width:100%;
+  margin-right: 5px;
 }
 
 .quantity {
@@ -632,4 +729,43 @@ footer{
 
 .search-box {
   margin-right: 30px;
+}
+
+.validation-form {
+    width: 900px;
+}
+
+.input-map {
+    margin-top: 20px;
+}
+
+/* --------------- 검색 ---------------- */
+
+.shop-search {
+    display: flex;
+    margin-top : 20px;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+}
+
+.shop-search input{
+    margin-right: 5px;
+
+}
+
+.input-group {
+    width: 300px;
+}
+
+.sorry-img {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    display:flex;
+    justify-content: center;
+}
+
+.sorry-img img{
+    display:flex;
+    justify-content: center;
+    width: 500px;
 }

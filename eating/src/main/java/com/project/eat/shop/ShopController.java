@@ -105,7 +105,7 @@ public class ShopController {
     // 서치 결과: 해당 음식점들 조회 출력 :form input post방식
     @PostMapping("/shop_searchWord")
     public String shop_search(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                              @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                              @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                               @RequestParam("searchWord") String searchWord,
                               @RequestParam(name = "userId", defaultValue = "") String userId,
                               Model model) {
@@ -184,7 +184,7 @@ public class ShopController {
     // 서치 결과: 해당 음식점들 조회 출력 : 페이지네이션 이동
     @GetMapping("/shop_search")
     public String shop_search2(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                               @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                               @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                                @RequestParam("searchWord") String searchWord,
                                @RequestParam(name = "userId", defaultValue = "") String userId,
                                Model model) {
@@ -247,10 +247,15 @@ public class ShopController {
     // 카테고리별 버튼 클릭 음식점 조회(shopMainPage에 버튼으로 링크)
     @GetMapping("/categoryList.do")
     public String categoryList(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                               @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                               @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                                @RequestParam("cateId") int cateId,
                                @RequestParam(name = "userId", defaultValue = "") String userId,
                                Model model){
+
+        model.addAttribute("currentCategoryId", cateId);
+        log.info("currentCategoryId : {}", cateId);
+
+
         log.info("shop list vos in controller cateId :  "+cateId);
 
         log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
@@ -321,7 +326,7 @@ public class ShopController {
     // 카카오맵api 내주변맛집 조회
     @PostMapping("/shop_mypositioncheckok")
     public String shop_mypositioncheckok(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                    @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                                    @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
             @RequestParam("mypositionaddr") String mypositionaddr, Model model) {
 
         log.info("/shop_mypositioncheckok...");
@@ -373,7 +378,7 @@ public class ShopController {
     // 카카오맵api 내주변맛집 조회 : 페이지네이션에서 조회
     @GetMapping("/mypositioncheckok")
     public String mypositioncheckokget(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                    @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                                    @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                                     @RequestParam("mypositionaddr") String mypositionaddr, Model model) {
 
         log.info("/mypositioncheckok...");
