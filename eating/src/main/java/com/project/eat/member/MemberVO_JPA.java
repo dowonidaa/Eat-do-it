@@ -1,15 +1,25 @@
 package com.project.eat.member;
 
+import com.project.eat.address.Address;
+import com.project.eat.cart.Cart;
+import com.project.eat.order.Order;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-@Data
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
-@Table(name = "MEMBER", uniqueConstraints = { @UniqueConstraint(columnNames = { "member_id" }) })
+@Getter
+@Setter
+@Table(name = "member")
 public class MemberVO_JPA {
-
 
     @Column(name = "num") // 컬럼이름 설정
     private int num;
@@ -36,9 +46,6 @@ public class MemberVO_JPA {
     private String email;
 
 
-
-
-
 //    @Column(name = "nickname", nullable = false)
     @Column(name = "nickname")
     private String nickname;
@@ -46,12 +53,31 @@ public class MemberVO_JPA {
     @Column(name = "pw", nullable = false)
     private String pw;
 
-    @Column(name = "tel", nullable = false)
     private String tel;
 
     @Column(name = "user_salt")
     private String salt;
 
-    @Column(columnDefinition = "DATETIME(0) default CURRENT_TIMESTAMP",insertable = false)
     private Date regdate;
+
+
+
+
+
+    @OneToOne(mappedBy = "member", fetch = LAZY)
+    private Cart cart;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member")
+    private Address address;
+
+    @OneToMany(mappedBy = "member")
+    private List<Coupon> coupons = new ArrayList<>();
+
+    public void addCart(Cart cart) {
+        this.setCart(cart);
+        cart.setMember(this);
+    }
 }

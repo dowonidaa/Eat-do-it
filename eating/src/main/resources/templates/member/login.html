@@ -53,7 +53,7 @@
                 <h1>로그인</h1>
             </div>
 
-            <form action="loginOK" method="post">
+            <form action="loginOK"  method="post">
                 <div class="form-login">
                     <label for="InputID"></label> <input type="text" class="form-control" name="id" id="InputID" placeholder="아이디를 입력하세요">
                 </div>
@@ -67,12 +67,13 @@
 
                 <div class="centered-button-container">
                     <button type="submit" class="btn btn-primary centered-button">로그인 하기</button>
+                    <input type="hidden" class="btn btn-primary centered-button" name="redirectURL" th:value="${param.redirectURL}">
                 </div>
             </form>
 
             <div id="id-pw-btn">
                 <button type="button" class="btn btn-light" th:onclick="|location.href='@{findID}'|">아이디 찾기</button>
-                <button type=" button" class="btn btn-light" th:onclick="|location.href='@{findPW}'|">비밀번호 찾기</button>
+                <button type="button" class="btn btn-light" th:onclick="|location.href='@{findPW}'|">비밀번호 찾기</button>
                 <button type="button" class="btn btn-light" th:onclick="|location.href='@{join}'|">회원가입</button>
             </div>
         </div>

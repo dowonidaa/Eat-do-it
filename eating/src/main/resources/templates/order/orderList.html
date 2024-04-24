@@ -1,0 +1,235 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>먹고해 주문내역</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/eat.css}"
+          href="../static/eat.css" rel="stylesheet">
+</head>
+
+<body th:replace="~{layout :: layout}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+
+
+</script>
+
+
+<div th:fragment="content" class="container py-3">
+
+
+
+    <!-- ----------------------------------------------------------------- -->
+    <!-- content 넣으실 부분 -->
+
+    <div id="wrapper">
+        <form id="searchForm" th:action="@{/}" th:method="POST" >
+        <div class="container row">
+        <h3 class="col-auto">주문내역</h3>
+            <div class="btn-group col-auto" role="group" aria-label="Basic radio toggle button group" id="orderType">
+                <input type="radio" class="btn-check" name="selectedType" id="all" value="all" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="all">전체</label>
+
+                <input type="radio" class="btn-check" name="selectedType" id="delivery" value="delivery" autocomplete="off" >
+                <label class="btn btn-outline-primary" for="delivery">배달</label>
+
+                <input type="radio" class="btn-check" name="selectedType" id="takeout" value="takeout" autocomplete="off">
+                <label class="btn btn-outline-primary" for="takeout">포장</label>
+            </div>
+        </div>
+        <div class="container mt-4 row align-items-end">
+
+                <div class="col-auto">
+                    <select name="searchOption" id="searchOption" class="form-select" onchange="toggleDateFields()">
+                        <option value="all">전체 검색</option>
+                        <option value="dateRange">기간 선택</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="text" name="searchText" id="searchText" class="form-control" placeholder="검색어 입력">
+
+                </div>
+                <div class="col-auto date-fields" style="display: none;">
+                    <input type="date" name="startDate" id="startDate" class="form-control">
+                </div>
+                <div class="col-auto date-fields" style="display: none;">
+                    <input type="date" name="endDate" id="endDate" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-primary" id="searchButton">검색</button>
+                </div>
+
+        </div>
+
+
+
+        <div  id="orderListContent">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination" th:object="${page}">
+                    <li class="page-item" th:if="*{prev}" style="margin:0"><a class="page-link" href="#" aria-label="Previous"  th:data-page="*{startPage - 1}"><span aria-hidden="true">&laquo;</span></a></li>
+                    <div th:each="i : ${#numbers.sequence(page.startPage , page.endPage)}">
+                    <li class="page-item" th:classappend="${i} == 1 ? 'active' : ''" style="margin:0"><a class="page-link" href="#" th:data-page="${i}" th:text="${i}" >1</a></li>
+                    </div>
+                    <li class="page-item" th:if="*{next}" style="margin:0"><a class="page-link" href="#" aria-label="Next"  th:data-page="*{endPage + 1}"><span aria-hidden="true">&raquo;</span></a></li>
+                </ul>
+            </nav>
+
+
+            <section class="container row orders-container" th:each="order : ${ordersDto}">
+            <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
+                    <div class="col-3 ">
+                    <img th:src="${order.shopThum}" th:style="'width: 100%; height: auto;'">
+                </div>
+                <div class="col-3 d-flex flex-column align-items-left justify-content-center">
+                    <h3 th:text="${order.shopName}"></h3>
+                    <div th:text="${order.itemsName}"></div>
+                    <div th:text="|${#numbers.formatDecimal(order.price, 0, 'COMMA', 0, 'POINT')}원|"></div>
+                </div>
+                <div class="col-6 d-flex flex-column align-items-end justify-content-center ">
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '\''">주문상세</button>
+<!--                    <button th:if="${order.orderType==T(com.project.eat.order.OrderType).DELIVERY and (order.orderStatus.toString()!='배달완료'and order.orderStatus.toString()!='주문취소 완료')}"-->
+<!--                            type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/orders/' + ${order.id} + '/delivery\''">배송조회</button>-->
+                    <div th:if="${order.orderStatus.toString() == '결제 준비' or order.orderStatus.toString() == '결제완료' or order.orderStatus.toString() == '주문확인중'}" th:switch="${order.paymentMethod}">
+                        <button th:case="'kakaoPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'tossPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/toss/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'naverPay'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/naver/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'cardPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'cashPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                        <button th:case="'creditCard'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                    </div>
+                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shopId} + '\''">리뷰작성</button>
+                </div>
+            </section>
+        </div>
+        </form>
+
+
+    </div>
+
+
+
+
+
+
+
+    <!-- ----------------------------------------------------------------- -->
+
+
+
+
+
+
+    <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link, .btn');
+
+            // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+            navLinks.forEach(function (link) {
+                // 글자 크기에 따라 가로폭 조정
+                const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
+                const textLength = link.textContent.length; // 텍스트 길이
+
+                // 가로폭 조정
+                const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+                link.style.width = dynamicWidth + 'px';
+            });
+        });
+        window.onload = function() {
+            var message = '[[${message}]]';
+            console.log("Received message: " + message);  // 메시지 로깅
+            if (message) {
+                alert(message);
+            }else{
+                console.log("aaaa")
+            }
+        };
+        function toggleDateFields() {
+            var searchOption = document.getElementById('searchOption').value;
+            var dateFields = document.querySelectorAll('.date-fields');
+            dateFields.forEach(field => field.style.display = searchOption === 'dateRange' ? 'block' : 'none');
+        }
+
+
+
+        $(document).ready(function () {
+            // Set up the button click and form submit event to prevent default submission and call getOrderList
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent the form from submitting traditionally
+                getOrderList(); // Call the AJAX function
+            });
+
+            $('#searchText').keypress(function(e) {
+                if (e.which == 13) { // Enter key pressed
+                    e.preventDefault(); // Prevent the form from submitting
+                    getOrderList(); // Call the AJAX function
+                }
+            });
+
+            $('#searchButton').click(function(e) {
+                e.preventDefault(); // Prevent the default button behavior
+                getOrderList(); // Call the AJAX function
+            });
+
+            $('input[type="radio"][name="selectedType"]').change(function() {
+                getOrderList(); // Trigger the AJAX call whenever a radio button changes
+            });
+            $('#orderListContent').on('click', '.page-link', function(e) {
+                e.preventDefault();
+                let page = $(this).attr('data-page');
+                getOrderList(page);
+                $('.pagination .page-item').removeClass('active'); // 모든 페이지 아이템에서 'active' 클래스 제거
+                $(this).closest('.page-item').addClass('active'); // 클릭된 링크의 상위 아이템에 'active' 클래스 추가
+            });
+
+
+            function getOrderList(page=1) {
+                var formData = $('#searchForm').serialize(); // Serialize the form data
+                formData += '&page=' + page;
+                console.log(formData)
+                formData.page =
+                $.ajax({
+                    type: "POST",
+                    url: "/orders/search",
+                    data: formData, // Send the serialized data
+                })
+                    .done(function (response) {
+                        $("#orderListContent").html(response); // Update the content dynamically
+                        updateActivePage(page);
+                        // reinitializeComponents();
+                    })
+                    .fail(function(jqXHR) {
+                        console.error("Error: ", jqXHR.statusText); // Log the error
+                    });
+            }
+            function updateActivePage(currentPage) {
+                $('.pagination .page-item').removeClass('active'); // 모든 페이지 아이템에서 'active' 클래스 제거
+                $('.pagination .page-link[data-page="' + currentPage + '"]').parent().addClass('active'); // 현재 페이지에만 'active' 클래스 추가
+            }
+        });
+        window.onload = function() {
+            var today = new Date().toISOString().split('T')[0]; // 오늘 날짜를 YYYY-MM-DD 형식으로 변환
+            document.getElementById('startDate').value = today; // startDate 필드에 오늘 날짜 설정
+            document.getElementById('endDate').value = today;   // endDate 필드에 오늘 날짜 설정
+        };
+
+
+
+
+
+    </script>
+
+</div>
+</body>
+
+
+</html>

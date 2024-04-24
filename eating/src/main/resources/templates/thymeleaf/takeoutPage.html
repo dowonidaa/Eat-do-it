@@ -1,0 +1,279 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>결제하기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/eat.css}">
+    <!--    <link href="../../static/css/eat.css" rel="stylesheet">-->
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+
+    $(document).ready(function () {
+        $('#couponSelect').change(function () {
+            var selectedCouponId = $(this).val(); // Get the selected coupon's value
+            if (selectedCouponId) {
+                $.ajax({
+                    url: '/order/coupon', // Endpoint to send the request
+                    type: 'POST', // Assuming a POST request
+                    contentType: 'application/json',
+                    dataType: 'json', // Expecting JSON response
+                    data: JSON.stringify({couponId: selectedCouponId}),  // Send the selected coupon price
+                    success: function (response) {
+                        var formattedPrice = new Intl.NumberFormat('ko-KR').format(response.discount);
+                        $('#couponDiscount').text("-" + formattedPrice + '원');
+                        $('#hiddenDiscount').val(response.discount);
+                        updateTotal(response)
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error updating coupon discount:", error);
+                        $('#couponDiscount').text('Error');
+                    }
+                });
+            } else {
+                $('#couponDiscount').text('0원'); // Reset to 0 if no coupon is selected
+            }
+        });
+
+        function updateTotal(response) {
+            var totalPrice = response.totalPrice;
+            var deliveryPrice = response.deliveryPrice;
+            var newTotal = totalPrice + deliveryPrice - response.discount;
+            $('#totalPaymentAmount').text(new Intl.NumberFormat('ko-KR').format(newTotal) + '원');
+        }
+    });
+
+
+
+</script>
+
+<body th:replace="~{layout :: layout}">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
+
+
+<div th:fragment="content" class="container py-3">
+    <!-- header -->
+
+
+
+    <!-- ----------------------------------------------------------------- -->
+    <!-- content 넣으실 부분 -->
+    <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
+    <div id='wrapper'>
+        <div class="container">
+            <img th:src="@{/img/banner_mini.jpg}" alt="배너" class="image">
+        </div>
+
+        <div class="pay-title">
+            <h3>결제하기</h3>
+        </div>
+
+
+        <!-- 왼쪽 -->
+        <div class="shop-menu-container">
+            <form id="myForm" th:action="@{/templates/order}" th:method="post">
+            <div class="container text-center">
+                <div class="pay-container">
+                    <div class="sub-title">
+                        <h3>포장 주문</h3>
+                    </div>
+                    <div>
+                        <input th:name="orderStatus" type="hidden" th:value="${orderForm.orderStatus}" >
+                        <input th:name="orderType" type="hidden" th:value="${orderForm.orderType}" >
+                    </div>
+                    <div class="pay-content-container">
+                        <img th:src="@{/img/home.png}" alt="로고" width="50%" height="auto">
+                        <div class="pay-content-title">가게 주소</div>
+                        <input type="hidden" id="address" th:name="orderAddress" th:value="${cart.shop.shopAddr}" style="width: 70%;">
+                        <label for="address" th:text="${cart.shop.shopAddr}" ></label>
+                    </div>
+                    <div class="pay-content-container">
+                        <img th:src="@{/img/phone.png}" alt="로고" width="70%" height="auto">
+                        <div class="pay-content-title">연락처</div>
+                        <label>
+                            <input th:name="orderTel" th:id="orderTel" type="text" th:value="${member.tel}"/>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pay-container">
+                    <div class="sub-title">
+                        <h3>주문 시 요청사항</h3>
+                    </div>
+                    <form>
+                        <div class="form-pay">
+                            <input type="text" class="form-control" id="InputRequest"
+                                   th:field="${orderForm.memberNotes}" placeholder="요청사항을 입력해 주세요.">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="pay-container">
+                    <div class="sub-title">
+                        <h3>쿠폰</h3>
+                    </div>
+                    <div class="pay-coupon-container">
+                        <div class="coupon-title">
+                            사용 가능한 쿠폰
+                        </div>
+                        <div class="dropdown">
+
+                            <select class="form-select" aria-labelledby="dropdownMenuButton1" name="couponId" id="couponSelect">
+                                <option value="">사용 가능한 쿠폰을 확인하세요.</option>
+                                <option th:each="coupon : ${coupons}"
+                                        th:value="${coupon.id}"
+                                        th:text="${coupon.content}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="pay-container">
+                    <div class="sub-title">
+                        <h3>결제수단</h3>
+                    </div>
+                    <div>
+                        간편결제
+                    </div>
+                    <div class="btn-group"  style="justify-content: center; display: flex; flex-wrap: wrap;">
+                        <!-- 간편결제 (Easy Payment) -->
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio1" autocomplete="off" checked th:value="naverPay">
+                        <label class="btn btn-outline-primary btn-square" for="btnradio1" style="margin: 5px;">네이버페이</label>
+
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio2" autocomplete="off" th:value="tossPay">
+                        <label class="btn btn-outline-primary btn-square" for="btnradio2" style="margin: 5px;">토스페이</label>
+
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio3" autocomplete="off" th:value="kakaoPay">
+                        <label class="btn btn-outline-primary btn-square" for="btnradio3" style="margin: 5px;">카카오페이</label>
+
+                        <!-- 만나서 결제하기 (Pay on Meeting) -->
+
+                        <div style="width: 100%; text-align: left; margin-top: 20px;">만나서결제하기</div>
+
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio4" autocomplete="off" th:value="cardPayment">
+                        <label class="btn btn-outline-primary btn-square" for="btnradio4" style="margin: 5px;">만나서 카드결제</label>
+
+                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio5" autocomplete="off" th:value="cashPayment">
+                        <label class="btn btn-outline-primary btn-square" for="btnradio5" style="margin: 5px;">만나서 현금결제</label>
+                    </div>
+                </div>
+
+                <div class="pay-container">
+                    <div class="sub-title">
+                        <h3>현금영수증 발행</h3>
+                    </div>
+
+
+                        <div class="pay-recipt">
+                            <div>이름</div>
+                            <div class="form-pay-recipt">
+                                <input type="text" placeholder="">
+                            </div>
+                        </div>
+                        <div class="pay-recipt">
+                            <div>전화번호</div>
+                            <div class="form-pay-recipt">
+                                <input type="text" placeholder="">
+                            </div>
+                        </div>
+
+
+                </div>
+
+            </div>
+            </form>
+
+
+            <!-- 오른쪽 -->
+            <div class="right-container">
+                <div class="pay-container">
+                    <div class="pay-total">
+                        <div class="sub-title">
+                            <h4>주문금액</h4>
+                            <div th:text="|${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
+                                60,000원
+                                <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice">
+                            </div>
+                        </div>
+
+                        <div class="sub-title">
+                            <h4>쿠폰할인</h4>
+                            <div  id="couponDiscount" style="font-size: 1.5em; font-weight: bold;">
+                                0원
+                                <input type="hidden" id="hiddenDiscount" th:name="discount">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="sub-title">
+                            <h5>총 결제 금액</h5>
+                            <h5 id="totalPaymentAmount"
+
+                                th:text="|${#numbers.formatDecimal(cart.totalPrice + cart.shop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원|">
+                                59,000원</h5>
+                        </div>
+                        <div>
+                            <button onclick="document.getElementById('myForm').submit();" class="btn btn-primary w-100">결제하기</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ----------------------------------------------------------------- -->
+
+
+<!-- footer -->
+<div class="container" th:replace="~{footer::footer}">
+
+</div>
+
+
+<!-- 수량 변경 -->
+
+
+<!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.nav-link, .btn');
+
+        // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+        navLinks.forEach(function (link) {
+            // 글자 크기에 따라 가로폭 조정
+            const fontSize = parseFloat(window.getComputedStyle(link)
+                .fontSize); // 현재 글자 크기
+            const textLength = link.textContent.length; // 텍스트 길이
+
+            // 가로폭 조정
+            const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+            link.style.width = dynamicWidth + 'px';
+        });
+    });
+</script>
+</body>
+
+
+</html>

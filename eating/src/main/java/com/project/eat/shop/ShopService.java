@@ -12,6 +12,9 @@ public class ShopService {
     @Autowired
     private ShopRepository shopRepository;
 
+    @Autowired
+    private ShopRepositoryEM shopRepositoryEM;
+
 
     public ShopVO approveShop(AdminVO_JPA adminVO) {
         ShopVO shopVO = new ShopVO();
@@ -143,8 +146,25 @@ public class ShopService {
     public ShopVO findByShopId(int shopId){
         return shopRepository.findByShopId(shopId);
     }
+//
+//    public ShopVO findByShopId(Long shopId){
+//        return shopRepository.findByShopId(shopId);
+//    }
 
-    public List<Object[]> findShopWithMenu(int shopId) {
+//    public List<Object[]> findShopWithMenu(int shopId) {
+//        return shopRepository.findShopWithMenu(shopId);
+//    }
+
+    public List<Object[]> findShopWithMenu(Long shopId) {
         return shopRepository.findShopWithMenu(shopId);
+    }
+
+
+    public ShopVO findShop(Long shopId) {
+        return shopRepositoryEM.findShop(shopId);
+    }
+
+    public List<ShopVO> findAll() {
+        return shopRepositoryEM.findAll();
     }
 }
