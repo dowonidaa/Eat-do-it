@@ -1,5 +1,6 @@
 package com.project.eat.shop;
 
+import com.project.eat.admin.AdminVO_JPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,29 @@ public class ShopService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+
+    public ShopVO approveShop(AdminVO_JPA adminVO) {
+        ShopVO shopVO = new ShopVO();
+
+        // AdminVO_JPA의 필요한 값들을 ShopVO에 설정
+        shopVO.setShopId(adminVO.getShopId());
+        shopVO.setShopName(adminVO.getShopName());
+        shopVO.setStarAvg(adminVO.getStarAvg());
+        shopVO.setReviewCount(adminVO.getReviewCount());
+        shopVO.setDeliveryTime(adminVO.getDeliveryTime());
+        shopVO.setDeliveryPrice(adminVO.getDeliveryPrice());
+        shopVO.setRunTime(adminVO.getRunTime());
+        shopVO.setShopTel(adminVO.getShopTel());
+        shopVO.setShopAddr(adminVO.getShopAddr());
+        shopVO.setMinPrice(adminVO.getMinPrice());
+        shopVO.setTag(adminVO.getTag());
+        shopVO.setCateId(adminVO.getCateId());
+        shopVO.setShopThum(adminVO.getShopThum());
+        shopVO.setMinPriceInt(adminVO.getMinPriceInt());
+
+        return shopRepository.save(shopVO);
+    }
 
     public List<ShopVO> selectAll(){
         return shopRepository.findAll();
