@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>thymeleaf</title>
+</head>
+
+<body>
+
+
+<h1>리뷰 마이페이지</h1>
+<h3 >내이름</h3>
+
+	<button>
+		<a href="/shop_main">shop 메인</a>
+	</button>
+
+<h1 th:text="${param.memberId}"> 내이름</h1>
+
+<table>
+
+	<th:block th:each="vos : ${myReviewList}">
+		<tr>
+			<td><span th:text="${vos.shopName}"></span></td>
+			<td><span th:text="${vos.reviewId}"></span>reviewId</td>
+			<td><span th:text="${vos.reviewStar}"></span></td>
+
+			<td>
+				<a th:href="@{reviewMypageSelectOne(reviewId=${vos.reviewId}, userId=${vos.userId}, shopName=${vos.shopName}, memberId=${param.memberId})}">
+					<span th:text="${vos.reviewComent}"></span>
+				</a>
+			</td>
+
+			<td><span th:text="${vos.createdAt}"></span></td>
+
+
+
+			<td>
+			<th:block th:if="${vos.reviewPic.isEmpty() or vos.reviewPic == '' or vos.reviewPic == null}">
+
+			</th:block>
+
+			<th:block th:if="${vos.reviewPic != null and  vos.reviewPic != ''}">
+				<img th:src="|/uploadimgPath/${vos.reviewPic}|" width="40" height="40" alt="Review Image">
+			</th:block>
+			</td>
+
+		</tr>
+	</th:block>
+
+
+	<tfoot>
+	<tr>
+		<td colspan="6" >
+			<th:block th:each="i : ${#numbers.sequence(1,totalPageCount)}">
+				<th:block th:if="${param.memberId} != null">
+					<a th:href="@{review_Mypage(cpage=${i},memberId=${param.memberId})}">[[${i}]] &nbsp;</a>
+				</th:block>
+			</th:block>
+		</td>
+	</tr>
+	</tfoot>
+
+</table>
+
+
+</body>
+
+</html>

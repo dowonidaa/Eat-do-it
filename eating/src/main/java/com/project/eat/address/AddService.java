@@ -40,6 +40,9 @@ public class AddService {
         return jpa.findBymId(voJpa);
     }
 
-
+    //주소지 추출
+    public String selectAddressById(String memId) {
+        return jpa.findAddressBymId(memId);
+    }
 
 }

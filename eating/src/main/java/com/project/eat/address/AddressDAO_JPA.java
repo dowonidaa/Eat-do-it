@@ -16,4 +16,7 @@ public interface AddressDAO_JPA extends JpaRepository<AddressVO_JPA, Object>{
 
 	public AddressVO_JPA findBymId(MemberVO_JPA mId);
 
+	@Query(nativeQuery=true,
+			value="select address from address where member_id = ?1 ")
+	String findAddressBymId(String memId);
 }//end interface

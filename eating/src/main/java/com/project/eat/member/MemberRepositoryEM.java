@@ -2,6 +2,7 @@ package com.project.eat.member;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,7 +15,6 @@ public class MemberRepositoryEM {
         return em.find(MemberVO_JPA.class, memberId);
 
     }
-
 
 }
 

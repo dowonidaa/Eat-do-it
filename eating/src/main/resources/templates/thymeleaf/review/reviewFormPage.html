@@ -1,0 +1,29 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+
+<body>
+<h1>리뷰 폼 페이지</h1>
+
+
+    <form class="validation-form" novalidate action="review_formdata" enctype="multipart/form-data"
+          method="post">
+        shopId<input id="shopId"  name="shopId" type="text">
+        <!--
+        userId test:27,28<input id="userId"  name="userId" type="text">
+        -->
+        start<input id="reviewStar"  name="reviewStar" type="text">
+        <textarea id="reviewComent" name="reviewComent" type="text"></textarea>
+
+        <input type="file" id="file" name="file">
+
+        <button type="submit">글쓰기확인</button>
+    </form>
+
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>thymeleaf</title>
+
+
+</head>
+
+<body>
+
+<h1>리뷰</h1>
+
+
+	<button>
+		<a href="/shop_main">메인</a>
+	</button>
+
+	<h3>리뷰 <span th:text="${shopName}"></span>의 리뷰리스트</h3>
+	<table>
+		<th:block th:each="listReviewItem : ${listReviewVos}">
+			<tr>
+				<td><span th:text="${listReviewItem.reviewId}"></span>reviewId</td>
+				<td><span th:text="${listReviewItem.reviewStar}"></span>star</td>
+				<td><span th:text="${listReviewItem.reviewComent}"></span></td>
+
+				<td><span th:text="${listReviewItem.userId}"></span></td>
+				<td><span th:text="${listReviewItem.name}"></span></td>
+				<td><span th:text="${listReviewItem.createdAt}"></span></td>
+
+
+				<td>
+					<!-- Thymeleaf 문법을 사용하여 이미지 URL을 동적으로 설정 -->
+					<th:block th:if="${listReviewItem.reviewPic.isEmpty() or listReviewItem.reviewPic == '' or listReviewItem.reviewPic == null}">
+						<!-- 빈 이미지 -->
+					</th:block>
+
+					<th:block th:if="${listReviewItem.reviewPic != null and  listReviewItem.reviewPic != ''}">
+						<img th:src="|/uploadimgPath/${listReviewItem.reviewPic}|" width="40" height="40" alt="Review Image">
+					</th:block>
+				</td>
+
+			</tr>
+		</th:block>
+
+		<tfoot>
+		<tr>
+			<td colspan="6" >
+				<th:block th:each="i : ${#numbers.sequence(1,totalPageCount)}">
+					<th:block th:if="${param.shopId} != null">
+						<a th:href="@{review_formdata_get(cpage=${i},shopId=${param.shopId})}">[[${i}]] &nbsp;</a>
+					</th:block>
+				</th:block>
+			</td>
+		</tr>
+		</tfoot>
+
+	</table>
+
+
+
+
+</body>
+
+</html>

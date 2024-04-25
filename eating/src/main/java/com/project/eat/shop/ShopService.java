@@ -167,4 +167,19 @@ public class ShopService {
     public List<ShopVO> findAll() {
         return shopRepositoryEM.findAll();
     }
+
+
+
+
+
+    public ShopVO findShopById(Long shopId) {
+        return shopRepository.findByShopId(shopId);
+    }
+
+    //by shopId 가게명찾기
+    public String getShopNameByShopId(Long shopId){
+        return shopRepository.findShopNameByShopId(shopId);
+    }
+
+
 }

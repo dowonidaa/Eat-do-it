@@ -37,7 +37,7 @@ public class ShopVO {
     private String deliveryTime;
 
     @Column(name="delivery_price")
-    private int deliveryPrice;
+    private Integer deliveryPrice;
 
     @Column(name="run_time")
     private String runTime;
