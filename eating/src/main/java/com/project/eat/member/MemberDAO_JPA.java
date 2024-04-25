@@ -82,6 +82,7 @@ public interface MemberDAO_JPA extends JpaRepository<MemberVO_JPA, Object>{
 					+ "where member_id = ?1")
 	public String findBySalt(String id);
 
-
-
+	@Query(nativeQuery = true,
+			value = "select num from member where member_id = ?1 ")
+	int findNumByMemberId(String memberId);
 }//end interface

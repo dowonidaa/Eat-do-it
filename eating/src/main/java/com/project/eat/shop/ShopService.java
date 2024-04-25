@@ -162,7 +162,9 @@ public class ShopService {
     }
 
 
-    //민혜님 코드 추가
+
+
+
     public ShopVO findShopById(Long shopId) {
         return shopRepository.findByShopId(shopId);
     }
@@ -171,4 +173,6 @@ public class ShopService {
     public String getShopNameByShopId(Long shopId){
         return shopRepository.findShopNameByShopId(shopId);
     }
+
+
 }

@@ -139,4 +139,7 @@ public class MemberService {
 		return memberRepository.findOne(memberId);
 	}
 
+	public int findNumByMemberId(String memberId) {
+		return jpa.findNumByMemberId(memberId);
+	}
 }

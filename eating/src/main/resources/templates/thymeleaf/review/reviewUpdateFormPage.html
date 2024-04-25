@@ -16,8 +16,9 @@ shopName<p id="shopName2"  name="shopName" type="text" th:text="${param.shopName
     <form class="validation-form" novalidate action="review_formdata_update" enctype="multipart/form-data"
           method="post">
         shopId<input id="shopId"  name="shopId" type="text" th:value="${vo.shopId}">
+        <!--
         userId test:27,28<input id="userId"  name="userId" type="text" th:value="${vo.userId}">
-
+-->
         start<input id="reviewStar"  name="reviewStar" type="text" th:value="${vo.reviewStar}">
         <textarea id="reviewComent" name="reviewComent" type="text" th:text="${vo.reviewComent}"></textarea>
 

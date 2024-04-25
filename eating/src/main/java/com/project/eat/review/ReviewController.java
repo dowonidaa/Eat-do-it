@@ -1,8 +1,11 @@
 package com.project.eat.review;
 
+import com.project.eat.member.MemberService;
+import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.shop.GetUserAddrWithUserId;
 import com.project.eat.shop.ShopService;
 import com.project.eat.shop.ShopVO;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+//import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -38,10 +47,22 @@ public class ReviewController {
     private BadWordService badWordService;
 
     @Resource(name="WordAnalysisService")
+//    @Resource(name="WordAnalysisService")
+    @Autowired
     private IWordAnalysisService wordAnalysisService;
 
     @Autowired
     private ImageCall imageCall; // imageCall 주입
+
+    @Autowired
+    private MemberService memberService;
+
+    // 리뷰 폼 페이지
+    @GetMapping("/review_formPage")
+    public String review_formPage(){
+
+        return "thymeleaf/review/reviewFormPage";
+    }
 
     // 리뷰 폼 페이지
     // POST 방식으로 리뷰 폼 페이지 요청
@@ -72,12 +93,34 @@ public class ReviewController {
                                     @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                     @RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                     @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
-                                    @RequestParam(name = "userId", defaultValue = "") int userId,
-                                    Model model) throws Exception {
+//                                    @RequestParam(name = "userId", defaultValue = "") int userId,
+                                    Model model, HttpSession session) throws Exception {
+
+        // 로그인한 유저명
+        String name = "";
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        int userId = 0;
+        if(memberId != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String mem = findMember.getId();
+            name = findMember.getName();
+
+            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+            userId = memberService.findNumByMemberId(memberId);
+
+
+            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+            model.addAttribute("memberId", mem);
+            model.addAttribute("userId", userId);
+
+            log.info("shopId : {}, userId : {}", shopId, userId);
+        }
+
         log.info("/review_formdata...");
         log.info("reviewStar:{}", reviewStar);
         log.info("reviewComent:{}", reviewComent);
-        log.info("shopId : {}, userId : {}", shopId, userId);
+
 
         log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
 
@@ -102,12 +145,14 @@ public class ReviewController {
         log.info("확인 !!! reviewPic:{}", reviewPic);
 
         ReviewVO vo = new ReviewVO();
+        vo.setName(name);
 
         vo.setReviewStar(reviewStar);
 //        vo.setShopId(shopId);
         // ShopVO를 설정
         ShopVO shop = shopService.findShopById(shopId); // shopId에 해당하는 가게 정보를 가져옴
         vo.setShop(shop);
+        log.info(" 확인 2 리뷰컨트롤러 num 확인: userId:{}",userId);
 
         vo.setUserId(userId);
         vo.setReviewPic(reviewPic);
@@ -236,11 +281,29 @@ public class ReviewController {
                                 @RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                 @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
                                 @RequestParam(name = "memberId", defaultValue = "") String memberId,
-                                Model model)  throws IOException  {
+                                Model model, HttpSession session)  throws IOException  {
+        // 로그인한 유저명
+        String name = "";
+        //세션처리
+        String memberId2 = (String) session.getAttribute("member_id");
+        int userId = 0;
+        if(memberId2 != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId2);
+            String mem = findMember.getId();
+            name = findMember.getName();
 
+            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+            userId = memberService.findNumByMemberId(memberId2);
+
+
+            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+            model.addAttribute("memberId", mem);
+            model.addAttribute("userId", userId);
+
+        }
         log.info("review_Mypage-- memberId:{}", memberId);
         // by memberId 로 num 타입:int 획득
-        int  userId = reviewService.findUserIdByMemberId(memberId);
+        userId = reviewService.findUserIdByMemberId(memberId);
         log.info("확인 !!! userId:{}", userId);
 
         // 내가 작성한 리뷰리스트
@@ -278,7 +341,25 @@ public class ReviewController {
             @RequestParam(name = "shopName") String shopName,
             @RequestParam(name = "memberId") String memberId,
             @RequestParam(name = "userId") int userId,
-            Model model){
+            Model model, HttpSession session){
+        // 로그인한 유저명
+        String name = "";
+        //세션처리
+        String memberId2 = (String) session.getAttribute("member_id");
+        if(memberId2 != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId2);
+            String mem = findMember.getId();
+            name = findMember.getName();
+
+            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+            userId = memberService.findNumByMemberId(memberId2);
+
+
+            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+            model.addAttribute("memberId", mem);
+            model.addAttribute("userId", userId);
+
+        }
         log.info("reviewMypageSelectOne-- reviewId:{}", reviewId);
         log.info("reviewMypageSelectOne-- shopName:{}", shopName);
         log.info("reviewMypageSelectOne-- memberId:{}", memberId);
@@ -297,7 +378,26 @@ public class ReviewController {
             @RequestParam(name = "shopName") String shopName,
             @RequestParam(name = "memberId") String memberId,
             @RequestParam(name = "userId") int userId,
-            Model model){
+            Model model, HttpSession session){
+        // 로그인한 유저명
+        String name = "";
+        //세션처리
+        String memberId2 = (String) session.getAttribute("member_id");
+        if(memberId2 != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId2);
+            String mem = findMember.getId();
+            name = findMember.getName();
+
+            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+            userId = memberService.findNumByMemberId(memberId2);
+
+
+            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+            model.addAttribute("memberId", mem);
+            model.addAttribute("userId", userId);
+
+        }
+
         log.info("    reviewMypageUpdateOne-- reviewId:{}", reviewId);
         log.info("    reviewMypageUpdateOne- shopName:{}", shopName);
         log.info("    reviewMypageUpdateOne-- memberId:{}", memberId);
@@ -316,15 +416,34 @@ public class ReviewController {
                                   @RequestParam(name = "reviewComent") String reviewComent,
                                   @RequestParam(name = "file", required = false) MultipartFile file,
                                   @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
-                                  @RequestParam(name = "userId", defaultValue = "") int userId,
+//                                  @RequestParam(name = "userId", defaultValue = "") int userId,
                                   @RequestParam(name = "reviewId", defaultValue = "") int reviewId,
                                   @RequestParam(name = "shopName", defaultValue = "") String shopName,
                                   @RequestParam(name = "memberId", defaultValue = "") String memberId,
-                                  Model model) throws IOException {
+                                  Model model, HttpSession session) throws IOException {
+        // 로그인한 유저명
+        String name = "";
+        //세션처리
+        String memberId2 = (String) session.getAttribute("member_id");
+        if(memberId2 != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId2);
+            String mem = findMember.getId();
+            name = findMember.getName();
+
+            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+            int userId = memberService.findNumByMemberId(memberId2);
+            log.info("shopId : {}, userId : {}", shopId, userId);
+
+            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+            model.addAttribute("memberId", mem);
+            model.addAttribute("userId", userId);
+
+        }
+
         log.info("수정!!!! /review_formdata_update...");
         log.info("reviewStar:{}", reviewStar);
         log.info("reviewComent:{}", reviewComent);
-        log.info("shopId : {}, userId : {}", shopId, userId);
+
 
 
         String reviewPic = "";
@@ -362,7 +481,7 @@ public class ReviewController {
 
         log.info("reviewMypageSelectOne-- reviewId:{}", reviewId);
         log.info("reviewMypageSelectOne-- shopName:{}", shopName);
-        log.info("reviewMypageSelectOne-- userId:{}", userId);
+
         log.info("reviewMypageSelectOne-- memberId:{}", memberId);
 
         ReviewVO vo = reviewService.findOneByReviewId(reviewId);
@@ -380,7 +499,26 @@ public class ReviewController {
             @RequestParam(name = "userId") int userId,
             @RequestParam(name = "cpage", defaultValue = "1") int cpage,
             @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
-            Model model){
+            Model model, HttpSession session){
+        // 로그인한 유저명
+        String name = "";
+        //세션처리
+        String memberId2 = (String) session.getAttribute("member_id");
+        if(memberId2 != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId2);
+            String mem = findMember.getId();
+            name = findMember.getName();
+
+            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+            userId = memberService.findNumByMemberId(memberId2);
+
+
+            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+            model.addAttribute("memberId", mem);
+            model.addAttribute("userId", userId);
+
+        }
+
         log.info("reviewMypagedeleteOne-- reviewId:{}", reviewId);
         log.info("reviewMypagedeleteOne-- memberId:{}", memberId);
         log.info("reviewMypagedeleteOne-- userId:{}", userId);
