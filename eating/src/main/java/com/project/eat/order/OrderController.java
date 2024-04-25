@@ -153,6 +153,7 @@ public class OrderController {
         List<OrderItem> orderItems = findOrder.getOrderItems();
         String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
         model.addAttribute("orderItems", itemName);
+
         log.info(message);
         return "order/orderDetail";
     }

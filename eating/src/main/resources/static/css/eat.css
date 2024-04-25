@@ -955,3 +955,10 @@ h3, h5 { /* 제목 스타일 조정 */
     justify-content: center;
     width: 500px;
 }
+
+
+/*---------리뷰페이지-----------*/
+.review-button{
+    display:flex;
+    justify-content: center;
+}

@@ -143,17 +143,10 @@ public class ShopService {
         }
     }
 
-//    public ShopVO findByShopId(int shopId){
-//        return shopRepository.findByShopId(shopId);
-//    }
-//
     public ShopVO findByShopId(Long shopId){
         return shopRepository.findByShopId(shopId);
     }
 
-//    public List<Object[]> findShopWithMenu(int shopId) {
-//        return shopRepository.findShopWithMenu(shopId);
-//    }
 
     public List<Object[]> findShopWithMenu(Long shopId) {
         return shopRepository.findShopWithMenu(shopId);
