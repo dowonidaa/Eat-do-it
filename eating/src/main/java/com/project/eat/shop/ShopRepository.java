@@ -99,4 +99,9 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
 
     public ShopVO findByShopId(Long shopId);
 
+    //민혜님
+    @Query(nativeQuery=true,
+            value="select shop_name from shop where shop_id = ?1 ")
+    String findShopNameByShopId(Long shopId);
+
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>thymeleaf</title>
+</head>
+
+<body>
+
+
+<h1>리뷰 마이페이지</h1>
+
+	<button>
+		<a href="/shop_main">shop 메인</a>
+	</button>
+
+<h1 th:text="${param.memberId}"> 내이름</h1>
+
+<table>
+
+		<tr>
+			<td><span th:text="${param.shopName}"></span></td>
+			<td><span th:text="${vo.shopId}"></span></td>
+			<td><span th:text="${vo.reviewId}"></span>reviewId</td>
+			<td><span th:text="${vo.reviewStar}"></span></td>
+			<td><span th:text="${vo.userId}"></span></td>
+
+			<td>
+
+					<span th:text="${vo.reviewComent}"></span>
+
+			</td>
+
+			<td><span th:text="${vo.createdAt}"></span></td>
+
+
+
+			<td>
+			<th:block th:if="${vo.reviewPic.isEmpty() or vo.reviewPic == '' or vo.reviewPic == null}">
+
+			</th:block>
+
+			<th:block th:if="${vo.reviewPic != null and  vo.reviewPic != ''}">
+				<img th:src="|/uploadimgPath/${vo.reviewPic}|" width="40" height="40" alt="Review Image">
+			</th:block>
+			</td>
+
+		</tr>
+</table>
+
+<a th:href="@{reviewMypageUpdateOne(reviewId=${vo.reviewId}, shopName=${param.shopName}, userId=${vo.userId}, memberId=${param.memberId})}">수정</a>
+<button onclick="deleteReview('${vo.reviewId}', '${vo.userId}', '${param.memberId}')">삭제</button>
+
+<a th:href="@{review_Mypage(memberId=${param.memberId})}">나의 리뷰 목록</a>
+
+<script th:inline="javascript">
+	function deleteReview(reviewId, userId, memberId) {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+            location.href = /*[[ @{/reviewMypagedeleteOne(reviewId=${vo.reviewId}, userId=${vo.userId}, memberId=${param.memberId})} ]]*/ '';
+        }
+    }
+</script>
+
+
+
+</body>
+
+</html>

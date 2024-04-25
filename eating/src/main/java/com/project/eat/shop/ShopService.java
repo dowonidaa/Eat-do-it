@@ -143,17 +143,10 @@ public class ShopService {
         }
     }
 
-//    public ShopVO findByShopId(int shopId){
-//        return shopRepository.findByShopId(shopId);
-//    }
-//
     public ShopVO findByShopId(Long shopId){
         return shopRepository.findByShopId(shopId);
     }
 
-//    public List<Object[]> findShopWithMenu(int shopId) {
-//        return shopRepository.findShopWithMenu(shopId);
-//    }
 
     public List<Object[]> findShopWithMenu(Long shopId) {
         return shopRepository.findShopWithMenu(shopId);
@@ -166,5 +159,16 @@ public class ShopService {
 
     public List<ShopVO> findAll() {
         return shopRepositoryEM.findAll();
+    }
+
+
+    //민혜님 코드 추가
+    public ShopVO findShopById(Long shopId) {
+        return shopRepository.findByShopId(shopId);
+    }
+
+    //by shopId 가게명찾기
+    public String getShopNameByShopId(Long shopId){
+        return shopRepository.findShopNameByShopId(shopId);
     }
 }
