@@ -154,7 +154,7 @@ public class CartController {
         String memberId = (String) session.getAttribute("member_id");
         cartService.deleteCart(memberId);
         log.info("remove");
-        return "redirect:/shop/" + shopId;
+        return "redirect:/shopDetail?num=" + shopId;
     }
 
     @PostMapping("/{itemId}")

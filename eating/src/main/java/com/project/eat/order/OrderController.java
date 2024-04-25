@@ -10,6 +10,9 @@ import com.project.eat.member.MemberService;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.coupon.CouponForm;
 import com.project.eat.order.coupon.CouponService;
+import com.project.eat.order.kakaopay.ApproveResponseVO;
+import com.project.eat.order.kakaopay.KakaoPayServiceImpl;
+import com.project.eat.order.kakaopay.ReadyResponseVO;
 import com.project.eat.order.orderItem.OrderItem;
 import com.project.eat.order.orderItemOption.OrderItemOption;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +24,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
