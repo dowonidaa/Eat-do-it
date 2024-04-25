@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -48,7 +45,7 @@ public class ReviewController {
 
     // 리뷰 폼 페이지
     // POST 방식으로 리뷰 폼 페이지 요청
-    @PostMapping ("/review_formPage")
+    @PostMapping("/review_formPage")
     public String reviewFormPage(@RequestParam(name = "shopId") Long shopId,
                                  @RequestParam(name = "itemsName") String itemsName,
                                  Model model) {

@@ -46,7 +46,7 @@
                 <label class="btn btn-outline-primary" for="takeout">포장</label>
             </div>
         </div>
-        <div class="container mt-4 row align-items-end">
+        <div class="container mt-4 row align-items-center">
 
                 <div class="col-auto">
                     <select name="searchOption" id="searchOption" class="form-select" onchange="toggleDateFields()">
@@ -54,7 +54,7 @@
                         <option value="dateRange">기간 선택</option>
                     </select>
                 </div>
-                <div class="col">
+                <div class="col" style="margin: 0">
                     <input type="text" name="searchText" id="searchText" class="form-control" placeholder="검색어 입력">
 
                 </div>
@@ -71,20 +71,20 @@
         </div>
 
 
+        </form>
 
         <div  id="orderListContent">
             <nav aria-label="Page navigation example">
                 <ul class="pagination" th:object="${page}">
                     <li class="page-item" th:if="*{prev}" style="margin:0"><a class="page-link" href="#" aria-label="Previous"  th:data-page="*{startPage - 1}"><span aria-hidden="true">&laquo;</span></a></li>
                     <div th:each="i : ${#numbers.sequence(page.startPage , page.endPage)}">
-                    <li class="page-item" th:classappend="${i} == 1 ? 'active' : ''" style="margin:0"><a class="page-link" href="#" th:data-page="${i}" th:text="${i}" >1</a></li>
+                        <li class="page-item" th:classappend="${i} == 1 ? 'active' : ''" style="margin:0"><a class="page-link" href="#" th:data-page="${i}" th:text="${i}" >1</a></li>
                     </div>
                     <li class="page-item" th:if="*{next}" style="margin:0"><a class="page-link" href="#" aria-label="Next"  th:data-page="*{endPage + 1}"><span aria-hidden="true">&raquo;</span></a></li>
                 </ul>
             </nav>
 
-
-            <section class="container row orders-container" th:each="order : ${ordersDto}">
+            <section class="container row orders-container" th:each="order, stat : ${ordersDto}">
             <div th:text="|${#temporals.format(order.orderDate, 'MM. dd (E)')} ﹒ ${order.orderStatus} ﹒ ${(order.orderType == T(com.project.eat.order.OrderType).TAKEOUT) ? '포장' : (order.orderType != null ? '배달' : '')}|"></div>
                     <div class="col-3 ">
                     <img th:src="${order.shopThum}" th:style="'width: 100%; height: auto;'">
@@ -106,24 +106,18 @@
                         <button th:case="'cashPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                         <button th:case="'creditCard'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                     </div>
-
-<!--                    여기에 폼 만들어서 shopId랑 메뉴${order.itemsName} 넘겨주기 -->
-                    <form id="reviewForm" method="POST" action="/review_formPage">
+                    <form th:id="'reviewForm'+${stat.index}" method="POST" th:action="@{/review_formPage}">
                         <!-- 필요한 데이터를 히든 필드로 포함 -->
-                        <input type="text" name="shopId" th:value="${order.shopId}">
-                        <input type="text" name="itemsName" th:value="${order.itemsName}">
-<!--                        <button type="submit" class="btn btn-primary mb-2">리뷰작성</button>-->
+                        <input type="hidden" name="shopId" th:value="${order.shopId}">
+                        <input type="hidden" name="itemsName" th:value="${order.itemsName}">
+                        <!--                        <button type="submit" class="btn btn-primary mb-2">리뷰작성</button>-->
                         <!-- 폼을 제출하는 자바스크립트 코드 -->
-                        <button type="submit" class="btn btn-primary mb-2" th:onclick="@{/review_formPage(shopId=${order.shopId}, itemsName=${order.itemsName})}">리뷰작성</button>
+                        <button type="submit" class="btn btn-primary mb-2" >리뷰작성</button>
                     </form>
-
-
-
-
                 </div>
             </section>
         </div>
-        </form>
+
 
 
     </div>
