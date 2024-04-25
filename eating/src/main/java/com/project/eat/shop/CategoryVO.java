@@ -14,8 +14,9 @@ public class CategoryVO {
     @Id  //pk설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto increament
     @Column(name="cate_id")
-    private int cateId;
+    private Long cateId;
 
     @Column(name="cate_name",nullable = false)
     private String cateName;
 }
+

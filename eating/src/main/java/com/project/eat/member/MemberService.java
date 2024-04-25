@@ -1,15 +1,20 @@
 package com.project.eat.member;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class MemberService {
 
-	@Autowired
-	private MemberDAO_JPA jpa;
+	private final MemberDAO_JPA jpa;
+	private final MemberRepositoryEM memberRepository;
+
 
 
 	public MemberVO_JPA insertOK(MemberVO_JPA vo) {
@@ -125,6 +130,13 @@ public class MemberService {
 
 	public String getSalt(MemberVO_JPA vo) {
 		return jpa.findBySalt(vo.getId());
+	}
+
+
+
+	@Transactional(readOnly = true)
+	public MemberVO_JPA findOne(String memberId) {
+		return memberRepository.findOne(memberId);
 	}
 
 }

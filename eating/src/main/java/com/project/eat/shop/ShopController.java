@@ -1,20 +1,22 @@
 package com.project.eat.shop;
 
+
+import com.project.eat.cart.CartService;
+import com.project.eat.cart.cartItem.CartItem;
+import com.project.eat.item.Item;
+import com.project.eat.item.itemOption.ItemOption;
+import com.project.eat.member.MemberService;
+import com.project.eat.member.MemberVO_JPA;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
-import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,12 @@ public class ShopController {
 
     @Autowired
     private GetUserAddrWithUserId getUserAddrWithUserId;
+
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private MemberService memberService;
 
     // 음식점 메인 페이지
     @GetMapping("/shop_main")
@@ -294,6 +302,7 @@ public class ShopController {
 
 
 
+
         // 결과값 없을 경우, sorry페이지 이동 및 홈버튼 제공
         if(total_rows<=0){
             return "thymeleaf/shop/sorry";
@@ -496,32 +505,75 @@ public class ShopController {
     }
 
     //shopDatil/num=${vo.shopId})
+//    @GetMapping("/shopDetail")
+//    public String shopDetail(@RequestParam("num") Long shopId, Model model){
+//        log.info("shopDetail called@#$@#$%#$@#!@#~~~~~~~~~~~~~~~~~~~~~~~~~");
+//        log.info("shopId: {}", shopId);
+//        model.addAttribute("shopId", shopId);
+//
+//        ShopVO vo = shopService.findByShopId(shopId);
+//        model.addAttribute("vo", vo);
+//
+//        List<Object[]> shopAndMenus = shopService.findShopWithMenu(shopId);
+//        List<MenuVO> dtos = new ArrayList<>();
+//        for (Object[] result : shopAndMenus) {
+//            // 배열의 요소에 접근하여 데이터 추출
+//            String menuName = (String) result[0];
+//            String menuPrice = (String) result[1];
+//            String menuDesc = (String) result[2];
+//            String menuPic = (String) result[3];
+//            int menuId =(int) result[4];
+//
+//            // DTO에 데이터 저장
+//            MenuVO dto = new MenuVO(menuName, menuPrice, menuDesc, menuPic, menuId);
+//            dtos.add(dto);
+//        }
+//        model.addAttribute("dtos", dtos);
+//
+//        return "thymeleaf/shop/shopDetail";
+//
+
+
+//    }
     @GetMapping("/shopDetail")
-    public String shopDetail(@RequestParam("num") int shopId, Model model){
-        log.info("shopDetail called@#$@#$%#$@#!@#~~~~~~~~~~~~~~~~~~~~~~~~~");
-        log.info("shopId: {}", shopId);
-        model.addAttribute("shopId", shopId);
-
-        ShopVO vo = shopService.findByShopId(shopId);
-        model.addAttribute("vo", vo);
-
-        List<Object[]> shopAndMenus = shopService.findShopWithMenu(shopId);
-        List<MenuVO> dtos = new ArrayList<>();
-        for (Object[] result : shopAndMenus) {
-            // 배열의 요소에 접근하여 데이터 추출
-            String menuName = (String) result[0];
-            String menuPrice = (String) result[1];
-            String menuDesc = (String) result[2];
-            String menuPic = (String) result[3];
-            int menuId =(int) result[4];
-
-            // DTO에 데이터 저장
-            MenuVO dto = new MenuVO(menuName, menuPrice, menuDesc, menuPic, menuId);
-            dtos.add(dto);
+    public String shop(@RequestParam("num") Long shopId, Model model, HttpSession session) {
+        ShopVO findShop = shopService.findShop(shopId);
+        if(findShop.getItems().isEmpty()){
+            return "redirect:/";
         }
-        model.addAttribute("dtos", dtos);
+        List<Item> items = findShop.getItems();
+        List<ItemOption> itemOptions = items.get(0).getItemOptions();
 
-        return "thymeleaf/shop/shopDetail";
+
+        model.addAttribute("shop", findShop);
+        model.addAttribute("items", items);
+        model.addAttribute("itemOptions", itemOptions);
+
+        Object memberId = session.getAttribute("member_id");
+        if(memberId != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId.toString());
+            if (findMember.getCart() == null) {
+                cartService.createCart(memberId.toString());
+            }
+            if (findMember.getCart().getShop() == null) {
+                ShopVO shop = shopService.findShop(shopId);
+                model.addAttribute("cartShop", shop);
+            }else {
+                model.addAttribute("cartShop", findMember.getCart().getShop());
+
+            }
+
+
+            List<CartItem> cartItems = findMember.getCart().getCartItems();
+            model.addAttribute("cartItems", cartItems);
+            int totalPrice = findMember.getCart().getTotalPrice();
+            model.addAttribute("totalPrice", totalPrice);
+
+
+        }
+
+//        return "/thymeleaf/shopPage";
+        return "shop/shop_detail";
     }
 
 

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="container py-3">
+  <header>
+    <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+      <a href="/static" th:href="@{/}" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+        <img src="../../static/먹고해%20로고%20이름만.png"
+             th:src="@{/먹고해 로고 이름만.png}"
+             alt="로고" width="30%" height="auto">
+      </a>
+
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link" href="#">로그인</a>
+              <a class="nav-link" href="#">마이페이지</a>
+              <button type="button" class="btn btn-primary" th:onclick="'location.href=\'/shop/' + ${shopId} + '\''">장바구니(<span th:text="${cartCount}">0</span>)</button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+</div>

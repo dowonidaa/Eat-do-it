@@ -41,4 +41,8 @@ public class MenuVO {
         this.menuPic = menuPic;
         this.menuId = menuId;
     }
+
+    public MenuVO() {
+
+    }
 }

@@ -239,3 +239,14 @@ footer{
     width:70%;
     margin-left: 15%;
 }
+
+/* 사장님 페이지 */
+.input-time {
+    display: flex;
+    align-items: center; /* 아이템을 수직으로 중앙 정렬 */
+    gap: 8px; /* 요소들 사이의 간격 설정 */
+}
+
+.input-time input {
+    width: 150px; /* 각 입력 필드의 너비 지정 */
+}
