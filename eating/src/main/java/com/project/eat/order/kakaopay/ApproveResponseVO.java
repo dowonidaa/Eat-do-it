@@ -1,6 +1,7 @@
-package com.project.eat.order;
+package com.project.eat.order.kakaopay;
 
 
+import com.project.eat.order.Amount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

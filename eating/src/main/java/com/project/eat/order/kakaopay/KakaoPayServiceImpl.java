@@ -1,5 +1,6 @@
-package com.project.eat.order;
+package com.project.eat.order.kakaopay;
 
+import com.project.eat.order.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
