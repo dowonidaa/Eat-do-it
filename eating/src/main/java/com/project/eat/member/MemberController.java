@@ -66,7 +66,7 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @PostMapping("/member/loginOK")
+//    @PostMapping("/member/loginOK")
     public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException {
         log.info("/member/loginOK...");
         log.info("{}", vo);
@@ -90,31 +90,31 @@ public class MemberController {
         }
     }
     //도원님 코드
-//    @PostMapping("/member/loginOK")
-//    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "/")String redirectURL) throws NoSuchAlgorithmException {
-//        log.info("/member/loginOK...");
-//        log.info("{}", vo);
-//        log.info("redirectURL = {}",redirectURL );
-//
-//        String salt = service.getSalt(vo);
-//        log.info("Salt : {}", salt);
-//
-//        String hex_password = User_pwSHA512.getSHA512(vo.getPw(), salt);
-//        log.info("암호화 결과 : {}", hex_password);
-//        vo.setPw(hex_password);
-//
-//        MemberVO_JPA vo2 = service.loginOK(vo);
-//        log.info("{}", vo2);
-//
-//        if (vo2 != null) {
-//            session.setAttribute("member_id", vo2.getId());
-////            session.setAttribute("member", vo2.getNum());
-//            return "redirect:" + redirectURL;
-//        } else {
-//            redirectAttributes.addFlashAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");
-//            return "redirect:/member/login";
-//        }
-//    }
+    @PostMapping("/member/loginOK")
+    public String loginOK(MemberVO_JPA vo, HttpServletRequest request, RedirectAttributes redirectAttributes, @RequestParam(defaultValue = "/")String redirectURL) throws NoSuchAlgorithmException {
+        log.info("/member/loginOK...");
+        log.info("{}", vo);
+        log.info("redirectURL = {}",redirectURL );
+
+        String salt = service.getSalt(vo);
+        log.info("Salt : {}", salt);
+
+        String hex_password = User_pwSHA512.getSHA512(vo.getPw(), salt);
+        log.info("암호화 결과 : {}", hex_password);
+        vo.setPw(hex_password);
+
+        MemberVO_JPA vo2 = service.loginOK(vo);
+        log.info("{}", vo2);
+
+        if (vo2 != null) {
+            session.setAttribute("member_id", vo2.getId());
+//            session.setAttribute("member", vo2.getNum());
+            return "redirect:" + redirectURL;
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "아이디와 비밀번호가 일치하지 않습니다.");
+            return "redirect:/member/login";
+        }
+    }
 
 //    // 아이디 찾기 페이지
 //    @GetMapping({"/member/findID"})
@@ -374,7 +374,9 @@ public class MemberController {
         // 주소 변경
         if (newAddress != null && !newAddress.isEmpty()){
             AddressVO_JPA existingAddress = jpa_add.findBymId(memberVO); // 기존의 주소 정보를 조회
-            log.info("원래 주소 : {}", existingAddress);
+            log.info("existingAddress: {}", existingAddress);
+            log.info("addressVO.getAddress(): {}", addressVO.getAddress());
+
             existingAddress.setAddress(addressVO.getAddress());
 
             AddressVO_JPA updatedAddress = service_add.updateOK(existingAddress);
