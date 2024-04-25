@@ -68,8 +68,8 @@ public class MemberVO_JPA {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "mId")
-    private List<AddressVO_JPA> address = new ArrayList<>();
+//    @OneToOne(mappedBy = "mId")
+//    private AddressVO_JPA address;
 
     @OneToMany(mappedBy = "member")
     private List<Coupon> coupons = new ArrayList<>();

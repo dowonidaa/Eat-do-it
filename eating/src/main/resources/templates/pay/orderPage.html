@@ -98,7 +98,7 @@
                     <div class="pay-content-container" th:if="${orderForm.orderType == T(com.project.eat.order.OrderType).DELIVERY}">
                         <img th:src="@{/img/home.png}" alt="로고" width="50%" height="auto">
                         <div class="pay-content-title">집 주소</div>
-                        <input type="text" th:name="orderAddress" th:value="${member.address != null ? member.address.get(0).address:''}" style="width: 70%;">
+                        <input type="text" th:name="orderAddress" th:value="${address.address != null ? address.address:''}" style="width: 70%;">
                     </div>
                     <div class="pay-content-container" th:if="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT}">
                         <img th:src="@{/img/home.png}" alt="로고" width="50%" height="auto">
