@@ -271,26 +271,46 @@
             <div class="container">
                 <img th:src="@{/img/banner_mini.jpg}" alt="배너" class="image">
             </div>
-
             <div class="title shop-title-container">
                 <p class="shop-title" th:text="${shop.shopName}">음식점 이름</p>
             </div>
 
 
+
+
             <!-- 왼쪽 -->
             <div class="shop-menu-container">
+
                 <div class="container text-center">
+
                     <div class="shop-detail-container">
-                        <img th:src="@{/img/shop.jpg}" alt="배너" class="shop-image">
+                        <div class="shop-image-container">
+                            <img th:src="@{/img/shop.jpg}" alt="배너" class="shop-image">
+                        </div>
+
                         <div>
                             <div class="star-score-container">
-                                <img th:src="@{/img/5star.png}" alt="배너" class="star-score">
-                                <span>5.0</span>
+                                <img th:if="${#strings.toString(shop.starAvg).startsWith('1')}" th:src="@{/img/1star.png}" alt="1 star" class="star-score" />
+                                <img th:if="${#strings.toString(shop.starAvg).startsWith('2')}" th:src="@{/img/2star.png}" alt="2 stars" class="star-score" />
+                                <img th:if="${#strings.toString(shop.starAvg).startsWith('3')}" th:src="@{/img/3star.png}" alt="3 stars" class="star-score" />
+                                <img th:if="${#strings.toString(shop.starAvg).startsWith('4')}" th:src="@{/img/4star.png}" alt="4 stars" class="star-score" />
+                                <img th:if="${#strings.toString(shop.starAvg).startsWith('5')}" th:src="@{/img/5star.png}" alt="5 stars" class="star-score" />
+
+                                <span th:text="${shop.starAvg}"></span>
                             </div>
-                            <p class="red-text" >25,500원 이상 주문 시 할인</p>
-                            <p class="grey-text" th:text="|최소 주문금액 ${shop.minPrice}|">최소 주문금액 12,000원</p>
-                            <p class="grey-text">2000원 할인</p>
-                            <p class="red-text">카카오페이, 카드, 현금</p>
+                            <div class="shop-info-container">
+                                <p class="red-text" th:text="|최소 주문금액 ${shop.minPrice}|"></p>
+                                <p class="grey-text">카카오페이, 카드, 현금</p>
+                                <hr>
+                                <p class="black-text-small"><b>가게정보</b></p>
+                                <p class="grey-text" th:text="|영업시간 : ${shop.runTime}|"></p>
+                                <p class="grey-text" th:text="|주소 : ${shop.shopAddr}|"></p>
+                                <p class="red-text" th:text="|배달시간 : ${shop.deliveryTime}|"></p>
+                                <p class="grey-text" th:text="|전화번호 : ${shop.shopTel}|"></p>
+                            </div>
+
+
+
                         </div>
 
 
@@ -300,11 +320,10 @@
                     <nav class="nav nav-justified nav-menu">
                         <a class="nav-link active" aria-current="page" th:href="@{shop_detail}">
                             <span>메뉴</span>
-                            <span>115</span>
                         </a>
                         <a class="nav-link list-link" th:href="@{shop_review}">
                             <span>리뷰</span>
-                            <span>672</span>
+                            <span th:text="${shop.reviewCount}"></span>
                         </a>
                     </nav>
                     <p class="shop-menu">대표 메뉴</p>

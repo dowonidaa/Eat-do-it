@@ -332,6 +332,12 @@ footer{
   text-align: left;
 }
 
+.shop-image-container {
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: flex-start; /* 요소들을 수직 중앙 정렬 */
+}
+
 .shop-image {
   width: 100%;
   border-radius: 10%;
@@ -347,7 +353,7 @@ footer{
 
 .shop-detail-container {
   display: grid;
-  grid-template-columns: 25% 75%; /* input과 button을 동일한 너비로 설정 */
+  grid-template-columns: 25% 70%; /* input과 button을 동일한 너비로 설정 */
   grid-column-gap: 25px; /* input과 button 사이의 간격 조정 */
   align-items: center; /* 요소들을 수직 중앙 정렬 */
 }
@@ -365,11 +371,7 @@ footer{
 }
 
 .shop-info-container {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  grid-column-gap: 5px; /* input과 button 사이의 간격 조정 */
-  align-items: center; /* 요소들을 수직 중앙 정렬 */
-  margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 .red-text {
