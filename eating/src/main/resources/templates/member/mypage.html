@@ -25,6 +25,11 @@
         <!-- content 넣으실 부분 -->
         <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
         <div id='wrapper'>
+            <div class="mypage-review">
+
+                <button class="btn btn-warning" th:attr="data-memberid=${memberInfo.id}" onclick="location.href='/review_Mypage?memberId=' + this.getAttribute('data-memberid');">나의 리뷰 작성 내역</button>
+            </div>
+
             <div>
                 <h1>마이페이지</h1>
             </div>
