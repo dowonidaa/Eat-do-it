@@ -373,7 +373,10 @@ public class MemberController {
 
         // 주소 변경
         if (newAddress != null && !newAddress.isEmpty()){
-            AddressVO_JPA existingAddress = jpa_add.findBymId(addressVO.getMId()); // 기존의 주소 정보를 조회
+            AddressVO_JPA existingAddress = jpa_add.findBymId(memberVO); // 기존의 주소 정보를 조회
+            log.info("existingAddress: {}", existingAddress);
+            log.info("addressVO.getAddress(): {}", addressVO.getAddress());
+
             existingAddress.setAddress(addressVO.getAddress());
 
             AddressVO_JPA updatedAddress = service_add.updateOK(existingAddress);
