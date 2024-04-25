@@ -127,94 +127,94 @@
                     </form>
                 </div>
 
-                <div class="pay-container">
-                    <div class="sub-title">
-                        <h3>쿠폰</h3>
-                    </div>
-                    <div class="pay-coupon-container">
-                        <div class="coupon-title">
-                            사용 가능한 쿠폰
+                    <div class="pay-container">
+                        <div class="sub-title">
+                            <h3>쿠폰</h3>
                         </div>
-                        <div class="dropdown">
+                        <div class="pay-coupon-container">
+                            <div class="coupon-title">
+                                사용 가능한 쿠폰
+                            </div>
+                            <div class="dropdown">
 
-                            <select class="form-select" aria-labelledby="dropdownMenuButton1" name="couponId" id="couponSelect">
-                                <option value="">사용 가능한 쿠폰을 확인하세요.</option>
-                                <option th:each="coupon : ${coupons}"
-                                        th:value="${coupon.id}"
-                                        th:text="${coupon.content}">
-                                </option>
-                            </select>
+                                <select class="form-select" aria-labelledby="dropdownMenuButton1" name="couponId" id="couponSelect">
+                                    <option value="">사용 가능한 쿠폰을 확인하세요.</option>
+                                    <option th:each="coupon : ${coupons}"
+                                            th:value="${coupon.id}"
+                                            th:text="${coupon.content}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="pay-container">
+                        <div class="sub-title">
+                            <h3>결제수단</h3>
+                        </div>
+                        <div>
+                            간편결제
+                        </div>
+                        <div class="btn-group"  style="justify-content: center; display: flex; flex-wrap: wrap;">
+                            <!-- 간편결제 (Easy Payment) -->
+                            <input type="radio" class="btn-check" name="paymentMethod" id="btnradio3" autocomplete="off" checked th:value="kakaoPay">
+                            <label class="btn btn-outline-primary btn-square" for="btnradio3" style="margin: 5px;">카카오페이</label>
+
+                            <input type="radio" class="btn-check" name="paymentMethod" id="btnradio1" autocomplete="off" th:value="naverPay"
+                                   th:disabled="disabled">
+                            <label class="btn btn-outline-primary btn-square" for="btnradio1" style="margin: 5px;">네이버페이</label>
+
+                            <input type="radio" class="btn-check" name="paymentMethod" id="btnradio2" autocomplete="off" th:value="tossPay"
+                                   th:disabled="disabled">
+                            <label class="btn btn-outline-primary btn-square" for="btnradio2" style="margin: 5px;">토스페이</label>
+
+
+                            <!-- 만나서 결제하기 (Pay on Meeting) -->
+
+                            <div style="width: 100%; text-align: left; margin-top: 20px;">만나서결제하기<span th:if="${orderForm.orderType==T(com.project.eat.order.OrderType).TAKEOUT}">(포장주문시 사용불가)</span></div>
+
+                            <input type="radio" class="btn-check" name="paymentMethod" id="btnradio4" autocomplete="off" th:value="cardPayment"
+                                   th:disabled="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT} ? 'disabled' : null">
+                            <label class="btn btn-outline-primary btn-square" for="btnradio4" style="margin: 5px;">만나서 카드결제</label>
+
+                            <input type="radio" class="btn-check" name="paymentMethod" id="btnradio5" autocomplete="off" th:value="cashPayment"
+                                   th:disabled="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT} ? 'disabled' : null">
+                            <label class="btn btn-outline-primary btn-square" for="btnradio5" style="margin: 5px;">만나서 현금결제</label>
                         </div>
                     </div>
 
+                    <!--                <div class="pay-container">-->
+                    <!--                    <div class="sub-title">-->
+                    <!--                        <h3>현금영수증</h3>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="container">-->
+                    <!--                    <div class="pay-recipt row align-items-center">-->
+                    <!--                        <div class="btn-group" style="justify-content: center; display: flex; flex-wrap: wrap;">-->
+                    <!--                            &lt;!&ndash; 간편결제 (Easy Payment) &ndash;&gt;-->
+                    <!--                            <input type="radio" class="btn-check col text-center" name="CashReceipt" id="personal" autocomplete="off"-->
+                    <!--                                   checked th:value="personal">-->
+                    <!--                            <label class="btn btn-outline-primary btn-square" for="personal"-->
+                    <!--                                   style="margin: 5px;">개인</label>-->
 
-                </div>
-
-
-                <div class="pay-container">
-                    <div class="sub-title">
-                        <h3>결제수단</h3>
-                    </div>
-                    <div>
-                        간편결제
-                    </div>
-                    <div class="btn-group"  style="justify-content: center; display: flex; flex-wrap: wrap;">
-                        <!-- 간편결제 (Easy Payment) -->
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio3" autocomplete="off" checked th:value="kakaoPay">
-                        <label class="btn btn-outline-primary btn-square" for="btnradio3" style="margin: 5px;">카카오페이</label>
-
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio1" autocomplete="off" th:value="naverPay"
-                               th:disabled="disabled">
-                        <label class="btn btn-outline-primary btn-square" for="btnradio1" style="margin: 5px;">네이버페이</label>
-
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio2" autocomplete="off" th:value="tossPay"
-                               th:disabled="disabled">
-                        <label class="btn btn-outline-primary btn-square" for="btnradio2" style="margin: 5px;">토스페이</label>
+                    <!--                            <input type="radio" class="btn-check col text-center" name="CashReceipt" id="business" autocomplete="off"-->
+                    <!--                                   th:value="business">-->
+                    <!--                            <label class="btn btn-outline-primary btn-square" for="business"-->
+                    <!--                                   style="margin: 5px;">사업자</label>-->
 
 
-                        <!-- 만나서 결제하기 (Pay on Meeting) -->
-
-                        <div style="width: 100%; text-align: left; margin-top: 20px;">만나서결제하기<span th:if="${orderForm.orderType==T(com.project.eat.order.OrderType).TAKEOUT}">(포장주문시 사용불가)</span></div>
-
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio4" autocomplete="off" th:value="cardPayment"
-                               th:disabled="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT} ? 'disabled' : null">
-                        <label class="btn btn-outline-primary btn-square" for="btnradio4" style="margin: 5px;">만나서 카드결제</label>
-
-                        <input type="radio" class="btn-check" name="paymentMethod" id="btnradio5" autocomplete="off" th:value="cashPayment"
-                               th:disabled="${orderForm.orderType == T(com.project.eat.order.OrderType).TAKEOUT} ? 'disabled' : null">
-                        <label class="btn btn-outline-primary btn-square" for="btnradio5" style="margin: 5px;">만나서 현금결제</label>
-                        </div>
-                    </div>
-
-<!--                <div class="pay-container">-->
-<!--                    <div class="sub-title">-->
-<!--                        <h3>현금영수증</h3>-->
-<!--                    </div>-->
-<!--                    <div class="container">-->
-<!--                    <div class="pay-recipt row align-items-center">-->
-<!--                        <div class="btn-group" style="justify-content: center; display: flex; flex-wrap: wrap;">-->
-<!--                            &lt;!&ndash; 간편결제 (Easy Payment) &ndash;&gt;-->
-<!--                            <input type="radio" class="btn-check col text-center" name="CashReceipt" id="personal" autocomplete="off"-->
-<!--                                   checked th:value="personal">-->
-<!--                            <label class="btn btn-outline-primary btn-square" for="personal"-->
-<!--                                   style="margin: 5px;">개인</label>-->
-
-<!--                            <input type="radio" class="btn-check col text-center" name="CashReceipt" id="business" autocomplete="off"-->
-<!--                                   th:value="business">-->
-<!--                            <label class="btn btn-outline-primary btn-square" for="business"-->
-<!--                                   style="margin: 5px;">사업자</label>-->
-
-
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="pay-recipt row align-items-center">-->
-<!--                        <div class="col-4 text-center">전화번호</div>-->
-<!--                        <div class="form-pay-recipt col text-center">-->
-<!--                            <input th:name="orderTel" th:id="orderTel" type="text" th:value="${member.tel}"/>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="pay-recipt row align-items-center">-->
+                    <!--                        <div class="col-4 text-center">전화번호</div>-->
+                    <!--                        <div class="form-pay-recipt col text-center">-->
+                    <!--                            <input th:name="orderTel" th:id="orderTel" type="text" th:value="${member.tel}"/>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
 
 
                 </div>
@@ -231,14 +231,14 @@
                             <div th:text="|${#numbers.formatDecimal(cart.totalPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
                                 60,000원
                             </div>
-                                <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice" id="totalPrice">
+                            <input type="hidden" th:value="${cart.totalPrice}" th:name="totalPrice" id="totalPrice">
                         </div>
                         <div class="sub-title">
                             <h4>배달금액</h4>
                             <div  th:text="|${#numbers.formatDecimal(cart.shop.deliveryPrice, 0, 'COMMA', 0, 'POINT')}원|" style="font-size: 1.5em; font-weight: bold;">
                                 60,000원
                             </div>
-                                <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice" id="deliveryPrice">
+                            <input type="hidden" th:value="${cart.shop.deliveryPrice}" th:name="orderPrice" id="deliveryPrice">
                         </div>
                         <div class="sub-title">
                             <h4>쿠폰할인</h4>

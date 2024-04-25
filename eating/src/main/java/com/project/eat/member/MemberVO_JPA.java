@@ -1,15 +1,12 @@
 package com.project.eat.member;
 
-import com.project.eat.address.Address;
 import com.project.eat.address.AddressVO_JPA;
 import com.project.eat.cart.Cart;
 import com.project.eat.order.Order;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,12 +39,12 @@ public class MemberVO_JPA {
     @Column(name = "name", nullable = false)
     private String name;
 
-//    @Column(name = "email", nullable = true)
+    //    @Column(name = "email", nullable = true)
     @Column(name = "email")
     private String email;
 
 
-//    @Column(name = "nickname", nullable = false)
+    //    @Column(name = "nickname", nullable = false)
     @Column(name = "nickname")
     private String nickname;
 
@@ -71,9 +68,8 @@ public class MemberVO_JPA {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member")
-    private AddressVO_JPA address;
-//    private Address address;
+    @OneToMany(mappedBy = "mId")
+    private List<AddressVO_JPA> address = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Coupon> coupons = new ArrayList<>();
