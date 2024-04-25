@@ -1,6 +1,7 @@
 package com.project.eat.address;
 
 
+import com.project.eat.member.MemberVO_JPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,11 @@ public class AddService {
     public AddressVO_JPA selectOneById(AddressVO_JPA vo) {
         return jpa.findBymId(vo.getMId());
     }
+
+    public AddressVO_JPA findByMemberId(MemberVO_JPA voJpa) {
+        return jpa.findBymId(voJpa);
+    }
+
+
 
 }

@@ -1,5 +1,7 @@
 package com.project.eat.order;
 
+import com.project.eat.address.AddService;
+import com.project.eat.address.AddressVO_JPA;
 import com.project.eat.cart.Cart;
 import com.project.eat.cart.CartService;
 import com.project.eat.cart.cartItem.CartItemService;
@@ -39,6 +41,7 @@ public class OrderController {
     private final MemberService memberService;
     private final CouponService couponService;
     private final KakaoPayServiceImpl kakaopayService;
+    private final AddService addService;
 
 
     @GetMapping("/order")
@@ -52,11 +55,12 @@ public class OrderController {
 
         List<Coupon> coupons = findMember.getCoupons();
         List<Coupon> filteredCoupons = coupons.stream().filter(c -> c.isCanUse() && (c.getShop() == null || c.getShop().getShopId().equals(cart.getShop().getShopId()))).toList();
-
+        AddressVO_JPA memberAddress = addService.findByMemberId(findMember);
         model.addAttribute("coupons", filteredCoupons);
         model.addAttribute("cart", cart);
         model.addAttribute("member", findMember);
         model.addAttribute("orderForm", orderForm);
+        model.addAttribute("address", memberAddress);
         log.info("/order orderType={}", orderForm.getOrderType());
 
         return "pay/orderPage";

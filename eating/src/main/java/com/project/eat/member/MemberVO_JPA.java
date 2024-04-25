@@ -39,12 +39,12 @@ public class MemberVO_JPA {
     @Column(name = "name", nullable = false)
     private String name;
 
-    //    @Column(name = "email", nullable = true)
+//    @Column(name = "email", nullable = true)
     @Column(name = "email")
     private String email;
 
 
-    //    @Column(name = "nickname", nullable = false)
+//    @Column(name = "nickname", nullable = false)
     @Column(name = "nickname")
     private String nickname;
 
