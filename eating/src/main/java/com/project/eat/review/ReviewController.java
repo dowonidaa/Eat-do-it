@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,11 +47,24 @@ public class ReviewController {
     private ImageCall imageCall; // imageCall 주입
 
     // 리뷰 폼 페이지
-    @GetMapping("/review_formPage")
-    public String review_formPage(){
-
+    // POST 방식으로 리뷰 폼 페이지 요청
+    @PostMapping ("/review_formPage")
+    public String reviewFormPage(@RequestParam(name = "shopId") Long shopId,
+                                 @RequestParam(name = "itemsName") String itemsName,
+                                 Model model) {
+        // 필요한 데이터를 모델에 추가
+        model.addAttribute("shopId", shopId);
+        log.info("shopId:{}", shopId);
+        model.addAttribute("itemsName", itemsName);
+        log.info("itemsName:{}", itemsName);
         return "thymeleaf/review/reviewFormPage";
     }
+
+//    @GetMapping("/review_formPage")
+//    public String review_formPage(){
+//
+//        return "thymeleaf/review/reviewFormPage";
+//    }
 
 
     // 리뷰폼ok 처리 :form input post방식

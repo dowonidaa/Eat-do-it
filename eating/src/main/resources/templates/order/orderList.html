@@ -106,7 +106,20 @@
                         <button th:case="'cashPayment'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                         <button th:case="'creditCard'" class="btn btn-primary mb-2" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                     </div>
-                    <button type="button" class="btn btn-primary  mb-2" th:onclick="'location.href=\'/reivew/' + ${order.shopId} + '\''">리뷰작성</button>
+
+<!--                    여기에 폼 만들어서 shopId랑 메뉴${order.itemsName} 넘겨주기 -->
+                    <form id="reviewForm" method="POST" action="/review_formPage">
+                        <!-- 필요한 데이터를 히든 필드로 포함 -->
+                        <input type="text" name="shopId" th:value="${order.shopId}">
+                        <input type="text" name="itemsName" th:value="${order.itemsName}">
+<!--                        <button type="submit" class="btn btn-primary mb-2">리뷰작성</button>-->
+                        <!-- 폼을 제출하는 자바스크립트 코드 -->
+                        <button type="submit" class="btn btn-primary mb-2" th:onclick="@{/review_formPage(shopId=${order.shopId}, itemsName=${order.itemsName})}">리뷰작성</button>
+                    </form>
+
+
+
+
                 </div>
             </section>
         </div>
