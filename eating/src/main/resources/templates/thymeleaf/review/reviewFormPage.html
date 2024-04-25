@@ -32,54 +32,67 @@
         <!-- content 넣으실 부분 -->
 
         <div id="wrapper">
-            <h1>리뷰 폼 페이지</h1>
-
-
-                <!-- shopId와 itemsName을 표시 -->
-                <p>Shop ID: <span th:text="${shopId}"></span></p>
-                <p>Item Name: <span th:text="${itemsName}"></span></p>
+            <div class="container">
+                <img th:src="@{/img/banner_mini.jpg}" alt="배너" class="image">
+            </div>
+            <div class="title">
+                <h1>리뷰 남기기</h1>
+            </div>
 
                 <form class="validation-form" novalidate action="review_formdata" enctype="multipart/form-data"
                       method="post">
+                    <div class="form-group  mb-3">
+                        <label>
+                            <h2>내가 주문한 메뉴</h2>
+                        </label>
+                        <div>
+                            <input name="itemsName" class="form-control" th:value="${itemsName}" disabled>
+                        </div>
+                    </div>
 
                     <div class="form-group mb-3">
                         <label>
                             <h2>별점</h2>
                         </label>
-                        <select id="numberSelect" name="reviewStar" class="input-confirm">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                        <select id="numberSelect" name="reviewStar" class="form-select">
+                            <option value="1">★☆☆☆☆</option>
+                            <option value="2">★★☆☆☆</option>
+                            <option value="3">★★★☆☆</option>
+                            <option value="4">★★★★☆</option>
+                            <option value="5">★★★★★</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group  mb-3">
                         <label>
                             <h2>리뷰 작성하기</h2>
                         </label>
                         <div>
-                            <textarea id="reviewComent" class="input-confirm" name="reviewComent" type="text"></textarea>
+                            <textarea id="reviewComent" class="form-control" name="reviewComent" type="text"></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group  mb-3">
                         <label>
                             <h2>사진 업로드하기</h2>
                             <p>직접 촬영한 음식을 업로드해주세요</p>
                         </label>
-                        <input type="file" id="file" name="file">
-                    </div>
-                    <div class="centered-button-container">
-                        <button type="submit">글쓰기확인</button>
-                    </div>
+                        <div class="mb-3">
+                            <input type="file" class="form-control" id="image-upload" name="file">
+                        </div>
 
-                    shopId<input id="shopId"  name="shopId" th:value="${shopId}" type="text">
-                    주문한 메뉴<input id="itemsName"  name="itemsName" th:value="${shopId}" type="text">
-                    userId test:27,28<input id="userId"  name="userId" type="text">
+                    </div>
+                    <div class="review-button">
+                        <button type="submit" class="btn btn-primary mb-3">글쓰기확인</button>
+                    </div>
+                    <!--      shopId       -->
+                    <input id="shopId"  name="shopId" class="form-control" th:value="${shopId}" type="text">
+                    <!--      userId : 세션 처리 후 바꿔야할 듯       -->
+                    <input id="userId"  name="userId" class="form-control" type="text">
 
                 </form>
         </div>
     </div>
 
+
 </body>
+
 </html>
