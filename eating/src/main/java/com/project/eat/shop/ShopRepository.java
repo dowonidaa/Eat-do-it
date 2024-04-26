@@ -1,6 +1,7 @@
 package com.project.eat.shop;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -104,5 +105,12 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
             value="select shop_name from shop where shop_id = ?1 ")
     String findShopNameByShopId(Long shopId);
 
+    @Query(nativeQuery=true,
+            value="select star_avg from shop where shop_id = ?1 ")
+    double findOneStarAvgByShopId(Long shopId);
 
+    @Modifying
+    @Query(nativeQuery=true,
+            value="UPDATE shop SET star_avg = ?1 WHERE shop_id = ?2 ")
+    void updateStarAvgByShopId(double starAvg, Long shopId);
 }
