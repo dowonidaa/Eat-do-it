@@ -119,7 +119,8 @@
             $(document).on('click', '#orderDirect', function() {
                 var formData = $('#addItemForm').serialize();
                 console.log('Form Data:', formData); // 디버깅: 폼 데이터 로깅
-                formData+='&extraItemId='
+                formData+='&extraItemId=';
+                let orderType = $('input[name="orderType"]:checked').val();
 
                 $.ajax({
                     url: $('#addItemForm').attr('action'),
@@ -127,7 +128,7 @@
                     data: formData,
                     success: function(response) {
                         alert('장바구니에 추가되었습니다. 주문 페이지로 이동합니다.');
-                        window.location.href = '/order'; // 주문 페이지로 리디렉션
+                        window.location.href = '/order?orderType=' + orderType.toUpperCase(); // 주문 페이지로 리디렉션
                     },
                     error: function() {
                         alert('주문 처리에 실패했습니다.');
