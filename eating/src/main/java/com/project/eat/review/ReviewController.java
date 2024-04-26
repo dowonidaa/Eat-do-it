@@ -1,5 +1,9 @@
 package com.project.eat.review;
 
+import com.project.eat.cart.CartService;
+import com.project.eat.cart.cartItem.CartItem;
+import com.project.eat.item.Item;
+import com.project.eat.item.itemOption.ItemOption;
 import com.project.eat.member.MemberService;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.Order;
@@ -31,6 +35,9 @@ public class ReviewController {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private GetUserAddrWithUserId getUserAddrWithUserId;
@@ -93,6 +100,7 @@ public class ReviewController {
                                     @RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                     @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
                                     @RequestParam(name = "orderId") Long orderId,
+//                                    @RequestParam(name = "itemsName") String itemsName,
 //                                    @RequestParam(name = "userId", defaultValue = "") int userId,
                                     Model model, HttpSession session) throws Exception {
 
@@ -114,12 +122,14 @@ public class ReviewController {
             model.addAttribute("memberId", mem);
             model.addAttribute("userId", userId);
 
+
             log.info("shopId : {}, userId : {}", shopId, userId);
         }
 
         log.info("/review_formdata...");
         log.info("reviewStar:{}", reviewStar);
         log.info("reviewComent:{}", reviewComent);
+//        log.info("itemsName:{}", itemsName);
 
 
         log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
@@ -219,7 +229,47 @@ public class ReviewController {
                                   @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                   @RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                   @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
-                                  Model model) throws IOException {
+                                  Model model, HttpSession session) throws IOException {
+        ShopVO findShop = shopService.findShop(shopId);
+        if(findShop.getItems().isEmpty()){
+            return "redirect:/";
+        }
+        List<Item> items = findShop.getItems();
+        List<ItemOption> itemOptions = items.get(0).getItemOptions();
+
+
+        model.addAttribute("shop", findShop);
+        model.addAttribute("items", items);
+        model.addAttribute("itemOptions", itemOptions);
+
+        Object memberId = session.getAttribute("member_id");
+        if(memberId != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId.toString());
+            if (findMember.getCart() == null) {
+                cartService.createCart(memberId.toString());
+            }
+            if (findMember.getCart().getShop() == null) {
+                ShopVO shop = shopService.findShop(shopId);
+                model.addAttribute("cartShop", shop);
+            }else {
+                model.addAttribute("cartShop", findMember.getCart().getShop());
+
+            }
+
+
+            List<CartItem> cartItems = findMember.getCart().getCartItems();
+            model.addAttribute("cartItems", cartItems);
+            int totalPrice = findMember.getCart().getTotalPrice();
+            model.addAttribute("totalPrice", totalPrice);
+
+
+        }
+
+
+
+
+
+
         log.info("가게 상세에서 a 링크로 by shopId 로 리뷰리스트 구성 조회 확인 !!! ");
         log.info("/review_formdata_get...");
 

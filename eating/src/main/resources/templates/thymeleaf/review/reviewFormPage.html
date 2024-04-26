@@ -47,6 +47,7 @@
                         </label>
                         <div>
                             <input name="itemsName" class="form-control" th:value="${itemsName}" disabled>
+                            <input name="itemsName" class="form-control" th:value="${itemsName}" type="hidden">
                         </div>
                     </div>
 
@@ -84,10 +85,10 @@
                         <button type="submit" class="btn btn-primary mb-3">글쓰기확인</button>
                     </div>
                     <!--      shopId       -->
-                    <input id="shopId"  name="shopId" class="form-control" th:value="${shopId}" type="text">
+                    <input id="shopId"  name="shopId" class="form-control" th:value="${shopId}" type="hidden">
                     <input id="orderId"  name="orderId" class="form-control" th:value="${orderId}" type="text">
                     <!--      userId : 세션 처리 후 바꿔야할 듯       -->
-                    <input id="userId"  name="userId" class="form-control" type="text">
+                    <input id="userId"  name="userId" class="form-control" type="hidden">
 
                 </form>
         </div>

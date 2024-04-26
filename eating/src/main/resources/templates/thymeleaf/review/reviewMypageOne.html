@@ -36,51 +36,71 @@
 				<img th:src="@{/img/banner_mini.jpg}" alt="배너" class="image">
 			</div>
 
+			<div class="mypage-review">
+
+				<button class="btn btn-warning" ><a th:href="@{review_Mypage(memberId=${param.memberId})}">나의 리뷰 작성 내역</a></button>
+			</div>
+
 			<div class="title">
 				<h1>리뷰 마이페이지</h1>
 			</div>
 
-			<h3 th:text="|${param.memberId} 님의 리뷰 상세|"></h3>
+<!--			<a th:href="@{review_Mypage(memberId=${param.memberId})}">나의 리뷰 목록</a>-->
+			<div class="container text-center">
+				<div class="row">
+						<div class="col">
+							<div class="review-list-card">
 
-			<table>
-
-					<tr>
-						<td><span th:text="${param.shopName}"></span></td>
-						<td><span th:text="${vo.shopId}"></span></td>
-						<td><span th:text="${vo.reviewId}"></span>reviewId</td>
-						<td><span th:text="${vo.reviewStar}"></span></td>
-						<td><span th:text="${vo.userId}"></span></td>
-
-						<td>
-
-								<span th:text="${vo.reviewComent}"></span>
-
-						</td>
-
-						<td><span th:text="${vo.createdAt}"></span></td>
+								<div class="card-body">
+									<a th:href="@{'/shopDetail?num=' + ${vo.shopId}}">
+										<h4 class="card-title" th:text="|${param.shopName}  >|"></h4>
+									</a>
+									<div style="display: none;"><span th:text="${vo.reviewId}"></span></div>
 
 
+									<!--									<div style="display: none;"><span th:text="${vo.shopId}"></span></div>-->
+									<div class="review-info">
+										<div class="review-info-details">
+											<p>작성일자</p>
+											<p th:text="${vo.createdAt}"></p>
+										</div>
+										<p th:text="${vo.createdAt}"></p>
+										<div class="review-star-container">
+											<img th:if="${#strings.toString(vo.reviewStar).startsWith('1')}" th:src="@{/img/1star.png}" alt="1 star" class="star-score" />
+											<img th:if="${#strings.toString(vo.reviewStar).startsWith('2')}" th:src="@{/img/2star.png}" alt="2 stars" class="star-score" />
+											<img th:if="${#strings.toString(vo.reviewStar).startsWith('3')}" th:src="@{/img/3star.png}" alt="3 stars" class="star-score" />
+											<img th:if="${#strings.toString(vo.reviewStar).startsWith('4')}" th:src="@{/img/4star.png}" alt="4 stars" class="star-score" />
+											<img th:if="${#strings.toString(vo.reviewStar).startsWith('5')}" th:src="@{/img/5star.png}" alt="5 stars" class="star-score" />
+										</div>
+									</div>
+									<div class="review-comment-selectOne">
+											<span th:text="${vo.reviewComent}"></span>
+									</div>
+									<div class="review-img-container">
+										<th:block th:if="${vo.reviewPic.isEmpty() or vo.reviewPic == '' or vo.reviewPic == null}">
 
-						<td>
-						<th:block th:if="${vo.reviewPic.isEmpty() or vo.reviewPic == '' or vo.reviewPic == null}">
+										</th:block>
 
-						</th:block>
+										<th:block th:if="${vo.reviewPic != null and  vo.reviewPic != ''}">
+											<img th:src="|/uploadimgPath/${vo.reviewPic}|" width="40" height="40" alt="Review Image">
+										</th:block>
+									</div>
 
-						<th:block th:if="${vo.reviewPic != null and  vo.reviewPic != ''}">
-							<img th:src="|/uploadimgPath/${vo.reviewPic}|" width="40" height="40" alt="Review Image">
-						</th:block>
-						</td>
 
-					</tr>
-			</table>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
 
-			<a th:href="@{reviewMypageUpdateOne(reviewId=${vo.reviewId}, shopName=${param.shopName}, userId=${vo.userId}, memberId=${param.memberId})}">수정</a>
-			<button onclick="deleteReview('${vo.reviewId}', '${vo.userId}', '${param.memberId}')">삭제</button>
 
-			<a th:href="@{review_Mypage(memberId=${param.memberId})}">나의 리뷰 목록</a>
+
+			<a class="review-update-btn" th:href="@{reviewMypageUpdateOne(reviewId=${vo.reviewId}, shopName=${param.shopName}, userId=${vo.userId}, memberId=${param.memberId})}">리뷰 수정하기</a>
+			<button class="btn btn-danger" onclick="deleteReview('${vo.reviewId}', '${vo.userId}', '${param.memberId}')">리뷰 삭제하기</button>
+
+
 
 		</div>
-	</div>
 
 	<script th:inline="javascript">
 		function deleteReview(reviewId, userId, memberId) {
