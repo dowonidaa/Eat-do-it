@@ -240,6 +240,12 @@ footer{
     margin-left: 15%;
 }
 
+.mypage-review{
+    margin-bottom: 40px;
+    display:flex;
+    justify-content: flex-end;
+}
+
 /* 사장님 페이지 */
 .input-time {
     display: flex;

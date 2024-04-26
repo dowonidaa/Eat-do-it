@@ -57,6 +57,7 @@ public class ReviewVO {
     private String shopName;
 
 
+
     public void setShop(ShopVO shop) {
         this.shop = shop;
         // ShopVO를 참조하는 필드를 설정하면서, 외래 키 값도 설정할 수 있음

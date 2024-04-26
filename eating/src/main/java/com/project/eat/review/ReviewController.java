@@ -92,7 +92,7 @@ public class ReviewController {
                                     @RequestParam(name = "file", required = false) MultipartFile file,
                                     @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                     @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                    @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                                    @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
 //                                    @RequestParam(name = "userId", defaultValue = "") int userId,
                                     Model model, HttpSession session) throws Exception {
 
@@ -216,7 +216,7 @@ public class ReviewController {
     public String review_formdata_get (
                                   @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                   @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                  @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                                  @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
                                   Model model) throws IOException {
         log.info("가게 상세에서 a 링크로 by shopId 로 리뷰리스트 구성 조회 확인 !!! ");
         log.info("/review_formdata_get...");
@@ -279,7 +279,7 @@ public class ReviewController {
     public String review_MypageList(
 //            HttpServletRequest request, HttpServletResponse response,
                                 @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+                                @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
                                 @RequestParam(name = "memberId", defaultValue = "") String memberId,
                                 Model model, HttpSession session)  throws IOException  {
         // 로그인한 유저명
@@ -498,7 +498,7 @@ public class ReviewController {
             @RequestParam(name = "memberId") String memberId,
             @RequestParam(name = "userId") int userId,
             @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-            @RequestParam(name = "pageBlock", defaultValue = "2") int pageBlock,
+            @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
             Model model, HttpSession session){
         // 로그인한 유저명
         String name = "";
