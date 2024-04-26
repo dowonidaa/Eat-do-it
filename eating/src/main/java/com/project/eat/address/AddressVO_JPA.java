@@ -25,7 +25,7 @@ public class AddressVO_JPA {
 
     private String address;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt=LocalDateTime.now();
     private LocalDateTime modifiedAt;
 
     @Override

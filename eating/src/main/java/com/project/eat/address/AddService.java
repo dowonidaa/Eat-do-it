@@ -45,4 +45,8 @@ public class AddService {
         return jpa.findAddressBymId(memId);
     }
 
+    public void saveAddress(AddressVO_JPA addressVOJpa) {
+        jpa.save(addressVOJpa);
+    }
+
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,6 +21,7 @@ import java.lang.reflect.Member;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -118,7 +120,7 @@ public class MemberController {
         }
     }
 
-//    // 아이디 찾기 페이지
+    // 아이디 찾기 페이지
 //    @GetMapping({"/member/findID"})
 //    public String findID() {
 //        log.info("/member/findID...");
@@ -140,10 +142,11 @@ public class MemberController {
 
 
     @PostMapping("/member/insertOK")
-    public String insertOK(MemberVO_JPA vo) {
+    public String insertOK(MemberVO_JPA vo, AddressVO_JPA address) {
 
         log.info("/member/insertOK...");
         log.info("vo:{}",vo);
+        log.info("address:{}",address);
 
         String salt = User_pwSHA512.Salt();
         log.info("Salt : {}",salt);
@@ -156,6 +159,8 @@ public class MemberController {
         vo.setPw(hex_password);//디비에 저장
 
         MemberVO_JPA result = service.insertOK(vo);
+        address.setMId(result);
+        service_add.saveAddress(address);
         log.info("result:{}", result);
 
         if (result != null) {
@@ -252,6 +257,7 @@ public class MemberController {
     @PostMapping("/member/updateOK")
     public String updateOK(MemberVO_JPA memberVO, AddressVO_JPA addressVO, HttpServletRequest request) {
         log.info("/member/updateOK...");
+        log.info("addressVo ={}", addressVO);
 
         String newPassword = request.getParameter("pw");
         String newAddress = request.getParameter("address");
