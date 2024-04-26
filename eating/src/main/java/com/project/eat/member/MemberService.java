@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +15,19 @@ public class MemberService {
 
 	private final MemberDAO_JPA jpa;
 	private final MemberRepositoryEM memberRepository;
+	private final MemberRepository memberRepository_join;
 
 
+	public boolean doesMemberExist(String id) {
+
+		MemberVO_JPA not_exist = memberRepository.findOne(id); // 엔터티 조회
+
+		if(not_exist == null){
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public MemberVO_JPA insertOK(MemberVO_JPA vo) {
 		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음

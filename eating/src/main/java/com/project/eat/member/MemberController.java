@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.lang.reflect.Member;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -129,8 +131,17 @@ public class MemberController {
 //        return "member/findID";
 //    }
 
+
+    @GetMapping("/member/checkId")
+    public ResponseEntity<Boolean> checkId(@RequestParam String id) {
+        boolean isAvailable = service.doesMemberExist(id);
+        return ResponseEntity.ok(isAvailable);
+    }
+
+
     @PostMapping("/member/insertOK")
     public String insertOK(MemberVO_JPA vo) {
+
         log.info("/member/insertOK...");
         log.info("vo:{}",vo);
 
@@ -148,7 +159,7 @@ public class MemberController {
         log.info("result:{}", result);
 
         if (result != null) {
-            return "redirect:selectAll";
+            return "redirect:/";
         } else {
             return "redirect:insert";
         }
