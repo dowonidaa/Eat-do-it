@@ -54,6 +54,19 @@
                 <h1>음식점 목록</h1>
             </div>
 
+            <form class="validation-form" novalidate action="shop_searchWord"
+                  method="post">
+                <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+                <div th:if="${userId}">
+                    <input id="userId"  name="userId" type="hidden" th:value="${userId}">
+                </div>
+
+                <div class="shop-search-container">
+                    <input id="searchWord" width="100px" class="form-control" name="searchWord" type="text" placeholder="음식점명을 입력해주세요">
+                    <button class="btn btn-dark" type="submit">검색</button>
+                </div>
+
+            </form>
 
             <div class="sort-button">
                 <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=1";'>별점순</button>

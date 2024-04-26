@@ -1,6 +1,8 @@
 package com.project.eat.shop;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -104,5 +106,17 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
             value="select shop_name from shop where shop_id = ?1 ")
     String findShopNameByShopId(Long shopId);
 
-
+    @Modifying
+    @Transactional
+    @Query(nativeQuery=true,
+            value="UPDATE shop AS s\n" +
+            "LEFT JOIN (\n" +
+            "  SELECT shop_id, COUNT(*) AS review_count\n" +
+            "  FROM review\n" +
+            "  GROUP BY shop_id\n" +
+            ") AS r\n" +
+            "ON s.shop_id = r.shop_id\n" +
+            "SET s.review_count = COALESCE(r.review_count, 0)\n" +
+            "WHERE s.shop_id IS NOT NULL;")
+    void updateReviewCount();
 }

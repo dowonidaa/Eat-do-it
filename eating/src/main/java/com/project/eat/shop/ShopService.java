@@ -53,6 +53,7 @@ public class ShopService {
         return shopRepository.findAllByShopNameContaining(searchWord);
     }
 
+
     public List<ShopVO> selectListByCategory(int cateId){
         return shopRepository.findAllByCateId(cateId);
     }

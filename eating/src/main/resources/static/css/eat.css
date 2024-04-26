@@ -1073,3 +1073,10 @@ h3, h5 { /* 제목 스타일 조정 */
     display:flex;
     justify-content: center;
 }
+
+
+.shop-search-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 500px;
+}

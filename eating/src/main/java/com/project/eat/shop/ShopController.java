@@ -27,6 +27,7 @@ public class ShopController {
     @Autowired
     private ShopService shopService;
 
+
     @Autowired
     private GetUserAddrWithUserId getUserAddrWithUserId;
 
@@ -91,6 +92,9 @@ public class ShopController {
         //세션처리
         String memberId = (String) session.getAttribute("member_id");
         if(memberId != null){
+
+
+
             MemberVO_JPA findMember = memberService.findOne(memberId);
             String memId = findMember.getId();
             log.info("전체조회 관련,주소지 확인:  로그인 성공시... 값 비교: userId:{}, memId:{}",userId,memId);
