@@ -19,8 +19,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "member")
 public class MemberVO_JPA {
 
-    @Id // pk설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략 설정
+     // pk설정
+//    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략 설정
     @Column(name = "num") // 컬럼이름 설정
     private int num;
 
@@ -30,7 +30,7 @@ public class MemberVO_JPA {
     )
     private Date created_at;
 
-
+    @Id
     @Column(name = "member_id", nullable = false)
     private String id;
 
