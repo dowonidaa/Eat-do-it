@@ -9,6 +9,7 @@ import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.Order;
 import com.project.eat.order.OrderService;
 import com.project.eat.shop.GetUserAddrWithUserId;
+import com.project.eat.shop.ShopRepository;
 import com.project.eat.shop.ShopService;
 import com.project.eat.shop.ShopVO;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +33,10 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+
+
+    @Autowired
+    private ShopRepository shopRepository;
 
     @Autowired
     private ShopService shopService;
@@ -220,7 +225,11 @@ public class ReviewController {
 
         model.addAttribute("listReviewVos", listReviewVos);
 
-        return "thymeleaf/review/reviewListByShopId";
+        //리뷰수 업데이트하는 거 추가
+        shopRepository.updateReviewCount(); // 페이지 요청 시 review_count 업데이트
+
+
+        return "main";
     }
 
     // by shopId : 페이지
