@@ -2,6 +2,8 @@ package com.project.eat.review;
 
 import com.project.eat.member.MemberService;
 import com.project.eat.member.MemberVO_JPA;
+import com.project.eat.order.Order;
+import com.project.eat.order.OrderService;
 import com.project.eat.shop.GetUserAddrWithUserId;
 import com.project.eat.shop.ShopService;
 import com.project.eat.shop.ShopVO;
@@ -10,22 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-//import javax.annotation.Resource;
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Base64;
-
-
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -56,6 +51,8 @@ public class ReviewController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private OrderService orderService;
 
     // 리뷰 폼 페이지
     @GetMapping("/review_formPage")
@@ -69,11 +66,13 @@ public class ReviewController {
     @PostMapping("/review_formPage")
     public String reviewFormPage(@RequestParam(name = "shopId") Long shopId,
                                  @RequestParam(name = "itemsName") String itemsName,
+                                 @RequestParam(name = "orderId") Long orderId,
                                  Model model) {
         // 필요한 데이터를 모델에 추가
         model.addAttribute("shopId", shopId);
         log.info("shopId:{}", shopId);
         model.addAttribute("itemsName", itemsName);
+        model.addAttribute("orderId", orderId);
         log.info("itemsName:{}", itemsName);
         return "thymeleaf/review/reviewFormPage";
     }
@@ -93,6 +92,7 @@ public class ReviewController {
                                     @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                     @RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                     @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
+                                    @RequestParam(name = "orderId") Long orderId,
 //                                    @RequestParam(name = "userId", defaultValue = "") int userId,
                                     Model model, HttpSession session) throws Exception {
 
@@ -145,6 +145,8 @@ public class ReviewController {
         log.info("확인 !!! reviewPic:{}", reviewPic);
 
         ReviewVO vo = new ReviewVO();
+        Order order = orderService.findOne(orderId);
+        vo.setOrder(order);
         vo.setName(name);
 
         vo.setReviewStar(reviewStar);

@@ -110,9 +110,10 @@
                         <!-- 필요한 데이터를 히든 필드로 포함 -->
                         <input type="hidden" name="shopId" th:value="${order.shopId}">
                         <input type="hidden" name="itemsName" th:value="${order.itemsName}">
+                        <input type="hidden" name="orderId" th:value="${order.id}">
                         <!--                        <button type="submit" class="btn btn-primary mb-2">리뷰작성</button>-->
                         <!-- 폼을 제출하는 자바스크립트 코드 -->
-                        <button type="submit" class="btn btn-primary mb-2" >리뷰작성</button>
+                        <button th:disabled="${order.reviewExists}" type="submit" class="btn btn-primary mb-2" >리뷰작성</button>
                     </form>
                 </div>
             </section>
