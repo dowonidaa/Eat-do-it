@@ -36,41 +36,76 @@
             <img th:src="@{/img/banner_mini.jpg}" alt="배너" class="image">
         </div>
 
+        <div class="mypage-review">
+
+            <button class="btn btn-warning" ><a th:href="@{review_Mypage(memberId=${param.memberId})}">나의 리뷰 작성 내역</a></button>
+        </div>
+
         <div class="title">
             <h1>리뷰 수정하기</h1>
         </div>
 
+        <form class="validation-form" novalidate action="review_formdata" enctype="multipart/form-data"
+              method="post">
+            <h3 th:text="|${param.shopName}에 작성한 리뷰|"></h3>
+            <input id="shopName"  name="shopName" type="hidden" th:value="${param.shopName}">
+            <div class="form-group mb-3">
+                <label>
+                    <h2>별점</h2>
+                </label>
+                <select id="numberSelect" name="reviewStar" th:value="${vo.reviewStar}" class="form-select">
+                    <option value="1">★☆☆☆☆</option>
+                    <option value="2">★★☆☆☆</option>
+                    <option value="3">★★★☆☆</option>
+                    <option value="4">★★★★☆</option>
+                    <option value="5">★★★★★</option>
+                </select>
+            </div>
+            <div class="form-group  mb-3">
+                <label>
+                    <h2>리뷰 작성하기</h2>
+                </label>
+                <div>
+                    <textarea id="reviewComent" class="form-control" th:text="${vo.reviewComent}" name="reviewComent" type="text"></textarea>
+                </div>
+            </div>
+            <div class="form-group  mb-3">
+                <label>
+                    <h2>사진 업로드하기</h2>
+                    <p>직접 촬영한 음식을 업로드해주세요</p>
+                </label>
+                <div class="review-img-container">
 
-        shopName<p id="shopName2"  name="shopName" type="text" th:text="${param.shopName}"></p>
+                    <th:block th:if="${vo.reviewPic.isEmpty() or vo.reviewPic == '' or vo.reviewPic == null}">
 
-            <form class="validation-form" novalidate action="review_formdata_update" enctype="multipart/form-data"
-                  method="post">
-                shopId<input id="shopId"  name="shopId" type="text" th:value="${vo.shopId}">
-                <!--
+                    </th:block>
+
+                    <th:block th:if="${vo.reviewPic != null and  vo.reviewPic != ''}">
+                        <img th:src="|/uploadimgPath/${vo.reviewPic}|" width="40" height="40" alt="Review Image">
+                    </th:block>
+                </div>
+
+                <!-- 사진 보여주고 다시 //input 사진 파일 선택 하게끔...-->
+                <div class="mb-3">
+                    <input type="file" class="form-control" id="image-upload" name="file">
+                </div>
+
+            </div>
+
+            <!--      shopId       -->
+            <input id="shopId"  class="form-control" name="shopId" type="hidden" th:value="${vo.shopId}">
+            <!--      userId : 세션 처리 후 바꿔야할 듯       -->
+            <!--
                 userId test:27,28<input id="userId"  name="userId" type="text" th:value="${vo.userId}">
         -->
-                start<input id="reviewStar"  name="reviewStar" type="text" th:value="${vo.reviewStar}">
-                <textarea id="reviewComent" name="reviewComent" type="text" th:text="${vo.reviewComent}"></textarea>
+            <input id="memberId"  class="form-control" name="memberId" type="hidden" th:value="${param.memberId}">
 
 
-                <p>사진!1</p>
-                <th:block th:if="${vo.reviewPic.isEmpty() or vo.reviewPic == '' or vo.reviewPic == null}">
+            <div class="review-button">
+                <button type="submit" class="btn btn-primary mb-3">리뷰 수정하기</button>
+            </div>
 
-                </th:block>
-
-                <th:block th:if="${vo.reviewPic != null and  vo.reviewPic != ''}">
-                    <img th:src="|/uploadimgPath/${vo.reviewPic}|" width="40" height="40" alt="Review Image">
-                </th:block>
-                <!-- 사진 보여주고 다시 //input 사진 파일 선택 하게끔...-->
-                <input type="file" id="file" name="file">
-
-                <button type="submit">글쓰기수정확인</button>
-
-                reviewId<input id="reviewId"  name="reviewId" type="text" th:value="${vo.reviewId}">
-                shopName<input id="shopName"  name="shopName" type="text" th:value="${param.shopName}">
-                memberId<input id="memberId"  name="memberId" type="text" th:value="${param.memberId}">
-
-            </form>
+        </form>
 
         </div>
     </div>

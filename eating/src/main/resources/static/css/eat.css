@@ -268,8 +268,37 @@ footer{
   align-items: center; /* 요소들을 수직 중앙 정렬 */
 }
 
+
+.mypage-review{
+    margin-top: 30px;
+    margin-bottom: 40px;
+    display:flex;
+    justify-content: flex-end;
+}
+
+.mypage-review button a{
+    text-decoration: none;
+    color: black;
+}
+
+.review-update-btn {
+     text-decoration: none;
+     color: white;
+     padding: 9px 15px 9px 15px;
+     background-color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+     border-radius: 7px;
+}
+
 .review-info {
   align-items: center; /* 요소들을 수직 중앙 정렬 */
+}
+
+.review-comment-selectOne {
+    position: relative; /* 툴팁의 위치를 요소 기준으로 정렬하기 위해 사용 */
+    margin-top: 10px;
+    padding: 10px;
+    border : 1px solid lightgrey;
+    border-radius: 10px;
 }
 
 .review-comment {
@@ -755,6 +784,15 @@ footer{
 
 .review-img {
   width:40%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+}
+
+.review-img img {
+    width: 40%;
+    height: fit-content;
+
 }
 
 .review-content {
