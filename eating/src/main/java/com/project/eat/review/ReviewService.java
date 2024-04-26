@@ -2,6 +2,7 @@ package com.project.eat.review;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,4 +51,13 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
+    @Transactional
+    public void update(ReviewVO updateReview) {
+        ReviewVO findReview = reviewRepository.findOneByReviewId(updateReview.getReviewId());
+        findReview.setReviewPic(updateReview.getReviewPic());
+        findReview.setReviewComent(updateReview.getReviewComent());
+        findReview.setReviewStar(updateReview.getReviewStar());
+        findReview.setShopName(updateReview.getShopName());
+
+    }
 }

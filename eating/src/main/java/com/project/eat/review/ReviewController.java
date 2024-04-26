@@ -24,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
@@ -472,7 +474,7 @@ public class ReviewController {
     }
 
     //수정 post review_formdata_update
-    @PostMapping("/review_formdata_update")
+//    @PostMapping("/review_formdata_update")
     public String review_formdata_update(@RequestParam(name = "reviewStar", defaultValue = "1") int reviewStar,
                                   @RequestParam(name = "reviewComent") String reviewComent,
                                   @RequestParam(name = "file", required = false) MultipartFile file,
@@ -550,6 +552,50 @@ public class ReviewController {
 
         return "thymeleaf/review/reviewMypageOne";
     }
+
+
+    @PostMapping("/review_update")
+    public String reviewUpdate(ReviewVO review, HttpSession session,@RequestParam(name = "file", required = false) MultipartFile file) {
+        log.info("review update");
+        // 현재 로그인 id와 리뷰 아이디 비교 하고싶으면 이부분 수정
+        String memberId = (String) session.getAttribute("member_id");
+        MemberVO_JPA findMember = memberService.findOne(memberId);
+
+        String reviewPic = "";
+        //이미지처리
+        if (file != null && !file.isEmpty()) {
+            // 파일이 선택된 경우의 처리
+            try {
+                // 파일을 업로드하고 업로드된 파일의 URL을 반환
+                String fileUrl = uploadService.uploadFile(file);
+                // 파일의 URL을 반환하여 클라이언트에게 전송하거나 다른 작업을 수행할 수 있습니다.
+                reviewPic = fileUrl;
+            } catch (IOException e) {
+                e.printStackTrace();
+                reviewPic = "";
+            }
+        }
+
+        review.setReviewPic(reviewPic);
+        reviewService.update(review);
+
+
+//        /reviewMypageSelectOne?reviewId=155&userId=22&shopName=해마루-양재점&memberId=dowon456
+//        return "redirect:/reviewMypageSelectOne?reviewId=" + review.getReviewId() + "&userId=" + findMember.getNum() + "&shopName=" + review.getShopName() + "&memberId=" +memberId ;
+        try {
+            String encodedShopName = URLEncoder.encode(review.getShopName(), StandardCharsets.UTF_8.toString());
+            String encodedMemberId = URLEncoder.encode(memberId, StandardCharsets.UTF_8.toString());
+
+            return "redirect:/reviewMypageSelectOne?reviewId=" + review.getReviewId()
+                    + "&userId=" + findMember.getNum()
+                    + "&shopName=" + encodedShopName
+                    + "&memberId=" + encodedMemberId;
+        } catch (Exception e) {
+            log.error("Error encoding URL parameters", e);
+            return "main";
+        }
+    }
+
 
 
     // 삭제
