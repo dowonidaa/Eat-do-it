@@ -108,6 +108,7 @@ public class OrderService {
         log.info("findOrders.size()= {}", findOrders.size());
         List<OrderDTO> orders = new ArrayList<>();
         for (Order order : findOrders) {
+            boolean reviewExists = order.getReview() != null;
             List<OrderItem> orderItems = order.getOrderItems();
             String matchedItemName = orderItems.stream()
                     .map(OrderItem::getItem)
@@ -117,7 +118,7 @@ public class OrderService {
                     .orElse(orderItems.isEmpty() ? "" : orderItems.get(0).getItem().getItemName());
             String itemName = matchedItemName + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
 
-            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getShopId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
+            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getShopId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName ,reviewExists);
             orders.add(orderDTO);
         }
         return orders;
@@ -147,9 +148,11 @@ public class OrderService {
     private List<OrderDTO> getOrderDTOS(List<Order> findOrder) {
         List<OrderDTO> orders = new ArrayList<>();
         for (Order order : findOrder) {
+            boolean reviewExists = order.getReview() != null;
+            log.info("reviewExists ={}", reviewExists);
             List<OrderItem> orderItems = order.getOrderItems();
             String itemName = orderItems.get(0).getItem().getItemName() + (orderItems.size() - 1 != 0 ? " 외 " + (orderItems.size() - 1) + "개" : "");
-            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getShopId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName );
+            OrderDTO orderDTO = new OrderDTO(order.getId(), (order.getTotalPrice() + order.getOrderPrice() - order.getDiscount()), order.getOrderType(), order.getOrderStatus(), order.getPaymentMethod(), order.getShop().getShopId(), order.getShop().getShopThum(), order.getOrderDate(), order.getShop().getShopName(), itemName, reviewExists );
             orders.add(orderDTO);
         }
 

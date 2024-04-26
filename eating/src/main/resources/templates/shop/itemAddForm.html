@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <img width="100%" th:src="${item.itemUrl}"/>
+                <img  th:src="${item.itemUrl}" width="100%"/>
                 <h2 th:text="${item.itemName}">메뉴이름</h2>
                 <h4 th:text="${item.itemDescription}">메뉴설명</h4>
                 <h4 id="itemPrice-modal" th:text="|${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">가격</h4>

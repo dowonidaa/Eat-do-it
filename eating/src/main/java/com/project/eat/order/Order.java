@@ -3,6 +3,7 @@ package com.project.eat.order;
 import com.project.eat.member.Coupon;
 import com.project.eat.member.MemberVO_JPA;
 import com.project.eat.order.orderItem.OrderItem;
+import com.project.eat.review.ReviewVO;
 import com.project.eat.shop.ShopVO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -57,6 +58,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToOne(mappedBy = "order")
+    private ReviewVO review;
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
