@@ -22,6 +22,7 @@ public class OrderDTO {
     private LocalDateTime orderDate;
     private String shopName;
     private String itemsName;
+    private boolean reviewExists;
 
 }
 

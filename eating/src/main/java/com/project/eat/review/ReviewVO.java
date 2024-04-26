@@ -1,6 +1,7 @@
 package com.project.eat.review;
 
 import com.project.eat.member.MemberVO_JPA;
+import com.project.eat.order.Order;
 import com.project.eat.shop.ShopVO;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -56,9 +57,12 @@ public class ReviewVO {
     @Column(name="shop_name")
     private String shopName;
 
-
+    @OneToOne(targetEntity = Order.class)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     public void setShop(ShopVO shop) {
+
         this.shop = shop;
         // ShopVO를 참조하는 필드를 설정하면서, 외래 키 값도 설정할 수 있음
         if (shop != null) {
