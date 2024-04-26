@@ -93,7 +93,6 @@ public class KakaoPayServiceImpl {
     public ApproveResponseVO payCancel(Order order) {
 
         //String order_id = "100";
-        Long orderId = order.getId();
         String tid = order.getTid();
         String cancel_amount = String.valueOf(order.getOrderPrice() + order.getTotalPrice()- order.getDiscount());
         String cancel_tax_free_amount = "0";

@@ -47,8 +47,8 @@
                 <button class="btn btn-primary" th:onclick="|window.location.href='@{/orders/{id}/reorder(id=${order.id})}'|">재주문</button>
                 <div th:if="${order.orderStatus.toString() == '결제 준비' or order.orderStatus.toString() == '결제완료' or order.orderStatus.toString() == '주문확인중'}" th:switch="${order.paymentMethod}">
                     <button th:case="'kakaoPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/kakao/cancel(orderId=${order.id})}'|">주문취소</button>
-                    <button th:case="'tossPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/toss/cancel(orderId=${order.id})}'|">주문취소</button>
-                    <button th:case="'naverPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/naver/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'tossPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
+                    <button th:case="'naverPay'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                     <button th:case="'cardPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                     <button th:case="'cashPayment'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
                     <button th:case="'creditCard'" class="btn btn-primary" th:onclick="|window.location.href='@{/order/cancel(orderId=${order.id})}'|">주문취소</button>
