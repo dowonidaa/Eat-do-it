@@ -1,0 +1,285 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>사장님페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/eat2.css}">
+    <!--    <link href="css/eat2.css" rel="stylesheet">-->
+</head>
+
+<body th:replace="~{layout2 :: layout2}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <!-- ----------------------------------------------------------------- -->
+
+
+
+    <div th:fragment="content" class="container py-3">
+        <!-- ----------------------------------------------------------------- -->
+        <!-- content 넣으실 부분 -->
+        <!-- footer 하단 고정 때문에 content는 다 wrapper안에 넣음 -->
+        <div id='wrapper'>
+            <div>
+                <h1>사장님페이지</h1>
+            </div>
+            <div class="exp">
+                <h2>환영합니다, 음식점을 등록해주세요</h2>
+                <p>관리자의 승인 이후, 먹고해 서비스에 등록됩니다.</p>
+            </div>
+
+            <form class="validation-form" novalidate action="insertShopOK"
+                  method="post" onsubmit="prepareAddress(); prepareRuntime();">
+
+                <div class="form-group">
+                    <label>
+                        <h2>상호명</h2>
+                    </label>
+                    <input type="text" class="form-control input-confirm" name="shopName" placeholder="상호명을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <h2>주소지</h2>
+                    <div class="form-grid form-address">
+                        <input type="text" class="form-control address_input_1 input-confirm" id="sample6_postcode" placeholder="우편번호" disabled="readonly">
+                        <button type="button" class="btn btn-dark address_button" onclick="execution_daum_address()">찾기</button>
+                    </div>
+                    <input type="text" class="form-control InputAddress address_input_2 input-confirm"  id="sample6_address" placeholder="주소" disabled="readonly">
+                    <input type="text" class="form-control InputAddress address_input_3" id="sample6_detailAddress" placeholder="상세주소">
+
+                    <!-- 합친 주소를 전달할 hidden input -->
+                    <input type="hidden" name="shopAddr" id="combined_address" placeholder="합쳐진 주소">
+                </div>
+
+
+
+                <!--      안 보이는 애들 : 그냥 기본값으로 들어가도록 -->
+                <div class="form-group" style="display: none;">
+                    <label>
+                        <h2>평균 배달 시간</h2>
+                    </label>
+                    <input type="text" class="form-control input-confirm" name="deliveryTime" value="30~40분">
+                </div>
+
+                <div class="form-group" style="display: none;">
+                    <label>
+                        <h2>배달비</h2>
+                    </label>
+                    <input type="text" class="form-control input-confirm" name="delivery_price" value="3000">
+                </div>
+
+                <div class="form-group" style="display: none;">
+                    <label>
+                        <h2>최소주문금액</h2>
+                    </label>
+                    <input type="text" class="form-control input-confirm" name="minPriceInt" value="3000">
+                </div>
+
+                <div class="form-group" style="display: none;">
+                    <label>
+                        <h2>별점</h2>
+                    </label>
+                    <input type="text" class="form-control input-confirm" name="starAvg" value="0.0">
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        <h2>카테고리 선택</h2>
+                    </label>
+                    <select id="numberSelect" name="cateId" class="input-confirm">
+                        <option value="1">치킨</option>
+                        <option value="2">피자/양식</option>
+                        <option value="3">중국집</option>
+                        <option value="4">분식</option>
+                        <option value="5">일식/돈까스</option>
+                        <option value="6">족발/보쌈</option>
+                        <option value="7">야식</option>
+                        <option value="8">분식</option>
+                        <option value="9">카페/디저트</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <h2>가게영업시간</h2>
+    <!--                    합쳐서 넣는 걸로 고쳐야됨-->
+                    </label>
+                    <div class="input-time">
+                        <input type="time" id="startTime" class="form-control input-confirm">
+                        <span>-</span>
+                        <input type="time" class="form-control input-confirm" id="finishTime">
+                        <!-- 합친 영업시간을 전달할 hidden input -->
+                        <input type="hidden" name="runTime" id="combined_runtime" placeholder="합쳐진 영업시간" required>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="form-group mb-3">
+                    <label>
+                        <h2>가게 연락처</h2>
+                    </label>
+                    <input type="tel" class="form-control input-confirm" name="shopTel" placeholder="가게 연락처를 입력하세요 ('-' 제외 11자리 입력)">
+                </div>
+
+                <div class="centered-button-container">
+                    <button type="submit" class="btn btn-primary centered-button" disabled>음식점 등록하기</button>
+                </div>
+            </form>
+        </div>
+
+
+
+
+
+    <!--   주소 찾기 API 추가     -->
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!--   영업시간 합치기    -->
+    <script>
+        function prepareRuntime() {
+            // 영업시간 필드들의 값을 가져옴
+            var startTime = document.getElementById('startTime').value;
+            var finishTime = document.getElementById('finishTime').value;
+
+            console.log(startTime);
+            console.log(finishTime);
+
+             // 영업시간 필드들이 모두 공백인지 확인
+            if (startTime.trim().length === 0 && finishTime.trim().length === 0) {
+                // 모든 주소 필드가 공백이면 합친 주소를 null로 설정
+                document.getElementById('combined_runtime').value = null;
+                console.log("공백입니다");
+            } else {
+                // 주소 필드들이 모두 공백이 아니면 주소를 합쳐서 설정
+                var combinedRuntime = startTime + ' - ' + finishTime;
+                document.getElementById('combined_runtime').value = combinedRuntime;
+                console.log(combinedRuntime);
+            }
+        }
+
+    <!--    주소 합치기    -->
+        function prepareAddress() {
+            // 주소 필드들의 값을 가져옴
+            var postcode = document.getElementById('sample6_postcode').value;
+            var address = document.getElementById('sample6_address').value;
+            var detailAddress = document.getElementById('sample6_detailAddress').value;
+
+             // 주소 필드들이 모두 공백인지 확인
+            if (postcode.trim().length === 0 && address.trim().length === 0) {
+                // 모든 주소 필드가 공백이면 합친 주소를 null로 설정
+                document.getElementById('combined_address').value = null;
+                console.log("주소합치기완료");
+            } else {
+                // 주소 필드들이 모두 공백이 아니면 주소를 합쳐서 설정
+                var combinedAddress = address + ' ' + detailAddress;
+                document.getElementById('combined_address').value = combinedAddress;
+            }
+        }
+
+
+
+        /* 다음 주소 연동 */
+        function execution_daum_address(){
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+
+                     // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var addr = ''; // 주소 변수
+                    var extraAddr = ''; // 참고항목 변수
+
+                    //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                    if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                        addr = data.roadAddress;
+                    } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                        addr = data.jibunAddress;
+                    }
+
+                    // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                    if(data.userSelectedType === 'R'){
+                        // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                        // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                        if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                            extraAddr += data.bname;
+                        }
+                        // 건물명이 있고, 공동주택일 경우 추가한다.
+                        if(data.buildingName !== '' && data.apartment === 'Y'){
+                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                        if(extraAddr !== ''){
+                            extraAddr = ' (' + extraAddr + ')';
+                        }
+                        // 주소변수 문자열과 참고항목 문자열 합치기
+                        addr += extraAddr;
+
+                    } else {
+                        addr += ' ';
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById('sample6_postcode').value = data.zonecode;
+                    document.getElementById("sample6_address").value = addr;
+                }
+
+            }).open();
+        }
+
+
+
+
+    <!--  버튼 활성화 함수 : 모든 input 값이 입력되었을 때만 활성화하도록 조건문 설정  -->
+        // 입력 필드의 값을 확인하고 모든 필드가 입력되었는지 확인하는 함수
+        function checkFormCompletion() {
+            // 폼 내의 모든 입력 필드 선택
+            const inputs = document.querySelectorAll('.input-confirm');
+            // 버튼 선택
+            const submitButton = document.querySelector('.centered-button-container button[type="submit"]');
+
+            // 모든 입력 필드가 비어 있지 않은지 확인
+            const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+
+            // 모든 필드가 입력되었으면 버튼 활성화, 그렇지 않으면 비활성화
+            submitButton.disabled = !allFilled;
+        }
+
+        // 모든 입력 필드에 'input' 이벤트 리스너 추가
+        document.querySelectorAll('.input-confirm').forEach(input => {
+            input.addEventListener('input', checkFormCompletion);
+        });
+
+        // 페이지가 로드될 때 폼 상태를 초기화
+        window.addEventListener('DOMContentLoaded', checkFormCompletion);
+
+    <!-- 한글/영어 변환 시 글자가 세로로 표시되는 이슈로 인해 script 코드 추가 -->
+        window.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link, .btn');
+
+            // 각 링크 요소에 대해 반복하여 스타일을 동적으로 조정
+            navLinks.forEach(function (link) {
+                // 글자 크기에 따라 가로폭 조정
+                const fontSize = parseFloat(window.getComputedStyle(link).fontSize); // 현재 글자 크기
+                const textLength = link.textContent.length; // 텍스트 길이
+
+                // 가로폭 조정
+                const dynamicWidth = fontSize * textLength + 40; // 글자 크기 * 글자 수 + 여백
+                link.style.width = dynamicWidth + 'px';
+            });
+        });
+    </script>
+</body>
+
+
+</html>

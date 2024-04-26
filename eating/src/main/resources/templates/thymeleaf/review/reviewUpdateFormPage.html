@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+
+<body>
+
+
+
+<h1>리뷰 폼 - 수정 페이지</h1>
+shopName<p id="shopName2"  name="shopName" type="text" th:text="${param.shopName}"></p>
+
+    <form class="validation-form" novalidate action="review_formdata_update" enctype="multipart/form-data"
+          method="post">
+        shopId<input id="shopId"  name="shopId" type="text" th:value="${vo.shopId}">
+        <!--
+        userId test:27,28<input id="userId"  name="userId" type="text" th:value="${vo.userId}">
+-->
+        start<input id="reviewStar"  name="reviewStar" type="text" th:value="${vo.reviewStar}">
+        <textarea id="reviewComent" name="reviewComent" type="text" th:text="${vo.reviewComent}"></textarea>
+
+
+        <p>사진!1</p>
+        <th:block th:if="${vo.reviewPic.isEmpty() or vo.reviewPic == '' or vo.reviewPic == null}">
+
+        </th:block>
+
+        <th:block th:if="${vo.reviewPic != null and  vo.reviewPic != ''}">
+            <img th:src="|/uploadimgPath/${vo.reviewPic}|" width="40" height="40" alt="Review Image">
+        </th:block>
+        <!-- 사진 보여주고 다시 //input 사진 파일 선택 하게끔...-->
+        <input type="file" id="file" name="file">
+
+        <button type="submit">글쓰기수정확인</button>
+
+        reviewId<input id="reviewId"  name="reviewId" type="text" th:value="${vo.reviewId}">
+        shopName<input id="shopName"  name="shopName" type="text" th:value="${param.shopName}">
+        memberId<input id="memberId"  name="memberId" type="text" th:value="${param.memberId}">
+
+    </form>
+
+
+
+
+</body>
+</html>

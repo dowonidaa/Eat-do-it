@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.beans.Encoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 //HandlerInterceptor를 상속받는 클래스를 구현 : 컴포넌트로 등록
 //WebMvcConfigurer를 상속받는 클래스에서 DI해서 사용
 @Slf4j
@@ -22,18 +26,20 @@ public class MemberInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String url = request.getRequestURI();
+		String queryString = request.getQueryString();
 		log.info("===============================================");
 		log.info("==================== preHandle ====================");
 		log.info("request url : {}", url);
-		
+		log.info("request queryString : {}", queryString);
+
 		String member_id = (String)session.getAttribute("member_id");
 		log.info("session - member_id : {}", member_id);
-		
+		String fullUrl = url + (queryString != null ? "?"+ queryString : "");
 		if(member_id == null) {
 			
 			if(url.equals("/member/selectAll") || url.equals("/member/selectOne")
-					|| url.equals("/member/searchList")) {
-				response.sendRedirect("login");
+					|| url.equals("/member/searchList") || url.equals("/shopDetail") || url.equals("/orders")) {
+				response.sendRedirect("/member/login?redirectURL=" + URLEncoder.encode(fullUrl, StandardCharsets.UTF_8));
 				return false;
 			}
 		}

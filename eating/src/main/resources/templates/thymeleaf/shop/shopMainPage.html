@@ -10,7 +10,27 @@
 <h1>shop 메인페이지</h1>
 
 <hr />
-
+    <div th:if="${#strings.isEmpty(userId)}">
+        <p>로그인 안함. 세션에 memberId 없습니다.</p>
+        <h3>로그인페이지로...</h3>
+    </div>
+    <!-- 세션에 로그인한 유저 정보 있을 경우 -->
+    <div th:unless="${#strings.isEmpty(userId)}">
+        <p>로그인 성공: <span th:text="${userId}"></span></p>
+<h3>마이리뷰확인 페이지</h3>
+<!-- 세션에 로그인한 유저 정보 없을 경우
+<div th:if="${session.getAttribute('member_id') == null}">
+    <p>로그인하세요 로그인페이지로.....</p>
+</div>
+<div th:if="${session.getAttribute('member_id') != null}">
+    <p>로그인 성공: <span th:text="${session.getAttribute('member_id')}"></span></p>
+    <h3>마이페이지 리뷰 확인 </h3>
+</div>
+-->
+        <h3>마이리부페이지 </h3>
+        <!-- userId를 포함한 URL을 생성하여 버튼에 설정 -->
+        <button th:attr="data-memberid=${userId}" onclick="location.href='/review_Mypage?memberId=' + this.getAttribute('data-memberid');">마이페이지-리뷰</button>
+    </div>
 
 
     <!-- 쿠키에 로그인한 유저 정보 없을 경우 -->

@@ -172,7 +172,7 @@ footer{
 .nav{
   font-size: 14px;
   background-color: rgba(239, 239, 239, 0.968);
-  margin-top:20px;
+  margin-top:50px;
   margin-bottom: 50px;
   text-align: center;
   align-items: center;
@@ -234,6 +234,22 @@ footer{
     height: fit-content;
 }
 
+.shop {
+  margin:8px;
+  width:100%;
+}
+
+.card-body a{
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 기본 색상 */
+}
+
+.sort-button {
+    display: flex;
+    justify-content: end;
+    margin-botton:10px;
+}
+
 .shop-info {
   display: grid;
   grid-template-columns: 120px 170px; /* input과 button을 동일한 너비로 설정 */
@@ -286,11 +302,6 @@ footer{
     justify-content: center;
 }
 
-.paging {
-    display: flex;
-    justify-content: center;
-}
-
 .centralized-link {
     display: inline-block; /* inline-block으로 중앙 정렬 가능 */
     text-align: center; /* 텍스트를 중앙에 정렬 */
@@ -321,6 +332,12 @@ footer{
   text-align: left;
 }
 
+.shop-image-container {
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: flex-start; /* 요소들을 수직 중앙 정렬 */
+}
+
 .shop-image {
   width: 100%;
   border-radius: 10%;
@@ -336,7 +353,7 @@ footer{
 
 .shop-detail-container {
   display: grid;
-  grid-template-columns: 25% 75%; /* input과 button을 동일한 너비로 설정 */
+  grid-template-columns: 25% 70%; /* input과 button을 동일한 너비로 설정 */
   grid-column-gap: 25px; /* input과 button 사이의 간격 조정 */
   align-items: center; /* 요소들을 수직 중앙 정렬 */
 }
@@ -354,11 +371,7 @@ footer{
 }
 
 .shop-info-container {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  grid-column-gap: 5px; /* input과 button 사이의 간격 조정 */
-  align-items: center; /* 요소들을 수직 중앙 정렬 */
-  margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 .red-text {
@@ -428,14 +441,11 @@ footer{
   font-weight: bold;
 }
 
-.cart {
-  margin:8px;
-  width:100%;
-  margin-right: 5px;
-}
-
 .quantity {
-  font-size:10px;
+  font-size:12px;
+}
+.quantity-modal {
+  font-size:1rem;
 }
 
 .quantity-button{
@@ -457,7 +467,7 @@ footer{
 }
 
 .deliver {
-  
+
   margin-top: 10px;
 }
 .deliver-left{
@@ -731,12 +741,188 @@ footer{
   margin-right: 30px;
 }
 
+.btn-square {
+  border-radius: 0 !important; /* Important to override any existing styles */
+}
+
+ .order-status {
+   align-self: center;
+   display: flex;
+   width: 100%;
+   max-width: 1051px;
+   flex-direction: column;
+   font-size: 16px;
+   color: #000;
+   font-weight: 400;
+   letter-spacing: -0.3px;
+ }
+
+.restaurant-info {
+  border-radius: 10px;
+  border: 3px solid rgba(236, 240, 241, 0.46);
+  background-color: rgba(217, 217, 217, 0);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 14px 13px;
+}
+
+.view-restaurant {
+  font-family: Roboto, sans-serif;
+  border-radius: 10px;
+  border: none;
+  background-color: #006FCA;
+  color: aliceblue;
+  align-self: end;
+  margin-top: 97px;
+  justify-content: center;
+  padding: 12px 24px;
+}
+
+.order-items {
+  border-radius: 10px;
+  border: 3px solid rgba(236, 240, 241, 0.46);
+  background-color: rgba(217, 217, 217, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 14px 80px 14px 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* 버튼 간격 동일하게 */
+  align-items: center; /* 세로 중앙 정렬 */
+  padding: 10px; /* 적당한 패딩 */
+  gap: 10px; /* 버튼 사이의 간격 */
+}
+
+.order-container {
+  border-radius: 10px;
+  border: 1px solid #ececec;  /* 경계선 색상을 조금 더 세밀하게 조정 */
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 20px;  /* 패딩을 좌우 동일하게 조정 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* 상자 그림자 추가 */
+  width: 100%; /* 너비 설정 */
+  margin: 20px auto; /* 중앙 정렬 */
+}
+
+.orders-container {
+  border-radius: 10px;
+  border: 1px solid #ececec; /* Light grey border for subtle definition */
+  display: flex;
+  flex-direction: row; /* To layout the child elements in a row */
+  align-items: center; /* Vertically align items in the center */
+  justify-content: space-between; /* Distribute space evenly between items */
+  padding: 20px; /* Uniform padding around the content */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for 3D effect */
+  width: 100%; /* Full width to stretch across the container */
+  margin: 20px auto; /* Margin for auto horizontal centering and space between sections */
+}
+
+h3, h5 { /* 제목 스타일 조정 */
+  margin-bottom: 5px;
+  color: #333; /* 글자 색상 조정 */
+}
+
+.address-title, .tel-title, .restaurant-request { /* 각 제목에 대한 스타일 */
+  margin-top: 10px; /* 위쪽 마진 추가 */
+  font-size: 16px; /* 글자 크기 조정 */
+}
+
+.address-details, .tel-details, .request { /* 상세 정보 스타일 */
+  margin-left: 10px; /* 왼쪽 마진 추가 */
+  color: #555; /* 글자 색상 어둡게 */
+  font-size: 14px; /* 글자 크기 줄임 */
+}
+
+
+.restaurant-request {
+  font-family: Roboto, sans-serif;
+  margin-top: 24px;
+}
+
+.rider-request {
+  font-family: Roboto, sans-serif;
+  margin-top: 24px;
+  /*높낮이 차이*/
+}
+
+.payment-amount-title-all { /*border 을 지정해주는 친구;*/
+  align-self: start;
+  margin: 27px 3px 0 45px;
+  font: 14px Roboto, sans-serif;
+  border-radius: 10px;
+  border: 3px solid rgba(236, 240, 241, 0.46);
+  padding: 15px 200px 30px 12px;
+}
+
+
+.payment-method-container1 {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+
+.payment-method-container2 {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+
+.payment-method-container3 {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+
+.payment-method-container {
+  /*비교적 정상적으로 정렬됨*/
+  align-self: center;
+  display: flex;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 2000px;
+  gap: 700px;
+  justify-content: space-between;
+
+
+}
+
+
+
+
+
+
 .validation-form {
     width: 900px;
 }
 
 .input-map {
+    width: 400px;
     margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 /* --------------- 검색 ---------------- */
@@ -753,7 +939,7 @@ footer{
 
 }
 
-.input-group {
+.input-address {
     width: 300px;
 }
 
@@ -768,4 +954,11 @@ footer{
     display:flex;
     justify-content: center;
     width: 500px;
+}
+
+
+/*---------리뷰페이지-----------*/
+.review-button{
+    display:flex;
+    justify-content: center;
 }

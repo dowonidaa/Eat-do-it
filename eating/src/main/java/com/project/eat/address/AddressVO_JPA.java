@@ -19,7 +19,7 @@ public class AddressVO_JPA {
 //    @JoinColumn(name = "member_id")
 //    private MemberVO_JPA member;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계 설정
+    @OneToOne(fetch = FetchType.LAZY) // 다대일 관계 설정
     @JoinColumn(name = "member_id") // 외래키 설정
     private MemberVO_JPA mId;
 

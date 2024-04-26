@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form id="addItemForm" class="modal" th:action="@{/cart/{shopId}/add (shopId=${shop.shopId})}"
+      th:object="${shop}" th:method="post">
+    <input th:type="hidden" name="itemId" th:value="${item.id}"/>
+    <input th:type="hidden" th:id="shopId" name="shopId" th:value="${shop.shopId}">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">메뉴상세
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <img  th:src="${item.itemUrl}"/>
+                <h2 th:text="${item.itemName}">메뉴이름</h2>
+                <h4 th:text="${item.itemDescription}">메뉴설명</h4>
+                <h4 id="itemPrice-modal" th:text="|${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">가격</h4>
+                <div class="accordion" id="option">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                필수 옵션
+                            </button>
+                        </h3>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                             data-bs-parent="#option">
+                            <div class="form-check accordion-body "  th:each="itemOption, iterStat : ${itemOptions}">
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col text-start">
+                                <input class="form-check-input" type="radio" name="itemOptionId"
+                                       th:id="${itemOption.id}"  th:value="${itemOption.id}"
+                                       th:attr="checked=${iterStat.index == 0 ? 'checked' : null}">
+                                <label class="form-check-label" th:for="${itemOption.id}"
+                                       th:text="${itemOption.content}">
+                                    아이템옵션
+                                </label>
+                                        </div>
+                                    <div class="col text-end" th:text="|${#numbers.formatDecimal(itemOption.price, 0, 'COMMA', 0, 'POINT')}원|">
+                                        2000원
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="headingOne2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
+                                추가 옵션
+                            </button>
+                        </h3>
+                        <div id="collapseOne2" class="accordion-collapse collapse" aria-labelledby="headingOne2"
+                             data-bs-parent="#option">
+                            <div class="form-check accordion-body" style="margin-left: 20px; " th:each="it, iterStat : ${items}">
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col text-start">
+                                <input class="form-check-input" type="checkbox" name="extraItemId"
+                                       th:id="${it.id}" th:value="${it.id}"
+                                       >
+                                <label class="form-check-label" th:for="${it.id}"
+                                       th:text="${it.itemName}">
+                                    추가 아이템
+                                </label>
+                                        </div>
+                                        <div class="col text-end" th:text="|${#numbers.formatDecimal(it.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quantity-modal container">
+                    <div class="row align-items-center">
+                        <div class="col text-start" style="margin-top: 10px">수량</div>
+                        <div class="col text-end">
+                            <button type="button" class="quantity-button btn-outline-secondary decrement-quantity" id="decrement-modal" >-</button>
+                            <span class="quantity-number" id="quantity-number-modal" >1</span>
+                            <input type="hidden" name="quantity" id="quantity-modal" th:value="1">
+                            <button type="button" class="quantity-button btn-outline-secondary increment-quantity" id="increment-modal">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container align-items-start">
+                    <div class="row">
+                        <H3 class="col text-start">총 주문금액</H3>
+                        <h4 class="col text-end" id="total-price-modal" th:text="|${#numbers.formatDecimal(item.itemPrice, 0, 'COMMA', 0, 'POINT')}원|">35,000원</h4>
+                    </div>
+                    <div class="row">
+                        <h6 class="col text-end align-items-end" th:text="|(최소주문금액 ${shop.minPrice})|">(최소주문음액 16,000원)</h6>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">장바구니추가</button>
+                    <button type="button" class="btn btn-secondary" id="orderDirect">주문하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

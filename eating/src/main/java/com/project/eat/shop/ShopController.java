@@ -1,20 +1,22 @@
 package com.project.eat.shop;
 
+
+import com.project.eat.cart.CartService;
+import com.project.eat.cart.cartItem.CartItem;
+import com.project.eat.item.Item;
+import com.project.eat.item.itemOption.ItemOption;
+import com.project.eat.member.MemberService;
+import com.project.eat.member.MemberVO_JPA;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
-import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,16 +30,39 @@ public class ShopController {
     @Autowired
     private GetUserAddrWithUserId getUserAddrWithUserId;
 
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private MemberService memberService;
+
     // 음식점 메인 페이지
     @GetMapping("/shop_main")
-    public String shop_main(){
+    public String shop_main(Model model, HttpSession session){
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        if(memberId != null){
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String userId = findMember.getId();
+            model.addAttribute("userId", userId);
+        }
 
         return "thymeleaf/shop/shopMainPage";
     }
 
     // 전체 음식점조회(테스트용)
     @GetMapping("/shop_selectAll")
-    public String slelctAll(Model model){
+    public String slelctAll(Model model,HttpSession session){
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        if(memberId != null){
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String userId = findMember.getId();
+            model.addAttribute("userId", userId);
+        }
+
+
+
         List<ShopVO> vos = shopService.selectAll();
         log.info("shop list vos in controller :  "+vos);
         model.addAttribute("vos", vos);
@@ -48,9 +73,11 @@ public class ShopController {
     @GetMapping("/shop_selectPageBlockAll")
     public String selectAllPageBlock(@RequestParam(name = "cpage", defaultValue = "1") int cpage,
                                      @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
-                                     @RequestParam(name = "userId", defaultValue = "") String userId,
-                                     Model model) {
-        log.info("userId:{}", userId);
+                                     Model model, HttpSession session) {
+
+        String userId = "";
+        log.info("userId 확인 : userId:{}",userId);
+
 
         // 로그인 안한, userId 없을 경우 => 전체조회
         List<ShopVO> vos = shopService.selectAllPageBlock(cpage, pageBlock);
@@ -59,21 +86,31 @@ public class ShopController {
 
         // shop테이블에 들어있는 모든음식점수는 몇개?
         long total_rows = shopService.getTotalRows();
-        log.info("total_rows:" + total_rows);
 
-        // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
-        String userAddr = getUserAddrWithUserId.AddrGu(userId);
-        log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
-        if(userId != null && !userId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
-            log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
 
-            // 로그인성공-userId집주소 주변 음식점 종 갯수
-            total_rows = shopService.getTotalRowswithContainingGu(userAddr);
-            log.info("로그인성공 집주변 음식점 총갯수 total_rows:" + total_rows);
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        if(memberId != null){
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String memId = findMember.getId();
+            log.info("전체조회 관련,주소지 확인:  로그인 성공시... 값 비교: userId:{}, memId:{}",userId,memId);
+            log.info("확인2 !!! umemId:{}", memId);
+            model.addAttribute("userId", memId);
 
-            //로그인성공-userId집주소 주변 음식점 조회
-            vos = shopService.findAllByShopAddrContainingPageBlock(userAddr, cpage, pageBlock);
-            log.info("userId집주소 주변 음식점 조회 vos:{} ", vos);
+            // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+            String userAddr = getUserAddrWithUserId.AddrGu(memId);
+            log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
+            if(memId != null && !memId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
+                log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
+
+                // 로그인성공-userId집주소 주변 음식점 종 갯수
+                total_rows = shopService.getTotalRowswithContainingGu(userAddr);
+                log.info("로그인성공 집주변 음식점 총갯수 total_rows:" + total_rows);
+
+                //로그인성공-userId집주소 주변 음식점 조회
+                vos = shopService.findAllByShopAddrContainingPageBlock(userAddr, cpage, pageBlock);
+                log.info("userId집주소 주변 음식점 조회 vos:{} ", vos);
+            }
         }
 
         // 결과값 없을 경우, sorry페이지 이동 및 홈버튼 제공
@@ -108,7 +145,7 @@ public class ShopController {
                               @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                               @RequestParam("searchWord") String searchWord,
                               @RequestParam(name = "userId", defaultValue = "") String userId,
-                              Model model) {
+                              Model model, HttpSession session) {
         log.info("/shop_searchWord...");
         log.info("searchWord:{}", searchWord);
         log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
@@ -122,38 +159,32 @@ public class ShopController {
         log.info("total_rows:" + total_rows);
 
         // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
-        String userAddr = getUserAddrWithUserId.AddrGu(userId);
-        log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
-        if(userId != null && !userId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
-            log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        if(memberId != null){
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String memId = findMember.getId();
+            log.info("전체조회 관련,주소지 확인:  로그인 성공시... 값 비교: userId:{}, memId:{}",userId,memId);
+            log.info("확인2 !!! umemId:{}", memId);
+            model.addAttribute("userId", memId);
 
-            // 로그인성공-userId집주소 주변 음식점 + 검색키워드  => 총 갯수 조회
-            total_rows = shopService.countAddrwithGuAndContaingSearchKey(userAddr, searchWord);
-            log.info("로그인성공 집주변 음식점+검색키워드 총갯수 total_rows:" + total_rows);
+            // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+            String userAddr = getUserAddrWithUserId.AddrGu(memId);
+            log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
+            if(memId != null && !memId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
+                log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
 
-            //로그인성공-userId집주소 주변 음식점 조회 + 검색키워드
-            vos = shopService.searchListPageBlockMyAddr(userAddr, searchWord, cpage, pageBlock);
-            log.info("userId집주소 주변 음식점 조회+검색키워드 vos:{} ", vos);
+                // 로그인성공-userId집주소 주변 음식점 + 검색키워드  => 총 갯수 조회
+                total_rows = shopService.countAddrwithGuAndContaingSearchKey(userAddr, searchWord);
+                log.info("로그인성공 집주변 음식점+검색키워드 총갯수 total_rows:" + total_rows);
+
+                //로그인성공-userId집주소 주변 음식점 조회 + 검색키워드
+                vos = shopService.searchListPageBlockMyAddr(userAddr, searchWord, cpage, pageBlock);
+                log.info("userId집주소 주변 음식점 조회+검색키워드 vos:{} ", vos);
+            }
         }
 
-        // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
-        userAddr = getUserAddrWithUserId.AddrGu(userId);
-        log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
-        if(userId != null && !userId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
-            log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
 
-            // 로그인성공-userId집주소 주변 음식점 + 검색키워드  => 총 갯수 조회
-            total_rows = shopService.countAddrwithGuAndContaingSearchKey(userAddr, searchWord);
-            log.info("로그인성공 집주변 음식점+검색키워드 총갯수 total_rows:" + total_rows);
-
-            //로그인성공-userId집주소 주변 음식점 조회 + 검색키워드
-            vos = shopService.searchListPageBlockMyAddr(userAddr, searchWord, cpage, pageBlock);
-            log.info("userId집주소 주변 음식점 조회+검색키워드 vos:{} ", vos);
-
-            log.info("로그인 성공 ! 유저아이디 확인~~~~~~~~~~~~유저 집주소 조회 :: userId:{}", userId);
-            model.addAttribute("userId", userId);
-        }
-        
         // 결과값 없을 경우, sorry페이지 이동 및 홈버튼 제공
         if(total_rows<=0){
             return "thymeleaf/shop/sorry";
@@ -187,7 +218,7 @@ public class ShopController {
                                @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                                @RequestParam("searchWord") String searchWord,
                                @RequestParam(name = "userId", defaultValue = "") String userId,
-                               Model model) {
+                               Model model, HttpSession session) {
         log.info("/shop_search2...");
         log.info("searchWord:{}", searchWord);
         log.info("cpage : {}, pageBlock : {}", cpage, pageBlock);
@@ -200,21 +231,30 @@ public class ShopController {
 
 
         // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
-        String userAddr = getUserAddrWithUserId.AddrGu(userId);
-        log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
-        if(userId != null && !userId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
-            log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
+        // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        if(memberId != null){
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String memId = findMember.getId();
+            log.info("전체조회 관련,주소지 확인:  로그인 성공시... 값 비교: userId:{}, memId:{}",userId,memId);
+            log.info("확인2 !!! umemId:{}", memId);
+            model.addAttribute("userId", memId);
 
-            // 로그인성공-userId집주소 주변 음식점 + 검색키워드  => 총 갯수 조회
-            total_rows = shopService.countAddrwithGuAndContaingSearchKey(userAddr, searchWord);
-            log.info("로그인성공 집주변 음식점+검색키워드 총갯수 total_rows:" + total_rows);
+            // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+            String userAddr = getUserAddrWithUserId.AddrGu(memId);
+            log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
+            if(memId != null && !memId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
+                log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
 
-            //로그인성공-userId집주소 주변 음식점 조회 + 검색키워드
-            vos = shopService.searchListPageBlockMyAddr(userAddr, searchWord, cpage, pageBlock);
-            log.info("userId집주소 주변 음식점 조회+검색키워드 vos:{} ", vos);
+                // 로그인성공-userId집주소 주변 음식점 + 검색키워드  => 총 갯수 조회
+                total_rows = shopService.countAddrwithGuAndContaingSearchKey(userAddr, searchWord);
+                log.info("로그인성공 집주변 음식점+검색키워드 총갯수 total_rows:" + total_rows);
 
-            log.info("로그인 성공 ! 유저아이디 확인~~~~~~~~~~~~유저 집주소 조회 :: userId:{}", userId);
-            model.addAttribute("userId", userId);
+                //로그인성공-userId집주소 주변 음식점 조회 + 검색키워드
+                vos = shopService.searchListPageBlockMyAddr(userAddr, searchWord, cpage, pageBlock);
+                log.info("userId집주소 주변 음식점 조회+검색키워드 vos:{} ", vos);
+            }
         }
 
 
@@ -250,7 +290,7 @@ public class ShopController {
                                @RequestParam(name = "pageBlock", defaultValue = "10") int pageBlock,
                                @RequestParam("cateId") int cateId,
                                @RequestParam(name = "userId", defaultValue = "") String userId,
-                               Model model){
+                               Model model, HttpSession session){
 
         model.addAttribute("currentCategoryId", cateId);
         log.info("currentCategoryId : {}", cateId);
@@ -273,24 +313,34 @@ public class ShopController {
 
 
         // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
-        String userAddr = getUserAddrWithUserId.AddrGu(userId);
-        log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
-        if(userId != null && !userId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
-            log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
-            log.info("로그인성공 카테고리별 !  cateId:{},  ", cateId);
+        // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+        //세션처리
+        String memberId = (String) session.getAttribute("member_id");
+        if(memberId != null){
+            MemberVO_JPA findMember = memberService.findOne(memberId);
+            String memId = findMember.getId();
+            log.info("전체조회 관련,주소지 확인:  로그인 성공시... 값 비교: userId:{}, memId:{}",userId,memId);
+            log.info("확인2 !!! umemId:{}", memId);
+            model.addAttribute("userId", memId);
 
-            // 로그인성공-userId집주소 주변 음식점 + 카테고리별  => 총 갯수 조회
-            total_rows = shopService.countAddrwithGuAndContaingCateId(userAddr, cateId);
-            log.info("로그인성공 집주변 음식점+카테고리별 총갯수 total_rows:" + total_rows);
-            log.info("로그인성공 카테고리별 로우갯수 !  total_rows:{},  ", total_rows);
+            // 로그인성공, userId 있을 경우 => 등록된 집주소 조회
+            String userAddr = getUserAddrWithUserId.AddrGu(memId);
+            log.info("유저 집주소 조회 :: userAddr:{}", userAddr);
+            if(memId != null && !memId.isEmpty() && userAddr != null && !userAddr.isEmpty()){
+                log.info("null도 아니고 그리고 엠티도 아니다 !!! 로그인성공이며 주소가 있다 ");
+                log.info("로그인성공 카테고리별 !  cateId:{},  ", cateId);
 
-            //로그인성공-userId집주소 주변 음식점 조회 + 카테고리별
-            vos = shopService.cateIdListPageBlockMyAddr(userAddr, cateId, cpage, pageBlock);
-            log.info("userId집주소 주변 음식점 조회+카테고리별 vos:{} ", vos);
+                // 로그인성공-userId집주소 주변 음식점 + 카테고리별  => 총 갯수 조회
+                total_rows = shopService.countAddrwithGuAndContaingCateId(userAddr, cateId);
+                log.info("로그인성공 집주변 음식점+카테고리별 총갯수 total_rows:" + total_rows);
+                log.info("로그인성공 카테고리별 로우갯수 !  total_rows:{},  ", total_rows);
 
-            log.info("로그인 성공 ! 유저아이디 확인~~~~~~~~~~~~유저 집주소 조회 :: userId:{}", userId);
-            model.addAttribute("userId", userId);
+                //로그인성공-userId집주소 주변 음식점 조회 + 카테고리별
+                vos = shopService.cateIdListPageBlockMyAddr(userAddr, cateId, cpage, pageBlock);
+                log.info("userId집주소 주변 음식점 조회+카테고리별 vos:{} ", vos);
+            }
         }
+
 
 
 
@@ -495,35 +545,47 @@ public class ShopController {
         return "thymeleaf/shop/shopListMain";
     }
 
-    //shopDatil/num=${vo.shopId})
+
     @GetMapping("/shopDetail")
-    public String shopDetail(@RequestParam("num") int shopId, Model model){
-        log.info("shopDetail called@#$@#$%#$@#!@#~~~~~~~~~~~~~~~~~~~~~~~~~");
-        log.info("shopId: {}", shopId);
-        model.addAttribute("shopId", shopId);
-
-        ShopVO vo = shopService.findByShopId(shopId);
-        model.addAttribute("vo", vo);
-
-        List<Object[]> shopAndMenus = shopService.findShopWithMenu(shopId);
-        List<MenuVO> dtos = new ArrayList<>();
-        for (Object[] result : shopAndMenus) {
-            // 배열의 요소에 접근하여 데이터 추출
-            String menuName = (String) result[0];
-            String menuPrice = (String) result[1];
-            String menuDesc = (String) result[2];
-            String menuPic = (String) result[3];
-            int menuId =(int) result[4];
-
-            // DTO에 데이터 저장
-            MenuVO dto = new MenuVO(menuName, menuPrice, menuDesc, menuPic, menuId);
-            dtos.add(dto);
+    public String shop(@RequestParam("num") Long shopId, Model model, HttpSession session) {
+        ShopVO findShop = shopService.findShop(shopId);
+        if(findShop.getItems().isEmpty()){
+            return "redirect:/";
         }
-        model.addAttribute("dtos", dtos);
+        List<Item> items = findShop.getItems();
+        List<ItemOption> itemOptions = items.get(0).getItemOptions();
 
-        return "thymeleaf/shop/shopDetail";
+
+        model.addAttribute("shop", findShop);
+        model.addAttribute("items", items);
+        model.addAttribute("itemOptions", itemOptions);
+
+        Object memberId = session.getAttribute("member_id");
+        if(memberId != null) {
+            MemberVO_JPA findMember = memberService.findOne(memberId.toString());
+            if (findMember.getCart() == null) {
+                cartService.createCart(memberId.toString());
+            }
+            if (findMember.getCart().getShop() == null) {
+                ShopVO shop = shopService.findShop(shopId);
+                model.addAttribute("cartShop", shop);
+            }else {
+                model.addAttribute("cartShop", findMember.getCart().getShop());
+
+            }
+
+
+            List<CartItem> cartItems = findMember.getCart().getCartItems();
+            model.addAttribute("cartItems", cartItems);
+            int totalPrice = findMember.getCart().getTotalPrice();
+            model.addAttribute("totalPrice", totalPrice);
+
+
+        }
+
+
+        return "shop/shop_detail";
     }
-
 
 
 }

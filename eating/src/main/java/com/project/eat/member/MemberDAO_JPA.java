@@ -14,7 +14,7 @@ public interface MemberDAO_JPA extends JpaRepository<MemberVO_JPA, Object>{
 
 	
 	//***JPQL : @Query(객체를 테이블로 하는 쿼리)***
-	@Query("select vo from MemberVO_JPA vo order by num desc") //객체명은 대소분자 구분함.
+	@Query("select vo from MemberVO_JPA vo order by vo.num desc") //객체명은 대소분자 구분함.
 	public List<MemberVO_JPA> selectAll_JPQL();
 	
 	//***네이티브쿼리(SQL) : @Query(nativeQuery=true,value="일반쿼리문") //복잡한쿼리:서브쿼리,조인
@@ -81,7 +81,8 @@ public interface MemberDAO_JPA extends JpaRepository<MemberVO_JPA, Object>{
 			value="select user_salt from member "
 					+ "where member_id = ?1")
 	public String findBySalt(String id);
-	
-	
-	
+
+	@Query(nativeQuery = true,
+			value = "select num from member where member_id = ?1 ")
+	int findNumByMemberId(String memberId);
 }//end interface
