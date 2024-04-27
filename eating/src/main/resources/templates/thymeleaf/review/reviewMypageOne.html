@@ -98,7 +98,7 @@
 			<a class="review-update-btn" th:href="@{reviewMypageUpdateOne(reviewId=${vo.reviewId}, shopName=${param.shopName}, userId=${vo.userId}, memberId=${param.memberId})}">리뷰 수정하기</a>
 			<button class="btn btn-danger" onclick="deleteReview('${vo.reviewId}', '${vo.userId}', '${param.memberId}')">리뷰 삭제하기</button>
 
-
+			<a style="background-color:#adb5bd;" class="review-update-btn" th:href="@{review_Mypage(memberId=${param.memberId})}">나의 리뷰 목록</a>
 
 		</div>
 
@@ -109,7 +109,7 @@
 			}
 		}
 	</script>
-
+	</div>
 
 
 </body>
