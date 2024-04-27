@@ -2,6 +2,7 @@ package com.project.eat.order.kakaopay;
 
 import com.project.eat.order.Order;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ import java.util.Map;
 @Slf4j
 @Service
 public class KakaoPayServiceImpl {
+
+    @Value("${kakaoPay.secretKey}")
+    private String secretKey;
 
 
     // 첫번째 요청주소(결제 준비)
@@ -57,7 +61,7 @@ public class KakaoPayServiceImpl {
     // 요청 헤더정보
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "SECRET_KEY DEVA3CC956AFA327ABB7CDA1885DEA974E70DB23");
+        headers.set("Authorization", secretKey);
         headers.set("Content-type", "application/json");
 
         return headers;
