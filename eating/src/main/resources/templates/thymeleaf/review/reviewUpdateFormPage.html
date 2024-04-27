@@ -45,7 +45,8 @@
             <h1>리뷰 수정하기</h1>
         </div>
 
-        <form class="validation-form" novalidate action="review_formdata" enctype="multipart/form-data"
+        <!-- 수정하기 url !!! -->
+        <form class="validation-form" novalidate action="review_formdata_update" enctype="multipart/form-data"
               method="post">
             <h3 th:text="|${param.shopName}에 작성한 리뷰|"></h3>
             <input id="shopName"  name="shopName" type="hidden" th:value="${param.shopName}">
@@ -99,6 +100,7 @@
                 userId test:27,28<input id="userId"  name="userId" type="text" th:value="${vo.userId}">
         -->
             <input id="memberId"  class="form-control" name="memberId" type="hidden" th:value="${param.memberId}">
+            <input id="reviewId"  class="form-control" name="reviewId" type="hidden" th:value="${vo.reviewId}">
 
 
             <div class="review-button">
