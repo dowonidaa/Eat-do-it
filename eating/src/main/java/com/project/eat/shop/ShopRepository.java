@@ -106,6 +106,14 @@ public interface ShopRepository extends JpaRepository<ShopVO, Object> {
             value="select shop_name from shop where shop_id = ?1 ")
     String findShopNameByShopId(Long shopId);
 
+    @Query(nativeQuery=true,
+            value="select star_avg from shop where shop_id = ?1 ")
+    double findOneStarAvgByShopId(Long shopId);
+
+    @Modifying
+    @Query(nativeQuery=true,
+            value="UPDATE shop SET star_avg = ?1 WHERE shop_id = ?2 ")
+    void updateStarAvgByShopId(double starAvg, Long shopId);
     @Modifying
     @Transactional
     @Query(nativeQuery=true,
