@@ -54,7 +54,9 @@ public class ReviewService {
     @Transactional
     public void update(ReviewVO updateReview) {
         ReviewVO findReview = reviewRepository.findOneByReviewId(updateReview.getReviewId());
-        findReview.setReviewPic(updateReview.getReviewPic());
+        if(!updateReview.getReviewPic().equals("")) {
+            findReview.setReviewPic(updateReview.getReviewPic());
+        }
         findReview.setReviewComent(updateReview.getReviewComent());
         findReview.setReviewStar(updateReview.getReviewStar());
         findReview.setShopName(updateReview.getShopName());
