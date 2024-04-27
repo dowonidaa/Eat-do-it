@@ -555,7 +555,7 @@ public class ReviewController {
 
 
     @PostMapping("/review_update")
-    public String reviewUpdate(ReviewVO review, HttpSession session,@RequestParam(name = "file", required = false) MultipartFile file) {
+    public String reviewUpdate(ReviewVO review, HttpSession session,@RequestParam(name = "file", required = false) MultipartFile file) throws Exception {
         log.info("review update");
         // 현재 로그인 id와 리뷰 아이디 비교 하고싶으면 이부분 수정
         String memberId = (String) session.getAttribute("member_id");
@@ -574,6 +574,18 @@ public class ReviewController {
                 e.printStackTrace();
                 reviewPic = "";
             }
+        }
+        String reviewComent= review.getReviewComent();
+        List<String> rMap2 = wordAnalysisService.doWordNouns(reviewComent);
+        log.info(" 컨트롤러에서... List 결과값...rMap2:{}",rMap2);
+
+        int pass1 = wordAnalysisService.checkdoBadWord(reviewComent);
+        log.info("1이면 정상. 0이면 비정상... pass1:{}",pass1);
+        if(pass1==0){
+            reviewComent = "해당 리뷰는 관리자에 의해 보이지 않습니다";
+            review.setReviewComent(reviewComent);
+        } else {
+            review.setReviewComent(reviewComent);
         }
 
         review.setReviewPic(reviewPic);
