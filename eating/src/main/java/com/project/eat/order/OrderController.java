@@ -275,6 +275,9 @@ public class OrderController {
             attributes.addFlashAttribute("message", "(" + orderStatus + ")" + " 상태 입니다. 주문 취소가 불가능 합니다.");
             return "redirect:/orders/" + orderId;
         }
+        if (orderStatus == OrderStatus.READY) {
+            return "redirect:/order/cancel?orderId=" + orderId;
+        }
 
         kakaopayService.payCancel(order);
         order.setOrderStatus(OrderStatus.CANCEL);

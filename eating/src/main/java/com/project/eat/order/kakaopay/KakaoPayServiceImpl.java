@@ -37,7 +37,7 @@ public class KakaoPayServiceImpl {
         parameters.put("total_amount", String.valueOf(totalAmount));
         parameters.put("tax_free_amount", "0");
         parameters.put("approval_url", "http://localhost:8088/order/kakao/success");
-        parameters.put("cancel_url", "http://localhost:8088/order/kakao/cancel");
+        parameters.put("cancel_url", "http://localhost:8088/order/kakao/cancel?orderId="+orderId);
         parameters.put("fail_url", "http://localhost:8088/order/kakao/fail");
 
 
