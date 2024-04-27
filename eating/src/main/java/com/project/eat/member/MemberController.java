@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.lang.reflect.Member;
@@ -135,7 +132,10 @@ public class MemberController {
 
 
     @GetMapping("/member/checkId")
+    @ResponseBody
     public ResponseEntity<Boolean> checkId(@RequestParam String id) {
+        log.info("id check");
+
         boolean isAvailable = service.doesMemberExist(id);
         return ResponseEntity.ok(isAvailable);
     }
@@ -391,6 +391,11 @@ public class MemberController {
         // 주소 변경
         if (newAddress != null && !newAddress.isEmpty()){
             AddressVO_JPA existingAddress = jpa_add.findBymId(memberVO); // 기존의 주소 정보를 조회
+            if (existingAddress == null){
+                existingAddress = new AddressVO_JPA();
+                existingAddress.setMId(memberVO);
+            }
+
             log.info("existingAddress: {}", existingAddress);
             log.info("addressVO.getAddress(): {}", addressVO.getAddress());
 

@@ -366,7 +366,7 @@ public class ReviewController {
         }
         log.info("review_Mypage-- memberId:{}", memberId);
         // by memberId 로 num 타입:int 획득
-        userId = reviewService.findUserIdByMemberId(memberId);
+        userId = memberService.findOne(memberId).getNum();
         log.info("확인 !!! userId:{}", userId);
 
         // 내가 작성한 리뷰리스트

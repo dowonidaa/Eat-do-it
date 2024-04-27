@@ -7,13 +7,13 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
+//@Entity
 @Setter
 @Getter
 
 public class Payment {
 
-    @Id
+//    @Id
     private int payCode;
 
     private int odrCode;

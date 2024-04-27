@@ -115,7 +115,7 @@
                 <div class="form-group">
                         <h2>주소지</h2>
                     <h3>현재 주소</h3>
-                    <input type="text" class="form-control" placeholder="현재주소" th:value="${addressInfo.address}" disabled="readonly">
+                    <input type="text" class="form-control" placeholder="현재주소" th:value="${addressInfo != null ? addressInfo.address : '' }" disabled="readonly">
                     <hr>
                     <h3>주소지 변경</h3>
                     <div class="form-grid form-address">
