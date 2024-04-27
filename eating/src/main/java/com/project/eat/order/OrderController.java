@@ -49,7 +49,7 @@ public class OrderController {
         String memberId = (String) session.getAttribute("member_id");
         MemberVO_JPA findMember = memberService.findOne(memberId);
         if (findMember.getCart().getTotalPrice() < findMember.getCart().getShop().getMinPriceInt()) {
-            return "redirect:/shop/" + findMember.getCart().getShop().getShopId();
+            return "redirect:/shopDetail?num=" + findMember.getCart().getShop().getShopId();
         }
         Cart cart = findMember.getCart();
 
