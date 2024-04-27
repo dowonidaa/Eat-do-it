@@ -68,11 +68,26 @@
 
             </form>
 
-            <div class="sort-button">
+
+            <!-- 쿠키에 로그인한 유저 정보 있을 경우 -->
+            <div class="sort-button" th:if="${userId != null}">
+<!--                <span th:text="|유저아이디 있음 ${userId}|"></span>-->
+                <button class="btn btn-light" th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=1&amp;userId=' + this.getAttribute('data-userid');">별점순</button>
+                <button class="btn btn-light" th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=2&amp;userId=' + this.getAttribute('data-userid');">최소금액순</button>
+                <button class="btn btn-light" th:attr="data-userid=${userId}" onclick="location.href='/sortList.do?sortNum=3&amp;userId=' + this.getAttribute('data-userid');">리뷰수 순</button>
+            </div>
+            <!-- 쿠키에 로그인한 유저 정보 없을 경우 -->
+            <div class="sort-button" th:if="${userId == null}">
+<!--                <span th:text="|유저아이디 없음 ${userId == null}|"></span>-->
                 <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=1";'>별점순</button>
                 <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=2";'>최소금액순</button>
                 <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=3";'>리뷰수 순</button>
             </div>
+<!--            <div >-->
+<!--                <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=1";'>별점순</button>-->
+<!--                <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=2";'>최소금액순</button>-->
+<!--                <button class="btn btn-light" onclick='location.href="sortList.do?sortNum=3";'>리뷰수 순</button>-->
+<!--            </div>-->
 
             <div class="container text-center">
                 <div class="row">
