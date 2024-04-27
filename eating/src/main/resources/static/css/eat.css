@@ -250,12 +250,17 @@ footer{
     height: fit-content;
 }
 
+.card-menu-img-top {
+    width: 100%;
+    height: 100px;
+}
+
 .shop {
   margin:8px;
   width:100%;
 }
 
-.card-body{
+.card-menu-body {
     height: 110px;
 }
 
