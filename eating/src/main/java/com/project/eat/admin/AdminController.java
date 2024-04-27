@@ -165,12 +165,13 @@ public class AdminController {
             ShopVO shopVO = shopService.approveShop(adminVO);
             log.info("shopVO:{}", shopVO);
             if (shopVO != null) {
-                model.addAttribute("message", "Shop has been approved and inserted!");
+                model.addAttribute("message", "음식점 등록 승인이 완료되었습니다!");
+                service.deleteOK(adminVO);
             } else {
-                model.addAttribute("message", "Failed to insert into shop.");
+                model.addAttribute("message", "음식점 등록 승인에 실패했습니다.");
             }
         } else {
-            model.addAttribute("message", "AdminVO not found.");
+            model.addAttribute("message", "AdminVO를 찾을 수 없습니다.");
         }
 
         return "admin/approvalResult"; // 결과를 보여주는 페이지로 리디렉션

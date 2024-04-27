@@ -4,6 +4,7 @@ import com.project.eat.member.MemberDAO_JPA;
 import com.project.eat.member.MemberVO_JPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class AdminService {
 		return jpa.save(vo); //pk 즉 num값이 있으면 수정, 없으면 입력, dao재정의 필요없음
 	}
 
+	@Transactional
 	public int deleteOK(AdminVO_JPA vo) {
 		return jpa.deleteByAdminId(vo.getAdminId()); //함수커스텀
 	}

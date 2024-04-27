@@ -92,8 +92,8 @@
                 <img th:src="@{/img/logo.png}" alt="로고" width="15%" height="auto">
 
                 <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">사장님페이지</a></li>
+                    <li class="nav-item"><a th:onclick="|location.href='@{/}'|" class="nav-link px-2 text-muted">Home</a></li>
+                    <li class="nav-item"><a th:onclick="|location.href='@{/insertShop}'|"  class="nav-link px-2 text-muted">사장님페이지</a></li>
                 </ul>
             </footer>
         </div>
