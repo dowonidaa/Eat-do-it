@@ -105,7 +105,7 @@ public class ReviewController {
                                     @RequestParam(name = "file", required = false) MultipartFile file,
                                     @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                     @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                    @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
+                                    @RequestParam(name = "pageBlock", defaultValue = "8") int pageBlock,
                                     @RequestParam(name = "orderId") Long orderId,
 //                                    @RequestParam(name = "itemsName") String itemsName,
 //                                    @RequestParam(name = "userId", defaultValue = "") int userId,
@@ -239,7 +239,7 @@ public class ReviewController {
     public String review_formdata_get (
                                   @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
                                   @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                  @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
+                                  @RequestParam(name = "pageBlock", defaultValue = "8") int pageBlock,
                                   Model model, HttpSession session) throws IOException {
         ShopVO findShop = shopService.findShop(shopId);
         if(findShop.getItems().isEmpty()){
@@ -342,7 +342,7 @@ public class ReviewController {
     public String review_MypageList(
 //            HttpServletRequest request, HttpServletResponse response,
                                 @RequestParam(name = "cpage", defaultValue = "1") int cpage,
-                                @RequestParam(name = "pageBlock", defaultValue = "3") int pageBlock,
+                                @RequestParam(name = "pageBlock", defaultValue = "8") int pageBlock,
                                 @RequestParam(name = "memberId", defaultValue = "") String memberId,
                                 Model model, HttpSession session)  throws IOException  {
         // 로그인한 유저명
