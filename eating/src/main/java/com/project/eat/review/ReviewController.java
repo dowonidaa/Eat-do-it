@@ -475,83 +475,83 @@ public class ReviewController {
 
     //수정 post review_formdata_update
 //    @PostMapping("/review_formdata_update")
-    public String review_formdata_update(@RequestParam(name = "reviewStar", defaultValue = "1") int reviewStar,
-                                  @RequestParam(name = "reviewComent") String reviewComent,
-                                  @RequestParam(name = "file", required = false) MultipartFile file,
-                                  @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
-//                                  @RequestParam(name = "userId", defaultValue = "") int userId,
-                                  @RequestParam(name = "reviewId", defaultValue = "") int reviewId,
-                                  @RequestParam(name = "shopName", defaultValue = "") String shopName,
-                                  @RequestParam(name = "memberId", defaultValue = "") String memberId,
-                                  Model model, HttpSession session) throws IOException {
-        // 로그인한 유저명
-        String name = "";
-        //세션처리
-        String memberId2 = (String) session.getAttribute("member_id");
-        if(memberId2 != null) {
-            MemberVO_JPA findMember = memberService.findOne(memberId2);
-            String mem = findMember.getId();
-            name = findMember.getName();
-
-            // 테이블 : member 의 num을 테이블:reivew 에서 userId
-            int userId = memberService.findNumByMemberId(memberId2);
-            log.info("shopId : {}, userId : {}", shopId, userId);
-
-            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
-            model.addAttribute("memberId", mem);
-            model.addAttribute("userId", userId);
-
-        }
-
-        log.info("수정!!!! /review_formdata_update...");
-        log.info("reviewStar:{}", reviewStar);
-        log.info("reviewComent:{}", reviewComent);
-
-
-
-        String reviewPic = "";
-        //이미지처리
-        if (file != null && !file.isEmpty()) {
-            // 파일이 선택된 경우의 처리
-            try {
-                // 파일을 업로드하고 업로드된 파일의 URL을 반환
-                String fileUrl = uploadService.uploadFile(file);
-                // 파일의 URL을 반환하여 클라이언트에게 전송하거나 다른 작업을 수행할 수 있습니다.
-                reviewPic = fileUrl;
-            } catch (IOException e) {
-                e.printStackTrace();
-                reviewPic = "";
-            }
-        } else {
-            // 파일이 선택되지 않은 경우의 처리
-            reviewPic = "";
-        }
-
-        log.info("확인 !!! reviewPic:{}", reviewPic);
-
-        ReviewVO inservo = reviewService.findOneByReviewId(reviewId);
-        int inservoReviewId = inservo.getReviewId();
-        log.info("찾은 객체의 id값 확인 ~~~~ inservoReviewId:{}", inservoReviewId);
-
-        inservo.setReviewComent(reviewComent);
-        inservo.setReviewStar(reviewStar);
-        inservo.setReviewPic(reviewPic);
-
-        reviewService.insertReview(inservo);
-        log.info("수정 저장함!  Db확인 id값 같은거에 수정값 반영됏는지확인");
-
-
-
-        log.info("reviewMypageSelectOne-- reviewId:{}", reviewId);
-        log.info("reviewMypageSelectOne-- shopName:{}", shopName);
-
-        log.info("reviewMypageSelectOne-- memberId:{}", memberId);
-
-        ReviewVO vo = reviewService.findOneByReviewId(reviewId);
-        model.addAttribute("vo", vo);
-
-        return "thymeleaf/review/reviewMypageOne";
-    }
+//    public String review_formdata_update(@RequestParam(name = "reviewStar", defaultValue = "1") int reviewStar,
+//                                  @RequestParam(name = "reviewComent") String reviewComent,
+//                                  @RequestParam(name = "file", required = false) MultipartFile file,
+//                                  @RequestParam(name = "shopId", defaultValue = "1") Long shopId,
+////                                  @RequestParam(name = "userId", defaultValue = "") int userId,
+//                                  @RequestParam(name = "reviewId", defaultValue = "") int reviewId,
+//                                  @RequestParam(name = "shopName", defaultValue = "") String shopName,
+//                                  @RequestParam(name = "memberId", defaultValue = "") String memberId,
+//                                  Model model, HttpSession session) throws IOException {
+//        // 로그인한 유저명
+//        String name = "";
+//        //세션처리
+//        String memberId2 = (String) session.getAttribute("member_id");
+//        if(memberId2 != null) {
+//            MemberVO_JPA findMember = memberService.findOne(memberId2);
+//            String mem = findMember.getId();
+//            name = findMember.getName();
+//
+//            // 테이블 : member 의 num을 테이블:reivew 에서 userId
+//            int userId = memberService.findNumByMemberId(memberId2);
+//            log.info("shopId : {}, userId : {}", shopId, userId);
+//
+//            log.info(" 리뷰컨트롤러 num 확인: userId:{}",userId);
+//            model.addAttribute("memberId", mem);
+//            model.addAttribute("userId", userId);
+//
+//        }
+//
+//        log.info("수정!!!! /review_formdata_update...");
+//        log.info("reviewStar:{}", reviewStar);
+//        log.info("reviewComent:{}", reviewComent);
+//
+//
+//
+//        String reviewPic = "";
+//        //이미지처리
+//        if (file != null && !file.isEmpty()) {
+//            // 파일이 선택된 경우의 처리
+//            try {
+//                // 파일을 업로드하고 업로드된 파일의 URL을 반환
+//                String fileUrl = uploadService.uploadFile(file);
+//                // 파일의 URL을 반환하여 클라이언트에게 전송하거나 다른 작업을 수행할 수 있습니다.
+//                reviewPic = fileUrl;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                reviewPic = "";
+//            }
+//        } else {
+//            // 파일이 선택되지 않은 경우의 처리
+//            reviewPic = "";
+//        }
+//
+//        log.info("확인 !!! reviewPic:{}", reviewPic);
+//
+//        ReviewVO inservo = reviewService.findOneByReviewId(reviewId);
+//        int inservoReviewId = inservo.getReviewId();
+//        log.info("찾은 객체의 id값 확인 ~~~~ inservoReviewId:{}", inservoReviewId);
+//
+//        inservo.setReviewComent(reviewComent);
+//        inservo.setReviewStar(reviewStar);
+//        inservo.setReviewPic(reviewPic);
+//
+//        reviewService.insertReview(inservo);
+//        log.info("수정 저장함!  Db확인 id값 같은거에 수정값 반영됏는지확인");
+//
+//
+//
+//        log.info("reviewMypageSelectOne-- reviewId:{}", reviewId);
+//        log.info("reviewMypageSelectOne-- shopName:{}", shopName);
+//
+//        log.info("reviewMypageSelectOne-- memberId:{}", memberId);
+//
+//        ReviewVO vo = reviewService.findOneByReviewId(reviewId);
+//        model.addAttribute("vo", vo);
+//
+//        return "thymeleaf/review/reviewMypageOne";
+//    }
 
 
     @PostMapping("/review_update")
