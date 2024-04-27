@@ -320,7 +320,7 @@ footer{
 
 .review-comment {
     position: relative; /* 툴팁의 위치를 요소 기준으로 정렬하기 위해 사용 */
-    margin-top: 10px;
+    margin-top: 2px;
     padding: 10px;
     border : 1px solid lightgrey;
     border-radius: 10px;

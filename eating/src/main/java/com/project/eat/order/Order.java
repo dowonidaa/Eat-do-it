@@ -41,14 +41,12 @@ public class Order {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime orderDate = LocalDateTime.now();
     private String orderAddress;
-    private String orderAddressDetail;
 
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
     private int orderPrice; // 배달비
     private String memberNotes; // 배달요구사항
     private String paymentMethod; // 결제방법
-    private String paymentStatus; //결제상태
     private int discount;
     private String orderTel;
     private String tid;
