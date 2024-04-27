@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/eat2.css}">
 <!--    <link href="../../static/css/eat2.css" rel="stylesheet">-->
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <body th:replace="~{layout2 :: layout2}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -39,12 +40,12 @@
                     <label for="InputID">
                         <h2>아이디</h2>
                     </label>
-                    <div class="form-grid">
-                        <input type="text" class="form-control" name="id" id="InputID" placeholder="아이디를 입력하세요">
-<!--                        <button type="button" class="btn btn-dark" onclick="checkId()">중복확인</button>-->
-<!--                        <small id="IdSuccess" class="hidden">사용할 수 있는 아이디입니다.</small>-->
-<!--                        <small id="IdFailure" class="hidden">이미 사용 중인 아이디입니다.</small> &lt;!&ndash; 중복 시 표시 &ndash;&gt;-->
-                    </div>
+                        <input type="text" class="form-control" name="id" id="InputID" placeholder="아이디를 입력하세요" style="width: 300px">
+<!--                        <button type="button" id="checkButton" class="btn btn-dark" onclick="checkId()">중복확인</button>-->
+<!--                        <button type="button" id="checkButton" class="btn btn-dark" >중복확인</button>-->
+                            <small id="idcheckSuccess"  style="display:none; color: #0d6efd"></small>
+                            <small id="idcheckFailure"  style="display:none; color: red"></small>
+
                 </div>
 
 
@@ -151,34 +152,79 @@
 
 
     <!-- 아이디 중복확인 -->
-<!--    <script>-->
-<!--        &lt;!&ndash;  아이디 중복확인  &ndash;&gt;-->
+
+    <script>
+// <!--        &lt;!&ndash;  아이디 중복확인  &ndash;&gt;-->
+//
+//
+// <!--        function checkId() {-->
+// <!--        var inputId = document.getElementById("InputID").value; // 아이디 입력값-->
+// <!--        var xhr = new XMLHttpRequest();-->
+//
+// <!--        xhr.open("GET", "/member/checkId?id=" + encodeURIComponent(inputId), true);-->
+// <!--        xhr.onreadystatechange = function() {-->
+// <!--        if (xhr.readyState === 4 && xhr.status === 200) {-->
+// <!--        var isAvailable = JSON.parse(xhr.responseText); // 서버 응답 파싱-->
+//
+// <!--        if (isAvailable) {-->
+// <!--        // 아이디가 사용 가능하면 메시지 표시-->
+// <!--        document.getElementById("IdSuccess").classList.remove("hidden");-->
+// <!--        document.getElementById("IdFailure").classList.add("hidden");-->
+// <!--        } else {-->
+// <!--        // 아이디가 중복이면 메시지 표시-->
+// <!--        document.getElementById("IdSuccess").classList.add("hidden");-->
+// <!--        document.getElementById("IdFailure").classList.remove("hidden");-->
+// <!--        }-->
+// <!--        }-->
+// <!--        };-->
+//
+// <!--        xhr.send(); // 서버에 요청 전송-->
+// <!--        }-->
 
 
-<!--        function checkId() {-->
-<!--        var inputId = document.getElementById("InputID").value; // 아이디 입력값-->
-<!--        var xhr = new XMLHttpRequest();-->
+$(document).ready(function () {
+    $("#InputID").keyup(function() {
+        let inputId = $("#InputID").val();
+        console.log("Current input ID:", inputId);
+        if (inputId!==""){
+        $.ajax({
+            url: "/member/checkId",
+            type: "get",
+            data: {id: inputId},
+            dataType: "json",
+            success: function (obj) {
+                console.log("Response from server:", obj);
+                let result = obj ? "사용가능" : "로그인 아이디가 중복되었습니다.";
+                $("#result").html(result);
 
-<!--        xhr.open("GET", "/member/checkId?id=" + encodeURIComponent(inputId), true);-->
-<!--        xhr.onreadystatechange = function() {-->
-<!--        if (xhr.readyState === 4 && xhr.status === 200) {-->
-<!--        var isAvailable = JSON.parse(xhr.responseText); // 서버 응답 파싱-->
+                if (obj) {
+                    $("#idcheckSuccess").show().html("사용 가능한 아이디입니다.");
+                    $("#idcheckFailure").hide();
+                } else {
+                    $("#idcheckFailure").show().html("로그인 아이디가 중복되었습니다.");
+                    $("#idcheckSuccess").hide();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Error occurred:", error);
+                console.log("Status:", status);
+                console.log("Response:", xhr.responseText);
+                $("#result").html("서버 오류");
+                $("#VerificationFailure").show().html("서버에서 응답을 받지 못했습니다.");
+                $("#VerificationSuccess").hide();
+            }
 
-<!--        if (isAvailable) {-->
-<!--        // 아이디가 사용 가능하면 메시지 표시-->
-<!--        document.getElementById("IdSuccess").classList.remove("hidden");-->
-<!--        document.getElementById("IdFailure").classList.add("hidden");-->
-<!--        } else {-->
-<!--        // 아이디가 중복이면 메시지 표시-->
-<!--        document.getElementById("IdSuccess").classList.add("hidden");-->
-<!--        document.getElementById("IdFailure").classList.remove("hidden");-->
-<!--        }-->
-<!--        }-->
-<!--        };-->
+        });
+        }else{
+            $("#idcheckFailure").hide();
+            $("#idcheckSuccess").hide();
+        }
+    });
+});
 
-<!--        xhr.send(); // 서버에 요청 전송-->
-<!--        }-->
-<!--    </script>-->
+
+    </script>
+
 
     <!-- 비밀번호 일치/불일치 여부 메시지 표시 -->
     <script>
