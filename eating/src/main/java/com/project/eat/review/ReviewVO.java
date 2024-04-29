@@ -30,7 +30,7 @@ public class ReviewVO {
     @Column(name = "shop_id", insertable = false, updatable = false)
     private Long shopId;// 외래 키
 
-    @OneToOne(targetEntity = ShopVO.class)
+    @OneToOne(targetEntity = ShopVO.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id") //테이블:shop 1대1 관계
     private ShopVO shop;
 //    @Column(name = "shop_id")
@@ -57,7 +57,7 @@ public class ReviewVO {
     @Column(name="shop_name")
     private String shopName;
 
-    @OneToOne(targetEntity = Order.class)
+    @OneToOne(targetEntity = Order.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 

@@ -1,12 +1,10 @@
 package com.project.eat.member;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +13,6 @@ public class MemberService {
 
 	private final MemberDAO_JPA jpa;
 	private final MemberRepositoryEM memberRepository;
-	private final MemberRepository memberRepository_join;
 
 
 	public boolean doesMemberExist(String id) {

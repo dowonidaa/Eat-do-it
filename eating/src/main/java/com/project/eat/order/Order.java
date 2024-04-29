@@ -51,7 +51,7 @@ public class Order {
     private String orderTel;
     private String tid;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "order", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Coupon coupon;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
