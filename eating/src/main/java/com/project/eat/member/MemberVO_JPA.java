@@ -67,7 +67,7 @@ public class MemberVO_JPA {
     @OneToOne(mappedBy = "member", fetch = LAZY)
     private Cart cart;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = LAZY)
     private List<Order> orders = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "mId")

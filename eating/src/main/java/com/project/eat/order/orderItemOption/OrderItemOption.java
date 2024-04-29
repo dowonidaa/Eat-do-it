@@ -16,11 +16,11 @@ public class OrderItemOption {
     @Column(name = "order_item_option_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_item_id", nullable = false)
     private OrderItem orderItem;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_option_id", nullable = false)
     private ItemOption itemOption;
 }
