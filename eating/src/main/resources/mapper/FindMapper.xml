@@ -5,8 +5,8 @@
 <mapper namespace="com.project.eat.find.FindMapper">
 
     <select id="findId" parameterType="string" resultType="String">
-        SELECT	MEMBER_ID
-        FROM	MEMBER
-        WHERE	EMAIL = #{email}
+        SELECT	member_id
+        FROM	member
+        WHERE	email = #{email}
     </select>
 </mapper>
