@@ -18,6 +18,10 @@ public class KakaoPayServiceImpl {
     @Value("${kakaoPay.secretKey}")
     private String secretKey;
 
+    @Value("${kakaoPay.url}")
+    private String url;
+
+
 
     // 첫번째 요청주소(결제 준비)
 
@@ -40,9 +44,9 @@ public class KakaoPayServiceImpl {
         parameters.put("quantity", String.valueOf(quantity));
         parameters.put("total_amount", String.valueOf(totalAmount));
         parameters.put("tax_free_amount", "0");
-        parameters.put("approval_url", "http://localhost:8088/order/kakao/success");
-        parameters.put("cancel_url", "http://localhost:8088/order/kakao/cancel?orderId="+orderId);
-        parameters.put("fail_url", "http://localhost:8088/order/kakao/fail");
+        parameters.put("approval_url", "http://"+url+":8088/order/kakao/success");
+        parameters.put("cancel_url", "http://"+url+":8088/order/kakao/cancel?orderId="+orderId);
+        parameters.put("fail_url", "http://"+url+":8088/order/kakao/fail");
 
 
         // 헤더와 파라미터 정보 구성
