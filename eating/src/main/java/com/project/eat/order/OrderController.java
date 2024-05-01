@@ -115,7 +115,7 @@ public class OrderController {
 
         model.addAttribute("page", page);
 
-        return "/order/orderList";
+        return "order/orderList";
     }
 
     @PostMapping("/orders/search")
